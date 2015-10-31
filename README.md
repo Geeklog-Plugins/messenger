@@ -19,7 +19,7 @@ This Geeklog plugin provides Private Messaging Functionality for your site membe
 
 * Enables site members to easily send other site members messages
 * Integrates seamlessly with the Forum Plugin to provide a 1-click feature to contact the posting member
-* Provides an online Smilie Adminitration feature for the site admin which is also intergrated with the Forum plugin so you can easily extend and personalize the smilies emoticons available for private messages and forum posts
+* Provides an online Smilie Administration feature for the site admin which is also integrated with the Forum plugin so you can easily extend and personalize the smilies emoticons available for private messages and forum posts
 * Online Budddy Admin tool so members can easily contact their favorite site members
 * Ability to archive messages and view messages sent to other site members
 * Site Admin can send out a broadcast private message but also members can enable the option to block broadcast messages
