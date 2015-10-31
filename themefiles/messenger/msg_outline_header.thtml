@@ -1,0 +1,12 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<td width="100%" align="right">{newposts}</td>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<tr>
+<td width="10" background="{imgset}/forum-wrap-tl.gif"><img src="{imgset}/pixel.gif" height="10" width="10"></td>
+<td width="100%" background="{imgset}/forum-wrap-t.gif"><img src="{imgset}/pixel.gif" height="10"></td>
+<td width="10" background="{imgset}/forum-wrap-tr.gif"><img src="{imgset}/pixel.gif" height="10" width="10"></td>
+</tr>
+<tr>
+<td width="10" background="{imgset}/forum-wrap-l.gif"><img src="{imgset}/pixel.gif" height="5" width="10"></td>
+<td class="footerbg" width="100%">

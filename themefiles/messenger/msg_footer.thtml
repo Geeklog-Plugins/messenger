@@ -1,0 +1,15 @@
+            <table border="0" width="100%" cellspacing="10" cellpadding="0" class="plugin">
+                <tr>
+                 <td width="50%" align="left">{pagenavigation}<br></td>
+                </tr>
+            </table>
+            <table border="0" width="100%" cellspacing="0" cellpadding="0" style="display:{show_footermsg};">
+                <tr>
+                    <td align="center" class="pluginInfo pluginTinyText">{footernote}</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+{endblock}

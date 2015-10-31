@@ -1,0 +1,66 @@
+<script type="text/JavaScript" src="{site_url}/messenger/library.js"></script>
+<script>
+<!--
+// -------------------------------------------------------------------
+// setBuddies(select_form)
+// Used to set a hidden form variable to the result of all the values in the source selectbox
+// -------------------------------------------------------------------
+function setBuddies(f) { 
+    var destVals = new Array(), opt = 0, separator = "|", d = f.fieldTo; 
+    while (d[opt]) 
+        destVals[opt] = d[opt++].value;
+        if(d[opt] > 1) {
+            f.buddylist.value = separator + destVals.join(separator); 
+        } else {
+            f.buddylist.value = destVals.join(separator); 
+        }
+        return true; 
+}
+-->
+</script>
+<table width="550" border="0" cellspacing="0" cellpadding="0" class="plugin">
+ <tr>
+    <td>
+        <table width="100%" border="0" cellspacing="1" cellpadding="0" class="pluginAltBG">
+            <form action="{phpself}" method="post" name="post">
+                <tr style="height:18px;">
+                    <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{actionurl}?folder=INBOX"><img src="{imgset}/inbox.gif" border="0" align="absmiddle">&nbsp;{lang_inbox}</a></td>
+                    <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{actionurl}?folder=OUTBOX"><img src="{imgset}/outbox.gif" border="0" align="absmiddle">&nbsp;{lang_outbox}</a></td>
+                    <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{actionurl}?folder=SENT"><img src="{imgset}/sent.gif" border="0" align="absmiddle">&nbsp;{lang_sent}</a></td>
+                    <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{actionurl}?folder=ARCHIVE"><img src="{imgset}/archive.gif" border="0" align="absmiddle">&nbsp;{lang_archive}</a></td>
+                </tr>
+            </form>
+        </table>
+        <TABLE width="100%" cellSpacing=0 cellPadding=0 border="0" class="plugin" style="margin-top:5px;">
+            <form name="buddyadmin" action="{phpself}" method=post>
+                <tr align="middle">
+                    <td style="padding:5 0 5 0;text-align:middle;">&nbsp;{LANG_sitemembers}</th>
+                    <td>&nbsp;</td>
+                    <td style="padding:5 0 5 0;text-align:middle;">{LANG_buddies}</th>
+                </tr>
+                <tr align="middle">
+                    <td>
+                        <select MULTIPLE SIZE=10 name=fieldFrom style="width: 15em; height: 20em; padding: 2px;" onDblClick="moveSelectedOptions(this.form['fieldFrom'],this.form['fieldTo'],false)">{sitemembers}</select>
+                    </td>
+                <td valign="middle" align="center">
+                    <input type="button" name="right" value="{LANG_add}" ONCLICK="moveSelectedOptions(this.form['fieldFrom'],this.form['fieldTo'],false)">
+                    <BR><BR>
+                    <input type="button" name="left"  value="{LANG_remove}" ONCLICK="moveSelectedOptions(this.form['fieldTo'],this.form['fieldFrom'],false)">
+                    <BR><BR>
+                </td>
+                    <td>
+                        <select multiple size=10 name=fieldTo style="width: 15em; height: 20em; padding: 2px;" onDblClick="moveSelectedOptions(this.form['fieldTo'],this.form['fieldFrom'],false)">{buddy_list}</select>
+                    </td>
+                </tr>
+                <tr align="middle"><td colspan="3" style="padding:10 0 10 0;">
+                    <INPUT type="hidden" name="mode" value="savebuddies">
+                    <input type="hidden" name="buddylist">
+                    <INPUT type=button value="{LANG_cancel}" onclick="javascript:history.go(-1)">&nbsp;&nbsp;
+                    <INPUT type=submit value="{LANG_save}" onclick="return setBuddies(this.form)">
+                    </td>
+                </tr>
+            </form>
+        </table>
+    </td>
+  </tr>
+</table>

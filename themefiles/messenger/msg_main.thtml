@@ -1,0 +1,43 @@
+{startblock}
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="plugin">
+    <tr>
+        <td width="100%" style="padding-right:5px;">
+            <table width="100%" border="0" cellspacing="0" cellpadding="0" class="pluginAltBG">
+                <tr>
+                    <td>
+                      <table width="100%" border="0" cellspacing="1" cellpadding="0">
+                        <form action="{phpself}" method="post" name="post">
+                            <tr>
+                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=INBOX"><img src="{imgset}/inbox.gif" border="0" align="absmiddle">&nbsp;{lang_inbox}</a></td>
+                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=OUTBOX"><img src="{imgset}/outbox.gif" border="0" align="absmiddle">&nbsp;{lang_outbox}</a></td>
+                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=SENT"><img src="{imgset}/sent.gif" border="0" align="absmiddle">&nbsp;{lang_sent}</a></td>
+                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=ARCHIVE"><img src="{imgset}/archive.gif" border="0" align="absmiddle">&nbsp;{lang_archive}</a></td>
+                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><b><a class="btn1" href="{phpself}?action=newpm">{LANG_NEWMESSAGE}</a></b></td>
+                            </tr>
+                        </form>
+                      </table>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td width="100%" colspan="5" style="padding-top:20px;padding-bottom:3px;">
+                        {msg_options}
+                    </td>
+                  </tr>
+                  <tr style="display:{show_navigation};">
+                      <td width="100%" colspan="5" align="left" style="padding:5 0 5 10;">
+                        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                             <td width="50%" class="pluginRow1 pluginLinks" align="left">{pagenavigation}</td>
+                            </tr>
+                        </table>
+                      </td>
+                  </tr>
+            <table>
+        </td>
+    </tr>
+<table>
+<table width="100%" style="display:{show_info};">
+    <tr>
+         <td class="pluginInfo" width="100%">{info_message}</td>
+     </tr>
+</table>

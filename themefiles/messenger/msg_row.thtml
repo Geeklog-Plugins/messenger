@@ -1,0 +1,22 @@
+<table width="100%" border="0" cellpadding="4" cellspacing="1" class="plugin" style="margin-bottom:5px;">
+    <tr>
+        <th colspan="2">{LANG_subject}:&nbsp;{subject}</th>
+    </tr>
+    <tr class="pluginRow{cssid}">
+        <td rowspan="2" valign="top"><div class="pm">{new}{message}<p>{viewlink}</div></td>
+        <td width="30%" valign="top">{LANG_whom}: {name}&nbsp;{buddylink}</a>&nbsp;{broadcast}<br>{date}</td>
+    </tr>
+    <tr class="pluginRow{cssid}">
+        <td width="30%" align="right" valign="bottom">
+            {preview_on}
+            <table border="0" cellspacing="{spacing}" cellpadding="0" class="plugin">
+                <tr style="height:24px;">
+                    <td width="80" style="padding:0px;text-align:center; background: center url({imgset}/button.gif);" nowrap>{deletelink}{LANG_delete}{link1_end}</td>
+                    <td width="80" style="padding:0px;text-align:center; background: center url({imgset}/button.gif);" nowrap>{archivelink}{LANG_archive}{link2_end}</td>
+                    <td width="80" style="padding:0px;text-align:center; background: center url({imgset}/button.gif);" nowrap>{replylink}{LANG_reply}{link3_end}</td>
+                </tr>
+            </table>
+            {preview_off}
+        </td>
+    </tr>
+</table>

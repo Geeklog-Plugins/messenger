@@ -1,0 +1,24 @@
+<script type="text/JavaScript" >
+function previewPic(sel) {
+    document.previewpic.src = "" + sel.options[sel.selectedIndex].value;
+}
+</script>
+<form name=smilieadmin action="{phpself}" method="post" style="margin:0px;">
+<table cellpadding="5" cellspacing="1" border="0" width="100%" class="plugin" style="margin-top:5px;">
+    <tr>
+        <td width="40%" class="pluginCellTitle">{LANG_filename}:</td>
+        <td width="60%" class="pluginCellText"><select name="sel_smilie" onChange="previewPic(this)">{smilies_select}</select>&nbsp;&nbsp;<img name="previewpic" src="{currentsmilie}" border=0></td>
+    </tr>
+    <tr>
+        <td width="40%" class="pluginCellTitle">{LANG_description}:</td>
+        <td width="60%" class="pluginCellText"><input type="text" size="40" name="smile_desc" value="{emoticon}"></td>
+    </tr>
+    <tr>
+        <td width="40%" class="pluginCellTitle">{LANG_emoticon}:</td>
+        <td width="60%" class="pluginCellText"><input type="text" name="smile_code" value="{code}"></td>
+    </tr>
+    <tr>
+        <td colspan="2" style="text-align:center;padding:10px;"><input type="button" value="cancel" onclick='javascript:history.go(-1)'>&nbsp;&nbsp;<input type="submit" name="edit" value="{LANG_editsmilie}"><input type="hidden" name="id" value="{id}"></td>
+    </tr>
+</table>
+</form>

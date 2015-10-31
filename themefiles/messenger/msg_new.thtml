@@ -1,0 +1,79 @@
+<script language="javascript">
+    <!--
+    function emoticon(text) {
+        text = ' ' + text + ' ';
+        if (document.newpm.message.createTextRange && document.newpm.message.caretPos) {
+            var caretPos = document.newpm.message.caretPos;
+            caretPos.text = caretPos.text.charAt(caretPos.text.length - 1) == ' ' ? text + ' ' : text;
+            document.newpm.message.focus();
+        } else {
+            document.newpm.message.value  += text;
+            document.newpm.message.focus();
+        }
+    }
+
+    function add_name(name,uid) {
+        document.newpm.toname.value += name + '; ';
+        document.newpm.touid.value += uid + '';
+    }
+
+    function storeCaret(textEl) {
+        if (textEl.createTextRange) textEl.caretPos = document.selection.createRange().duplicate();
+    }
+
+    function toggle(theDiv) {
+        var elem = document.getElementById(theDiv);
+        elem.style.display = (elem.style.display == "none")?"":"none";
+    }
+
+    //  End -->
+</script>
+{location}
+                <FORM ACTION="{phpself}" METHOD="POST" name="newpm">
+                <input type="hidden" name="mode" value="newpm">
+                <input type="hidden" name="replyid" value="{replyid}">
+                <input type="hidden" name="touid" value="{touid}">
+
+                <table width="100%" border="0" cellspacing="0" cellpadding="0" class="plugin">
+                  <tr>
+                    <td>
+                      <table border="0" cellspacing="0" cellpadding="2">
+                        <tr>
+                          <td class="pluginCellTitle" nowrap>&nbsp;{LANG_to}:</td>
+                          <td class="pluginCellText"><input type="text" name="toname" style="width: 330px;" value="{toname}" tabindex="1"></td>
+                          <td class="pluginCellText" nowrap style="padding-right:20px;">&nbsp;<a href="javascript:void(0);" onClick="javascript:window.open('memberlist.php', 'smallmemberlist', config='height=450,width=200,scrollbars=yes,top=50,left=150');">{LANG_memberslist}</a></td>
+                        </tr>
+                        <tr>
+                          <td class="pluginCellTitle" nowrap>&nbsp;{LANG_subject}:<br><img width="65" height="1"></td>
+                          <td class="pluginCellText" colspan="2" width="100%"><input type="text" name="subject" style="width: 330px;" value="{subject}" tabindex="2"></td>
+                        </tr>
+                         <tr>
+                            <td class="pluginCellTitle" align="left" valign="top"><br>&nbsp;{message}:<br><img width="65" height="1"></td>
+                            <td class="pluginCellText" align="left" valign="top"><br><textarea name="message" wrap="virtual" tabindex="3" style="width: 340px; height: 220px;" onselect="storeCaret(this);" onclick="storeCaret(this);" onkeyup="storeCaret(this);">{preview}</textarea></td>
+                            <td class="pluginCellText" width="50%" align="right" style="vertical-align:top"><br>{LANG_mybuddies}:<br><br><div class="pmbuddylist">{buddies}</div></td>
+                        </tr>
+                        <tr>
+                            <td class="pluginCellTitle">&nbsp;</td>
+                            <td class="pluginCellText" colspan="2" style="padding:5 5 5 50;">
+                                <input name="togglesmilies" type=button value="Show Smilies" onclick="toggle('smilies'); (this.value=='Show Smilies')?this.value='Hide Smilies':this.value='Show Smilies';return true;">
+                                <div id="smilies" style="display:none;">{smilies}</div>
+                            </td>
+                        </tr>
+                   </td>
+                  </tr>
+                </table>
+                <table width="100%" border="0" cellspacing="6" cellpadding="0" class="plugin">
+                    <tr>
+                        <td nowrap>{broadcast_option}</td>
+                        <td style="text-align:right;padding-right:10px;" nowrap><input type="submit" name="submit" value="{LANG_submit}">&nbsp;<input type="submit" name="submit" value="{LANG_preview}"></td>
+                    </tr>
+                </FORM>
+                </table>
+                </td>
+            </tr>
+        </table>
+        </td>
+    </tr>
+</table>
+<p />
+{endblock}

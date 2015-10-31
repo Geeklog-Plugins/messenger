@@ -1,0 +1,7 @@
+<tr class="pluginRow{cssid}" valign=middle align=center>
+    <td><img src="{smilie_url}"></td>
+    <td>{code}</td>
+    <td>{emoticon}</td>
+    <td><a href="{phpself}?action=edit&id={smilie_id}">{LANG_edit}</a></td>
+    <td><a href="{phpself}?action=delete&id={smilie_id}">{LANG_delete}</a></td>
+</tr>

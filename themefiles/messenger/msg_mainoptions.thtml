@@ -1,0 +1,12 @@
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="msgNavbar">
+    <tr style="padding-bottom:5px;">
+        <td width="30%" style="padding-left:5px; text-align:left;">
+            <form action="index.php" style="margin:0px;padding:0px;" method="post" name="msgform1"">
+                <select name="sortoption" style="width: 150px"  onchange="this.form.submit()"><option selected value="-1">{LANG_sortedby}<OPTION value="1" {sel1}>&nbsp;&#187&nbsp;&nbsp;{LANG_oldest}<OPTION value="2" {sel2}>&nbsp;&#187&nbsp;&nbsp;{LANG_newest}<OPTION value="3" {sel3}>&nbsp;&#187&nbsp;&nbsp;{LANG_members}</option></select>
+            </form>
+        </td>
+        <td width="40%" style="padding-right:5px; text-align:right;"><a href="{site_url}/messenger/buddies.php">{LANG_buddyadmin}</a>&nbsp;
+        <td width="15%" nowrap style="padding-right:5px; text-align:right;"><a href="{delall_link}">{LANG_delall}</a>&nbsp;</td>
+        <td width="15%" nowrap style="padding-right:5px; text-align:left;"><a href="{delolder_link}">{LANG_delolder}</a>&nbsp;</td>
+    </tr>
+</table>

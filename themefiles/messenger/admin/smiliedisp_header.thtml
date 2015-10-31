@@ -1,0 +1,12 @@
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+    <tr>
+        <td width="100%"><br>{help_msg}<hr></td>
+    </tr>
+</table>
+<table cellpadding="5" cellspacing="1" border="0" width="100%">
+    <tr valign=middle align=center height="30">
+        <td><b>{LANG_image}</b></td>
+        <td><b>{LANG_code}</b></td>
+        <td><b>{LANG_description}</b></td>
+        <td colspan="2"><a href="{phpself}?action=new">{LANG_addsmilie}</a></td>
+</tr>
