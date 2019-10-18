@@ -363,9 +363,9 @@ function msg_showsmilies() {
     $query = DB_query("SELECT smilie_id,code,smile_url,emoticon FROM {$_TABLES['smilies']}");
     while ( list($smilie_id,$code,$smile_url,$emoticon) = DB_fetchARRAY($query)) {
         if (!array_key_exists($smile_url,$arr_emoticons)) {
-            $arr_emoticons[$smile_url][code] = "Emoticon " .$emoticon . ", codes => " . $code;
+            $arr_emoticons[$smile_url]['code'] = "Emoticon " .$emoticon . ", codes => " . $code;
         } else {
-            $arr_emoticons[$smile_url][code] .= " , " . $code;
+            $arr_emoticons[$smile_url]['code'] .= " , " . $code;
         }
     }
 
@@ -379,7 +379,7 @@ function msg_showsmilies() {
         } else {
             $code = (substr($smilie['code'], $pos1));
         }
-        $smilies .= '<a href="javascript:emoticon(\'' .$code .'\')"><img align=absmiddle  vspace="1" src="' .$baseurl. $key. '" alt="' . $smilie[code]. '" title="' .$smilie[code]. '" border="0"></a> ';
+        $smilies = '<a href="javascript:emoticon(\'' .$code .'\')"><img align=absmiddle  vspace="1" src="' .$baseurl. $key. '" alt="' . $smilie['code']. '" title="' .$smilie['code']. '" border="0"></a> ';
     }
     return $smilies;
 }
@@ -497,7 +497,7 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
                         $notifyMessage .= sprintf($LANG_MSG01['LINE1'], $_USER['username'],$subject);
                         $notifyMessage .= $LANG_MSG01['LINE2'];
                         $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'].' '.$LANG_MSG01['ADMIN']."\n";
-                        $notifyMessage .= "\n" .$_CONF[site_url]. "\n";
+                        $notifyMessage .= "\n" .$_CONF['site_url']. "\n";
                         msg_sendNotification($target_user,$notifySubject,$notifyMessage,"messenger");
                     } else {
                         DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");

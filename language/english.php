@@ -106,6 +106,7 @@ $LANG_MSG  = array(
     'MSGFAVORITES'      => 'Messenger Favorites',
     'ADDBUDDY'          => 'Add Buddy',
     'DELBUDDY'          => 'Delete Buddy',
+	'HOME'              => 'Home',
     'prompt01'          => 'the page does not automatically reload, please click <a href=%s>here</a>',
     'prompt02'          => '* Broadcast message. Only originator or Admin can delete.<br>&nbsp;Delete will remove all copies.',
     'prompt02b'         => '* Broadcast message. Only originator or Admin can delete.',
@@ -193,5 +194,3 @@ $LANG_MSG05 = array (
     'subject'     => "Welcome to my site!",
     'message'     => "Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>"
 );
-
-?>

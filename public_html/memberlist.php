@@ -43,9 +43,10 @@
 require_once("../lib-common.php"); // Path to your lib-common.php
 
 $sql = DB_query("SELECT uid,username,fullname FROM $_TABLES[users] WHERE uid > 1 ORDER BY username");
+header('Content-Type: text/html;' . COM_getCharset());
 echo '<html><head>';
-echo '<title>' .$LANG_GF97['msgmembers']. '</title>';
-echo '<link rel="stylesheet" href="' .$_CONF['site_url']. '/layout/' .$_CONF['theme']. '/style.css" type="text/css">';
+echo '<title>' . $LANG_MSG['MEMBERS'] . '</title>';
+echo '<link rel="stylesheet" href="' . $_CONF['site_url']. '/layout/' .$_CONF['theme']. '/style.css" type="text/css">';
 echo "<script language='javascript'>
 <!--
 function add_name(name,uid)
@@ -58,15 +59,15 @@ opener.window.top.document.newpm.touid.value += uid + '';
 </script>";
 
 echo '</head><body class="msgText">';
-echo '<center><font size="2"><br><b>' .$_CONF['site_name'] . ' ' . $LANG_GF01['MEMBERS']. '</b></font></center>';
+echo '<center><font size="2"><br><b>' .$_CONF['site_name'] . ' ' . $LANG_MSG['MEMBERS']. '</b></font></center>';
 echo '<br>';
 echo '<table width="100%" class="msgText" cellpadding="2" cellspacing="1">';
 
 while($A = DB_fetchArray($sql)) {
     if ($_CONF['show_fullname'] == 1 AND trim($A['fullname']) != '') {
-        echo "<tr><td align=\"center>\" class=\"msgText\">» <a href='javascript:add_name(\"$A[fullname]\",\"$A[uid]\")'>$A[fullname]</a></td></tr>";
+        echo "<tr><td align=\"center>\" class=\"msgText\">&raquo; <a href='javascript:add_name(\"$A[fullname]\",\"$A[uid]\")'>$A[fullname]</a></td></tr>";
     } else {
-        echo "<tr><td align=\"center>\" class=\"msgText\">» <a href='javascript:add_name(\"$A[username]\",\"$A[uid]\")'>$A[username]</a></td></tr>";
+        echo "<tr><td align=\"center>\" class=\"msgText\">&raquo; <a href='javascript:add_name(\"$A[username]\",\"$A[uid]\")'>$A[username]</a></td></tr>";
     }
 }
 
@@ -75,4 +76,3 @@ echo '<br><center><input type="button" value="Close" onClick="window.close()"></
 echo '<br>';
 echo '</body></html>';
 exit;
-?>

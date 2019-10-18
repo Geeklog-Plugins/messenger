@@ -88,12 +88,11 @@ function plugin_compatible_with_this_geeklog_version ()
 if (!SEC_inGroup('Root')) {
     // Someone is trying to illegally access this page
     COM_errorLog("Someone has tried to illegally access the messenger install/uninstall page.  User id: {$_USER['uid']}, Username: {$_USER['username']}, IP: $REMOTE_ADDR",1);
-    $display = COM_siteHeader();
-    $display .= COM_startBlock($LANG_MSG00['access_denied']);
-    $display .= $LANG_MSG00['access_denied_msg'];
-    $display .= COM_endBlock();
-    $display .= COM_siteFooter(true);
-    echo $display;
+    $display = COM_startBlock($LANG_MSG00['access_denied'])
+        . $LANG_MSG00['access_denied_msg']
+        . COM_endBlock();
+    $content = COM_createHTMLDocument($display);
+    COM_output($content);
     exit;
 }
  
@@ -114,24 +113,24 @@ function plugin_install_now()
     $uninstall_plugin = 'plugin_uninstall_' . $pi_name;
 
     // Create the Plugins Tables
-    
-    require_once($_CONF['path'] . 'plugins/messenger/sql/messenger_install_1.0.php');
-    for ($i = 1; $i <= count($_SQL); $i++) {
-        $progress .= "executing " . current($_SQL) . "<br>\n";
-        COM_errorLOG("executing " . current($_SQL));
-        DB_query(current($_SQL));
+    require_once $_CONF['path'] . 'plugins/messenger/sql/messenger_install_1.0.php';
+	$progress = '';
+
+    foreach ($_SQL as $sql) {
+        $progress .= "executing " . $sql . "<br>\n";
+        COM_errorLOG("executing " . $sql);
+        DB_query($sql);
+
         if (DB_error()) {
-            COM_errorLog("Error Creating $table table",1);
-            $uninstall_plugin ('DeletePlugin');
+            COM_errorLog('Error Creating a table', 1);
+            $uninstall_plugin('DeletePlugin');
             return false;
-            exit;
         }
-        next($_SQL);
     }
-    COM_errorLog("Success - Created $table table",1);
-       
+
+    COM_errorLog('Success - Created tables', 1);
+
     // Insert Default Data
-    
     foreach ($DEFVALUES as $table => $sql) {
         COM_errorLog("Inserting default data into $table table",1);
         DB_query($sql,1);
@@ -219,7 +218,7 @@ function plugin_install_now()
     $message =  'Completed plugin install: ' .date('m d Y',time()) . "   AT " . date('H:i', time()) . "\n";
     $message .= 'Site: ' . $_CONF['site_url'] . ' and Sitename: ' . $_CONF['site_name'] . "\n";
     $message .= 'Admin: ' . $_CONF['site_mail'] . "\n";
-    $message .= 'Hostname: ' . $_ENV['HOSTNAME'] . ' and RemoteAddress: ' .$_ENV['REMOTE_ADDR'];
+    $message .= 'Hostname: ' . @$_ENV['HOSTNAME'] . ' and RemoteAddress: ' . @$_ENV['REMOTE_ADDR'];
     @mail('glmessenger@portalparts.com','glMessenger Install successfull',$message);
 
     COM_errorLog("Succesfully installed the $pi_name Plugin!",1);
@@ -232,40 +231,30 @@ $display = '';
 if ($_REQUEST['action'] == 'uninstall') {
     $uninstall_plugin = 'plugin_uninstall_' . $pi_name;
     if ($uninstall_plugin ()) {
-        $display = COM_refresh ($_CONF['site_admin_url']
-                                . '/plugins.php?msg=45');
+        COM_redirect($_CONF['site_admin_url'] . '/plugins.php?msg=45');
     } else {
-        $display = COM_refresh ($_CONF['site_admin_url']
-                                . '/plugins.php?msg=73');
+        COM_redirect($_CONF['site_admin_url'] . '/plugins.php?msg=73');
     }
-
 } else if (DB_count ($_TABLES['plugins'], 'pi_name', $pi_name) == 0) {
     // plugin not installed
     if (plugin_compatible_with_this_geeklog_version ()) {
         if (plugin_install_now ()) {
-            $display = COM_refresh ($_CONF['site_admin_url']
-                                    . '/plugins.php?msg=44');
+            COM_redirect($_CONF['site_admin_url'] . '/plugins.php?msg=44');
         } else {
-            $display = COM_refresh ($_CONF['site_admin_url']
-                                    . '/plugins.php?msg=72');
+            COM_redirect($_CONF['site_admin_url'] . '/plugins.php?msg=72');
         }
     } else {
         // plugin needs a newer version of Geeklog
-        $display .= COM_siteHeader ('menu', $LANG32[8])
-                 . COM_startBlock ($LANG32[8])
+        $display = COM_startBlock($LANG32[8])
                  . '<p>' . $LANG32[9] . '</p>'
-                 . COM_endBlock ()
-                 . COM_siteFooter ();
+                 . COM_endBlock();
     }
 } else {
     // plugin already installed
-    $display .= COM_siteHeader ('menu', $LANG01[77])
-             . COM_startBlock ($LANG32[6])
+    $display = COM_startBlock($LANG32[6])
              . '<p>' . $LANG32[7] . '</p>'
-             . COM_endBlock ()
-             . COM_siteFooter();
+             . COM_endBlock();
 }
 
-echo $display;
-
-?>
+$display = COM_createHTMLDocument($display);
+COM_output($display);

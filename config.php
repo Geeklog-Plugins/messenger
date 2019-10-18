@@ -75,5 +75,3 @@ $_TABLES['messenger_dist']       =  $_DB_table_prefix . 'messenger_dist';
 $_TABLES['messenger_userinfo']   =  $_DB_table_prefix . 'messenger_userinfo';
 $_TABLES['messenger_buddies']    =  $_DB_table_prefix . 'messenger_buddies';
 $_TABLES['smilies']              = $_DB_table_prefix . 'smilies';
-
-?>

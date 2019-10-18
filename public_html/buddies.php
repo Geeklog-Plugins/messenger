@@ -99,8 +99,7 @@ function editbuddies() {
     $lang_sentbox     = $LANG_MSG['SENTBOX'] ."&nbsp;($sentCnt)";
     $lang_archivebox  = $LANG_MSG['ARCHIVEBOX'] ."&nbsp;($archiveCnt)";
 
-    $retval .= COM_startBlock ($LANG_MSG04['MAINHEADER'] , '',
-                       COM_getBlockTemplate ('_admin_block', 'header'));
+    $retval = COM_startBlock ($LANG_MSG04['MAINHEADER'] , '', COM_getBlockTemplate ('_admin_block', 'header'));
     $buddymembers = new Template($_CONF['path_layout'] . 'messenger');
     $buddymembers->set_file (array ('buddymembers'=>'msg_buddyadmin.thtml'));
     $buddymembers->set_var ('site_url',$_CONF['site_url']);
@@ -108,8 +107,8 @@ function editbuddies() {
     $buddymembers->set_var ('imgset', $CONF_MSG['imgset'] );
     $buddymembers->set_var ('LANG_sitemembers',$LANG_MSG04['HEADER1']);
     $buddymembers->set_var ('LANG_buddies',$LANG_MSG04['HEADER2']);
-    $buddymembers->set_var ('sitemembers', msg_selectbuddies($group,true) );
-    $buddymembers->set_var ('buddy_list', msg_selectbuddies($group) );
+    $buddymembers->set_var ('sitemembers', msg_selectbuddies(@$group,true) );
+    $buddymembers->set_var ('buddy_list', msg_selectbuddies(@$group) );
     $buddymembers->set_var ('lang_inbox', $lang_inbox);
     $buddymembers->set_var ('lang_outbox', $lang_outbox);
     $buddymembers->set_var ('lang_sent', $lang_sentbox);
@@ -136,20 +135,16 @@ function savebuddies($buddylist) {
         $buddy_uid = COM_applyFilter($buddy[$i]);
         DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid,buddy_id) VALUES ('$uid', '$buddy_uid')");
     }
-    echo COM_refresh($_CONF['site_url'] . '/messenger/index.php');
+    COM_redirect($_CONF['site_url'] . '/messenger/index.php');
 }
 
 // MAIN
 
-if ($_REQUEST['mode'] == 'savebuddies') {
-    $display .= savebuddies($_POST['buddylist']);
+if (isset($_REQUEST['mode']) && ($_REQUEST['mode'] === 'savebuddies')) {
+    $display = savebuddies($_POST['buddylist']);
 } else {
-    $display .= COM_siteHeader('menu');
-    $display .= editbuddies();
-    $display .= COM_siteFooter();
+    $display = editbuddies();
 }
 
-echo $display;
-
-
-?>
+$display = COM_createHTMLDocument($display);
+COM_output($display);
