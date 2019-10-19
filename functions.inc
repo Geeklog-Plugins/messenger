@@ -41,6 +41,7 @@
 // +-----------------------------------------------------------------------------+
 //
 
+use Geeklog\Input;
 
 $langfile = $_CONF['path'] . 'plugins/messenger/language/' . $_CONF['language'] . '.php';
 if (file_exists ($langfile))
@@ -133,6 +134,12 @@ function plugin_user_delete_messenger ($uid)
 function plugin_profilevariablesedit_messenger($uid, &$template)
 {
     global $_TABLES, $LANG_MSG, $CONF_MSG;
+	
+	$uid = (int) $uid;
+	if ($uid <= 1) {
+		return;
+	}
+
     if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
 	DB_save ($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
     }
@@ -181,11 +188,24 @@ function plugin_profilevariablesdisplay_messenger($uid, &$template)
 function plugin_profileextrassave_messenger()
 {
     global $_USER, $_TABLES;
+	
     $uid = $_USER['uid'];
-    if (empty ($uid)) {
+    if (empty($uid)) {
         $uid = DB_getItem ($_TABLES['users'], "uid", "username = '{$_POST['username']}'");
     }
-    DB_save ($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$_POST['msg_opt1']}','{$_POST['msg_opt2']}','{$_POST['msg_opt3']}'");
+	
+	$msgOpt1 = Input::post('msg_opt1', '');
+	$msgOpt2 = Input::post('msg_opt2', '');
+	$msgOpt3 = Input::post('msg_opt3', '');
+	$msgOpt1 = DB_escapeString($msgOpt1);
+	$msgOpt2 = DB_escapeString($msgOpt2);
+	$msgOpt3 = DB_escapeString($msgOpt3);
+	
+    DB_save(
+		$_TABLES['messenger_userinfo'],
+		"uid, broadcasts, notifications, sitepreference",
+		"'{$uid}', '{$msgOpt1}', '{$msgOpt2}', '{$msgOpt3}'"
+	);
 }
 
 /**
