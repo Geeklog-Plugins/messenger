@@ -34,37 +34,28 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.           |
 // |                                                                           |
 // +---------------------------------------------------------------------------+
-//
 
-require_once('../../../lib-common.php');
-require_once($_CONF['path'] . 'plugins/messenger/config.php');
-require_once($_CONF['path'] . 'plugins/messenger/functions.inc');
+require_once '../../../lib-common.php';
+require_once $_CONF['path'] . 'plugins/messenger/config.php';
+require_once $_CONF['path'] . 'plugins/messenger/functions.inc';
 
-//
 // Universal plugin install variables
 // Change these to match your plugin
-//
-
-$pi_name = 'messenger';                   // Plugin name
-$pi_version = $CONF_MSG['version'];       // Plugin Version
-$gl_version = '1.4';                      // GL Version plugin for
-$pi_url = 'http://www.portalparts.com';   // Plugin Homepage
-
+$pi_name = 'messenger';                                     // Plugin name
+$pi_version = $CONF_MSG['version'];                         // Plugin Version
+$gl_version = '2.2.0';                                      // GL Version plugin for
+$pi_url = 'https://github.com/Geeklog-Plugins/messenger';   // Plugin Homepage
 
 // Default data
 // Insert table name and sql to insert default data for your plugin.
-
 $DEFVALUES = array();
 
-//
 // Security Feature to add
 // Fill in your security features here
 // Note you must add these features to the uninstall routine in function.inc so that they will
 // be removed when the uninstall routine runs.
 // You do not have to use these particular features.  You can edit/add/delete them
 // to fit your plugins security model
-//
-
 $NEWFEATURE = array();
 $NEWFEATURE['messenger.edit']        = "Messenger Admin Rights";
 $NEWFEATURE['messenger.user']        = "Messenger User";
@@ -114,7 +105,7 @@ function plugin_install_now()
 
     // Create the Plugins Tables
     require_once $_CONF['path'] . 'plugins/messenger/sql/messenger_install_1.0.php';
-	$progress = '';
+    $progress = '';
 
     foreach ($_SQL as $sql) {
         $progress .= "executing " . $sql . "<br>\n";

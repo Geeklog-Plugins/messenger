@@ -79,7 +79,7 @@ function fill_smilieSelect($currentsmilie='') {
         closedir($handle);
     }
 
-	$smilies_select = '';
+    $smilies_select = '';
     foreach ($filesArr as $file) {
         $smilies_select .= '<option value="' . $baseurl . $file . '" ';
         if ($file == $currentsmilie) {

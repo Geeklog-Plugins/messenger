@@ -88,6 +88,3 @@ $_SQL[] = "INSERT INTO {$_TABLES['smilies']} VALUES (22, ':idea:', 'icon_idea.gi
 $_SQL[] = "INSERT INTO {$_TABLES['smilies']} VALUES (23, ':arrow:', 'icon_arrow.gif', 'Arrow');";
 $_SQL[] = "INSERT INTO {$_TABLES['smilies']} VALUES (24, ':|', 'icon_neutral.gif', 'Neutral');";
 $_SQL[] = "INSERT INTO {$_TABLES['smilies']} VALUES (25, ':mrgreen:', 'icon_mrgreen.gif', 'Mr. Green');";
-
-
-?>

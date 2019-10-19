@@ -106,7 +106,7 @@ $LANG_MSG  = array(
     'MSGFAVORITES'      => 'Messenger Favorites',
     'ADDBUDDY'          => 'Add Buddy',
     'DELBUDDY'          => 'Delete Buddy',
-	'HOME'              => 'Home',
+    'HOME'              => 'Home',
     'prompt01'          => 'the page does not automatically reload, please click <a href=%s>here</a>',
     'prompt02'          => '* Broadcast message. Only originator or Admin can delete.<br>&nbsp;Delete will remove all copies.',
     'prompt02b'         => '* Broadcast message. Only originator or Admin can delete.',

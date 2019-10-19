@@ -39,22 +39,21 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
 
 use Geeklog\Input;
 
+if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
+    die('This file can not be used on its own.');
+}
+
 $langfile = $_CONF['path'] . 'plugins/messenger/language/' . $_CONF['language'] . '.php';
-if (file_exists ($langfile))
-{
-    include_once ($langfile);
-}
-else
-{
-    include_once ($_CONF['path'] . 'plugins/messenger/language/english.php');
+if (file_exists($langfile)) {
+    include_once $langfile;
+} else {
+    include_once $_CONF['path'] . 'plugins/messenger/language/english.php';
 }
 
-require_once ($_CONF['path'] . 'plugins/messenger/config.php');
-
+require_once $_CONF['path'] . 'plugins/messenger/config.php';
 
 /**
 * Returns the user menuitem option for this plugin
@@ -63,8 +62,9 @@ require_once ($_CONF['path'] . 'plugins/messenger/config.php');
 function plugin_getuseroption_messenger()
 {
    global $_USER, $_CONF, $_TABLES, $LANG_MSG00, $CONF_MSG;
+
    // If restricted access has been enabled in the plugins config.php then check access right
-   if (!$CONF_MSG['RestrictedAccess'] OR SEC_hasRights('messenger.user') ) {
+   if (!$CONF_MSG['RestrictedAccess'] || SEC_hasRights('messenger.user') ) {
        // Check and see if user wants to view Broadcast messages - if not exclude them
        if (DB_getItem($_TABLES['messenger_userinfo'],"broadcasts", "uid={$_USER['uid']}") == '1') {
             $sql = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_dist']} dist LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id=msg.id WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) ");
@@ -80,7 +80,6 @@ function plugin_getuseroption_messenger()
    }
 }
 
-
 /**
 * returns the administrative option for this plugin
 *
@@ -89,19 +88,22 @@ function plugin_getadminoption_messenger()
 {
     global $_TABLES, $_CONF, $CONF_MSG;
 
-    if ($CONF_MSG['smiliesEnabled'] AND SEC_hasRights('smilie.edit')) {
+    if ($CONF_MSG['smiliesEnabled'] && SEC_hasRights('smilie.edit')) {
         return array('Smilies', $_CONF['site_admin_url'] . '/plugins/messenger/editsmilies.php');
+    } else {
+        return array();
     }
 }
-
 
 /**
 * Called if user is created - Adds a default userpref record which is used when member edits account preferences
 */
-function plugin_user_create_messenger ($uid)
+function plugin_user_create_messenger($uid)
 {
     global $_TABLES, $CONF_MSG, $LANG_MSG05;
-    DB_query ("INSERT INTO {$_TABLES['messenger_userinfo']} (uid) VALUES ('{$uid}')");
+
+    DB_query("INSERT INTO {$_TABLES['messenger_userinfo']} (uid) VALUES ('{$uid}')");
+
     // Check if new members should receive the welcome private message
     if ($CONF_MSG['newmember']) {
         $toname = DB_getItem($_TABLES['users'],"username","uid=$uid");
@@ -111,76 +113,97 @@ function plugin_user_create_messenger ($uid)
     }
 }
 
-
 /**
 * Called if admin deletes a user - remove all user messages as well
 */
-function plugin_user_delete_messenger ($uid)
+function plugin_user_delete_messenger($uid)
 {
     global $_TABLES;
-    $sql = DB_query ("SELECT msg_id FROM {$_TABLES['messenger_dist']} WHERE target_uid = '{$uid}'");
+
+    $sql = DB_query("SELECT msg_id FROM {$_TABLES['messenger_dist']} WHERE target_uid = '{$uid}'");
+
     while (list($msg_id) = DB_fetchArray($sql)) {
         // Only delete any actual messages if only this member was on the distribution
         if (DB_count($_TABLES['messenger_dist'],"msg_id", "$msg_id") == 1) {
-            DB_query ("DELETE FROM {$_TABLES['messenger_msg']} WHERE id = '{$msg_id}'");
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE id = '{$msg_id}'");
         }
-        DB_query ("DELETE FROM {$_TABLES['messenger_dist']} WHERE msg_id = '{$msg_id}' AND target_uid = '{$uid}'");
-    }
-    // Finally - Delete the user preference record
-    DB_query ("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = '{$uid}'");
 
+        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE msg_id = '{$msg_id}' AND target_uid = '{$uid}'");
+    }
+
+    // Finally - Delete the user preference record
+    DB_query("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = '{$uid}'");
 }
 
 function plugin_profilevariablesedit_messenger($uid, &$template)
 {
     global $_TABLES, $LANG_MSG, $CONF_MSG;
-	
-	$uid = (int) $uid;
-	if ($uid <= 1) {
-		return;
-	}
+    
+    $uid = (int) $uid;
+    if ($uid <= 1) {
+        return;
+    }
 
     if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
-	DB_save ($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+        DB_save($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
     }
-    $result = DB_query ("SELECT broadcasts,notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = $uid");
-    list ($option1,$option2,$option3) = DB_fetchArray ($result);
+
+    $result = DB_query(
+        "SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} "
+        . "WHERE uid = $uid"
+    );
+    list($option1, $option2, $option3) = DB_fetchArray($result);
+
     if ($option1) {
         $template->set_var('msgoption1_checked', 'CHECKED');
     } else {
         $template->set_var('msgoption1_checked', '');
     }
+    
     if ($option2) {
         $template->set_var('msgoption2_checked', 'CHECKED');
     } else {
         $template->set_var('msgoption2_checked', '');
     }
+    
     if ($option3) {
         $template->set_var('msgoption3_checked', 'CHECKED');
     } else {
         $template->set_var('msgoption3_checked', '');
     }
+    
     $template->set_var('messenger_option1', $option1);
-    $template->set_var ('lang_messengeroption1', $LANG_MSG['lang_broadcasts']);
-    $template->set_var ('lang_messengerhelp1', $LANG_MSG['help_broadcasts']);
+    $template->set_var('lang_messengeroption1', $LANG_MSG['lang_broadcasts']);
+    $template->set_var('lang_messengerhelp1', $LANG_MSG['help_broadcasts']);
     $template->set_var('messenger_option2', $option2);
-    $template->set_var ('lang_messengeroption2', $LANG_MSG['lang_notifications']);
-    $template->set_var ('lang_messengerhelp2', $LANG_MSG['help_notifications']);
+    $template->set_var('lang_messengeroption2', $LANG_MSG['lang_notifications']);
+    $template->set_var('lang_messengerhelp2', $LANG_MSG['help_notifications']);
     $template->set_var('messenger_option3', $option3);
-    $template->set_var ('lang_messengeroption3', $LANG_MSG['lang_sitenotifications']);
-    $template->set_var ('lang_messengerhelp3', $LANG_MSG['help_sitenotifications']);
+    $template->set_var('lang_messengeroption3', $LANG_MSG['lang_sitenotifications']);
+    $template->set_var('lang_messengerhelp3', $LANG_MSG['help_sitenotifications']);
 }
 
-function plugin_profilevariablesdisplay_messenger($uid, &$template)
+function plugin_profilevariablesdisplay_messenger($uid, $template)
 {
-    global $_USER,$_CONF,$_TABLES, $LANG_MSG;
-    if (isset($_USER['uid']) AND $_USER['uid'] > 1 AND $_USER['uid'] != $uid) {
-        if (DB_COUNT($_TABLES['messenger_buddies'],array('uid','buddy_id'),array($_USER['uid'],$uid)) > 0) {
+    global $_USER, $_CONF, $_TABLES, $LANG_MSG;
+
+    $uid = (int) $uid;
+
+    if (isset($_USER['uid']) && ($_USER['uid'] > 1) && ($_USER['uid'] != $uid)) {
+        if (DB_count($_TABLES['messenger_buddies'], array('uid', 'buddy_id'), array($_USER['uid'], $uid)) > 0) {
             $template->set_var('LANG_favorites', $LANG_MSG['MSGFAVORITES']);
-            $template->set_var('favorites_link', '<a href="' .$_CONF['site_url']. '/messenger/index.php?action=delbuddy&buddy=' .$uid. '&fromprofile=1">' .$LANG_MSG['DELBUDDY']. '</a>');
+            $template->set_var(
+                'favorites_link',
+                '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=delbuddy&amp;buddy=' . $uid
+                    . '&amp;fromprofile=1">' . $LANG_MSG['DELBUDDY'] . '</a>'
+            );
         } else {
             $template->set_var('LANG_favorites', $LANG_MSG['MSGFAVORITES']);
-            $template->set_var('favorites_link', '<a href="' .$_CONF['site_url']. '/messenger/index.php?action=addbuddy&buddy=' .$uid. '&fromprofile=1">' .$LANG_MSG['ADDBUDDY']. '</a>');
+            $template->set_var(
+                'favorites_link',
+                '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=addbuddy&amp;buddy=' . $uid
+                    . '&amp;fromprofile=1">' . $LANG_MSG['ADDBUDDY'] . '</a>'
+            );
         }
     }
 }
@@ -188,24 +211,24 @@ function plugin_profilevariablesdisplay_messenger($uid, &$template)
 function plugin_profileextrassave_messenger()
 {
     global $_USER, $_TABLES;
-	
-    $uid = $_USER['uid'];
+    
+    $uid = (int) $_USER['uid'];
     if (empty($uid)) {
-        $uid = DB_getItem ($_TABLES['users'], "uid", "username = '{$_POST['username']}'");
+        $uid = DB_getItem($_TABLES['users'], "uid", "username = '{$_POST['username']}'");
     }
-	
-	$msgOpt1 = Input::post('msg_opt1', '');
-	$msgOpt2 = Input::post('msg_opt2', '');
-	$msgOpt3 = Input::post('msg_opt3', '');
-	$msgOpt1 = DB_escapeString($msgOpt1);
-	$msgOpt2 = DB_escapeString($msgOpt2);
-	$msgOpt3 = DB_escapeString($msgOpt3);
-	
+    
+    $msgOpt1 = Input::post('msg_opt1', '');
+    $msgOpt2 = Input::post('msg_opt2', '');
+    $msgOpt3 = Input::post('msg_opt3', '');
+    $msgOpt1 = DB_escapeString($msgOpt1);
+    $msgOpt2 = DB_escapeString($msgOpt2);
+    $msgOpt3 = DB_escapeString($msgOpt3);
+    
     DB_save(
-		$_TABLES['messenger_userinfo'],
-		"uid, broadcasts, notifications, sitepreference",
-		"'{$uid}', '{$msgOpt1}', '{$msgOpt2}', '{$msgOpt3}'"
-	);
+        $_TABLES['messenger_userinfo'],
+        "uid, broadcasts, notifications, sitepreference",
+        "'{$uid}', '{$msgOpt1}', '{$msgOpt2}', '{$msgOpt3}'"
+    );
 }
 
 /**
@@ -215,28 +238,22 @@ function plugin_profileextrassave_messenger()
 */
 function plugin_chkVersion_messenger() {
     global $CONF_MSG;
-    return $CONF_MSG['version'] ;
 
+    return $CONF_MSG['version'] ;
 }
 
 /**
 * Called by the plugin Editor to run the SQL Update for a plugin update
 */
 function plugin_upgrade_messenger() {
-    global $_TABLES,$CONF_MSG;
+    global $_TABLES, $CONF_MSG;
 
     $curversion = DB_getItem($_TABLES['plugins'],'pi_version',"pi_name = 'messenger'");
     DB_query("UPDATE {$_TABLES['plugins']} SET pi_version = '{$CONF_MSG['version']}' WHERE pi_name = 'messenger'");
 
-    /* Check if update completed and return a message number to be shown */
-    if (DB_getItem($_TABLES['plugins'],'pi_version',"pi_name = 'messenger'") == $CONF_MSG['version']) {
-        return 1;
-    } else {
-        return 5;
-    }
-
+    // Check if update completed and return a message number to be shown
+    return (DB_getItem($_TABLES['plugins'],'pi_version',"pi_name = 'messenger'") == $CONF_MSG['version']);
 }
-
 
 /**
 * Removes the datastructures for this plugin from the Geeklog database
@@ -245,48 +262,51 @@ function plugin_upgrade_messenger() {
 */
 function plugin_uninstall_messenger($installCheck='')
 {
-    global $_TABLES, $LANG_MSG00, $_ENV, $_CONF;
+    global $_TABLES, $LANG_MSG00, $_CONF;
 
-    $pi_name='messenger';
-    $FEATURES = array ('messenger.user','messenger.edit','messenger.broadcast','smilie.edit');
-    $TABLES = array ('messenger_msg','messenger_dist','messenger_userinfo', 'messenger_buddies','smilies');
+    $pi_name = 'messenger';
+    $FEATURES = array('messenger.user', 'messenger.edit', 'messenger.broadcast', 'smilie.edit');
+    $TABLES = array('messenger_msg', 'messenger_dist', 'messenger_userinfo', 'messenger_buddies', 'smilies');
 
     // Check and see if plugin is still enabled - if so display warning and exit
-    if ($installCheck != '' && DB_getItem($_TABLES['plugins'],'pi_enabled', 'pi_name = "' .$pi_name. '"')) {
-        COM_errorLog("Plugin is installed and enabled. Disable first if you want to de-install it",1);
-    $display .= COM_startBlock($LANG_MSG00['warning']);
-    $display .= $LANG_MSG00['enabled'];
-    $display .= COM_endBlock();
-    echo $display;
-    exit;
+    if ($installCheck != '' && DB_getItem($_TABLES['plugins'],'pi_enabled', 'pi_name = "' . $pi_name . '"')) {
+        COM_errorLog("Plugin is installed and enabled. Disable first if you want to de-install it", 1);
+        $display = COM_startBlock($LANG_MSG00['warning'])
+            . $LANG_MSG00['enabled']
+            . COM_endBlock();
+        $display = COM_createHTMLDocument($display);
+        COM_output($display);
+        exit;
     }
 
     // Ok to proceed and delete plugin - Unregister the plugin with Geeklog
-    COM_errorLog('Attempting to unregister the Messenger plugin from Geeklog',1);
-    DB_query("DELETE FROM {$_TABLES['plugins']} WHERE pi_name = 'messenger'",1);
+    COM_errorLog('Attempting to unregister the Messenger plugin from Geeklog', 1);
+    DB_query("DELETE FROM {$_TABLES['plugins']} WHERE pi_name = 'messenger'", 1);
+    
     // Drop Messenger Plugin tables
     foreach($TABLES as $table) {
         $t = $_TABLES["$table"];
-        COM_errorLog("Removing Table $t",1);
-        DB_query("DROP TABLE $t",1);
+        COM_errorLog("Removing Table $t", 1);
+        DB_query("DROP TABLE $t", 1);
     }
 
     // Remove Admin Security for this plugin
     $grp_id = DB_getItem($_TABLES['vars'], 'value', "name = '{$pi_name}_admin'");
     COM_errorLog("Removing $pi_name Admin Group", 1);
-    DB_query("DELETE FROM {$_TABLES['groups']} WHERE grp_id = $grp_id",1);
+    DB_query("DELETE FROM {$_TABLES['groups']} WHERE grp_id = $grp_id", 1);
     DB_query("DELETE FROM {$_TABLES['vars']} WHERE name = '{$pi_name}_admin'");
     COM_errorLog("Removing root users from admin of $pi_name");
-    DB_query("DELETE FROM {$_TABLES['group_assignments']} WHERE ug_main_grp_id = $grp_id",1);
+    DB_query("DELETE FROM {$_TABLES['group_assignments']} WHERE ug_main_grp_id = $grp_id", 1);
 
     // Remove all the associated features - access rights. The feature ID's were stored in the vars table during install.
     foreach ($FEATURES as $feature) {
-        COM_errorLog("Removing $feature feature and rights to it",1);
+        COM_errorLog("Removing $feature feature and rights to it", 1);
         $feat_id = DB_getItem($_TABLES['features'], 'ft_id', "ft_name = '$feature'");
         COM_errorLog("DELETE FROM {$_TABLES['access']} WHERE acc_ft_id = $feat_id");
-        DB_query("DELETE FROM {$_TABLES['access']} WHERE acc_ft_id = $feat_id",1);
-        DB_query("DELETE FROM {$_TABLES['features']} WHERE ft_id = $feat_id",1);
+        DB_query("DELETE FROM {$_TABLES['access']} WHERE acc_ft_id = $feat_id", 1);
+        DB_query("DELETE FROM {$_TABLES['features']} WHERE ft_id = $feat_id", 1);
     }
+    
     /* DO NOT REMOVE OR CHANGE THE FOLLOWING CODE UNDER ANY CONDITION */
     /* This Plugin requires a license to be installed and information collected is only used to track that license */
     /* Blaine Lang: glmessenger author */
@@ -299,31 +319,29 @@ function plugin_uninstall_messenger($installCheck='')
     return true;
 }
 
-
-
-
-function messenger_statusMessage($message='',$url,$prompt) {
+function messenger_statusMessage($message = '', $url, $prompt) {
     global $_CONF,$_USER,$LANG_MSG,$CONF_MSG;
-    include_once ($_CONF['path'] . 'plugins/messenger/config.php');
 
-    if ($prompt=="") {
+    include_once $_CONF['path'] . 'plugins/messenger/config.php';
+
+    if (empty($prompt)) {
         $prompt = $LANG_MSG['statusmsg2'];
     }
 
     echo COM_startBlock();
-    echo "<font class='alert'><br><p />$message</font>";
+    echo "<font class='alert'><br><p/>$message</font>";
     echo "<br><p/>";
 
     if ($CONF_MSG['automsg'] == "0") {
-    echo sprintf($LANG_MSG['statusmsg1'],$prompt,$url);
+        echo sprintf($LANG_MSG['statusmsg1'], $prompt, $url);
         echo "<br><p>";
     } else {
         echo '<script language="javascript1.1">';
-    echo 'window.setTimeout("window.location.href=\'' .$url. '\'",' . $CONF_MSG['messagedelay'] . ');';
-    echo '<!-- window.location.replace("'.$url. '");';
-    echo '// --> </script>';
-    echo sprintf($LANG_MSG['statusmsg3'],$url);
-    echo "<br><p>";
+        echo 'window.setTimeout("window.location.href=\'' . $url . '\'",' . $CONF_MSG['messagedelay'] . ');';
+        echo '<!-- window.location.replace("'. $url . '");';
+        echo '// --> </script>';
+        echo sprintf($LANG_MSG['statusmsg3'], $url);
+        echo "<br><p>";
     }
 
     echo COM_endBlock();
@@ -343,13 +361,17 @@ function msg_replaceEmoticons( $text ) {
 
     $arr_smilies = array();
     $sql = DB_query("SELECT code,smile_url,emoticon from {$_TABLES['smilies']} ORDER BY length(code) desc");
+
     while ( list($code,$icon,$emoticon) = DB_fetchARRAY($sql)) {
-        $text = str_replace($code,'<img src="'.$CONF_MSG['SMILIE_URL']. $icon . '" ALT="'.$emoticon.'" TITLE="'.$emoticon.'" BORDER="0">',$text);
+        $text = str_replace(
+            $code,
+            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" ALT="' . $emoticon . '" TITLE="' . $emoticon . '" BORDER="0">',
+            $text
+        );
     }
+
     return $text;
-
 }
-
 
 /**
 * Replace formatted smilie HTML for emoticons - so message can be edited
@@ -361,17 +383,26 @@ function msg_restoreEmoticons( $text ) {
 
     $arr_smilies = array();
     $sql = DB_query("SELECT code,smile_url,emoticon from {$_TABLES['smilies']} ORDER BY length(code) desc");
-    while ( list($code,$icon,$emoticon) = DB_fetchARRAY($sql)) {
-        // Check for HTML that is formatted the new way and how it was used in earlier releases
-        $text = str_replace('<img src="'.$CONF_MSG['SMILIE_URL']. $icon . '" ALT="'.$emoticon.'" TITLE="'.$emoticon.'" BORDER="0">',$code,$text);
-        $text = str_replace('<img src='.$CONF_MSG['SMILIE_URL']. $icon . ' BORDER="0">',$code,$text);
-    }
-    return $text;
 
+    while (list($code, $icon, $emoticon) = DB_fetchArray($sql)) {
+        // Check for HTML that is formatted the new way and how it was used in earlier releases
+        $text = str_replace(
+            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" ALT="' . $emoticon . '" TITLE="' . $emoticon .'" BORDER="0">',
+            $code,
+            $text
+        );
+        $text = str_replace(
+            '<img src=' . $CONF_MSG['SMILIE_URL'] . $icon . ' BORDER="0">',
+            $code,
+            $text
+        );
+    }
+
+    return $text;
 }
 
 function msg_showsmilies() {
-    global $_TABLES,$_CONF,$CONF_MSG;
+    global $_TABLES, $_CONF, $CONF_MSG;
 
     $baseurl = $CONF_MSG['SMILIE_URL'];
     $dirPath = $CONF_MSG['SMILIE_PATH'];
@@ -381,117 +412,135 @@ function msg_showsmilies() {
     // I need to sort this out and only show 1 but display a help message with all the possible codes
     $arr_emoticons = array();
     $query = DB_query("SELECT smilie_id,code,smile_url,emoticon FROM {$_TABLES['smilies']}");
-    while ( list($smilie_id,$code,$smile_url,$emoticon) = DB_fetchARRAY($query)) {
-        if (!array_key_exists($smile_url,$arr_emoticons)) {
-            $arr_emoticons[$smile_url]['code'] = "Emoticon " .$emoticon . ", codes => " . $code;
+
+    while (list($smilie_id, $code, $smile_url, $emoticon) = DB_fetchArray($query)) {
+        if (!array_key_exists($smile_url, $arr_emoticons)) {
+            $arr_emoticons[$smile_url]['code'] = 'Emoticon ' . $emoticon . ', codes => ' . $code;
         } else {
-            $arr_emoticons[$smile_url]['code'] .= " , " . $code;
+            $arr_emoticons[$smile_url]['code'] .= ' , ' . $code;
         }
     }
 
     // Now build the HTML to return with the smilie images and help line when you hover over image
     foreach ($arr_emoticons as $key => $smilie) {
-        $pos1 = strpos($smilie['code'],'=>') + 3;
-        $pos2 = strpos($smilie['code'],',',$pos1);
+        $pos1 = strpos($smilie['code'], '=>') + 3;
+        $pos2 = strpos($smilie['code'], ',', $pos1);
+
         if ($pos2 > 0) {
             $len = $pos2 - $pos1;
-            $code = (substr($smilie['code'], $pos1,$len));
+            $code = substr($smilie['code'], $pos1, $len);
         } else {
-            $code = (substr($smilie['code'], $pos1));
+            $code = substr($smilie['code'], $pos1);
         }
-        $smilies = '<a href="javascript:emoticon(\'' .$code .'\')"><img align=absmiddle  vspace="1" src="' .$baseurl. $key. '" alt="' . $smilie['code']. '" title="' .$smilie['code']. '" border="0"></a> ';
+
+        $smilies = '<a href="javascript:emoticon(\'' . $code . '\')"><img align=absmiddle  vspace="1" src="'
+            . $baseurl . $key . '" alt="' . $smilie['code'] . '" title="' . $smilie['code'] . '" border="0"></a> ';
     }
+
     return $smilies;
 }
 
 // Callback Function for the array walk function below to apply the data filters to clean any posted data
 function msg_cleanfield(&$field) {
-        $p = COM_stripslashes( $field );
-        $p = strip_tags( $p );
-        $p = COM_killJS( $p ); // doesn't help a lot right now, but still ...
-        $pa = explode( "'", $p );
-        $pa = explode( '"', $pa[0] );
-        $pa = explode( '`', $pa[0] );
-        $field = $pa[0];
+    $p = COM_stripslashes( $field );
+    $p = strip_tags( $p );
+    $p = COM_killJS( $p ); // doesn't help a lot right now, but still ...
+    $pa = explode( "'", $p );
+    $pa = explode( '"', $pa[0] );
+    $pa = explode( '`', $pa[0] );
+    $field = $pa[0];
 }
 
 // Function to clean any posted data
 function msg_cleandata($parameter) {
-    if (gettype($parameter) == "array") {
-        array_walk($parameter,'msg_cleanfield');
+    if (gettype($parameter) === 'array') {
+        array_walk($parameter, 'msg_cleanfield');
     } else {
        msg_cleanfield($parameter);
     }
+    
     return $parameter;
 }
 
-
-function msg_preparefordb($message,$postmode="text",$censor=TRUE,$htmlfilter=TRUE) {
+function msg_preparefordb($message, $postmode = 'text', $censor = true, $htmlfilter = true) {
     if ($censor) {
         $message = COM_checkWords($message);
     }
-    if($postmode == 'html') {
+
+    if ($postmode === 'html') {
         if ($htmlfilter) {
             // Need to call addslahes again as COM_checkHTML stips it out
             $message = addslashes(nl2br(COM_checkHTML($message)));
-        } elseif (!get_magic_quotes_gpc() ) {
+        } elseif (!get_magic_quotes_gpc()) {
             $message = addslashes(nl2br($message));
         }
     } else {
-        if(get_magic_quotes_gpc() ) {
+        if(get_magic_quotes_gpc()) {
             $message = htmlspecialchars($message);
         } else {
             $message = addslashes(htmlspecialchars($message));
         }
     }
+
     return $message;
 }
 
 function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=false,$notify=true)
 {
-    global $_CONF,$_TABLES,$_USER,$REMOTE_ADDR, $CONF_MSG,$LANG_MSG01;
-    $subject = msg_preparefordb($subject,'html');
-    $message = msg_preparefordb($message,'html');
-    if ($reply_msgid == '') $reply_msgid = 0;
+    global $_CONF, $_TABLES, $_USER, $REMOTE_ADDR, $CONF_MSG,$LANG_MSG01;
+
+    $subject = msg_preparefordb($subject, 'html');
+    $message = msg_preparefordb($message, 'html');
+
+    if ($reply_msgid == '') {
+        $reply_msgid = 0;
+    }
+
     if ($broadcast) {
         $target_uid = "0";
         DB_query("INSERT INTO $_TABLES[messenger_msg] (message,source_uid,subject,datetime,reply_msgid,ip) VALUES ('$message','$_USER[uid]','$subject',UNIX_TIMESTAMP(),$reply_msgid,'$REMOTE_ADDR')");
         $lastmsg_id = DB_insertID();
         DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
+
         // If admin then allow notifications to be sent to all members
-        if ( SEC_inGroup('Root') AND $CONF_MSG['RootBdcastNotificaton'] AND $CONF_MSG['notification'] ) {
-           $query = DB_QUERY("SELECT username,uid from {$_TABLES['users']} where uid != {$_USER['uid']} AND uid > 1");
-           while ( list($target_user,$target_uid) = DB_fetchARRAY($query)) {
+        if (SEC_inGroup('Root') && $CONF_MSG['RootBdcastNotificaton'] && $CONF_MSG['notification']) {
+           $query = DB_query("SELECT username,uid from {$_TABLES['users']} where uid != {$_USER['uid']} AND uid > 1");
+
+           while (list($target_user, $target_uid) = DB_fetchARRAY($query)) {
                 $query2 = DB_query("SELECT broadcasts, notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid={$target_uid}");
                 list($broadcastblock,$notifyoption,$sitepreference) = DB_fetchArray($query2);
+
                 // Check if user has messenger_userinfo record and possibly disabled notifications
                 // Also don't need to send a notification if user has messenger as their default for notifications
-                if ( (DB_numRows($query2) == 0) OR ($broadcastblock == 0 AND $notifyoption == 1 and $sitepreference == 0)) {
-                    $notifySubject = '' . $_CONF['site_name'] . ' ' .$LANG_MSG01['BROADCAST']. '';
-                    $notifyMessage  = $LANG_MSG01['HELLO'] .' '. $target_user . ",\n\n";
-                    $notifyMessage .= sprintf($LANG_MSG01['LINE1B'], $_USER['username'],$subject);
+                if ((DB_numRows($query2) == 0) || ($broadcastblock == 0 && $notifyoption == 1 && $sitepreference == 0)) {
+                    $notifySubject = '' . $_CONF['site_name'] . ' ' . $LANG_MSG01['BROADCAST']. '';
+                    $notifyMessage  = $LANG_MSG01['HELLO'] . ' ' . $target_user . ",\n\n";
+                    $notifyMessage .= sprintf($LANG_MSG01['LINE1B'], $_USER['username'], $subject);
                     $notifyMessage .= $LANG_MSG01['LINE2'];
-                    $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'].' '.$LANG_MSG01['ADMIN']."\n";
-                    $notifyMessage .= "\n" .$_CONF[site_url]. "\n";
-                    msg_sendNotification($target_user,$notifySubject,$notifyMessage,"messenger");
+                    $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'] . ' ' . $LANG_MSG01['ADMIN'] . "\n";
+                    $notifyMessage .= "\n" . $_CONF[site_url] . "\n";
+                    msg_sendNotification($target_user, $notifySubject, $notifyMessage, 'messenger');
                 }
             }
         }
     } else {
-        $target_users = explode(";",$towhom);
+        $target_users = explode(';', $towhom);
+
         // Check that all users are valid members before saving message and sending notifications out;
         foreach ($target_users as $target_user) {
             $target_user = trim($target_user);
+
             if ($_CONF['show_fullname'] == 1) {
-                if ($target_user != '' AND DB_getItem($_TABLES['users'],"uid", "fullname = '$target_user'") < 1) {
+                if ($target_user != '' && DB_getItem($_TABLES['users'], "uid", "fullname = '$target_user'") < 1) {
                     return false;
                 }
             } else {
-                if ($target_user != '' AND DB_getItem($_TABLES['users'],"uid", "username = '$target_user'") < 1) {
+                if ($target_user != '' && DB_getItem($_TABLES['users'],"uid", "username = '$target_user'") < 1) {
                     return false;
                 }
             }
         }
+
         reset($target_users);
         DB_query("INSERT INTO $_TABLES[messenger_msg] (message,source_uid,subject,datetime,reply_msgid,ip) VALUES ('$message','$_USER[uid]','$subject',UNIX_TIMESTAMP(),$reply_msgid,'$REMOTE_ADDR')");
         $lastmsg_id = DB_insertID();
@@ -500,25 +549,28 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
             // Send out Notifications to all users on distribution
             foreach ($target_users as $target_user) {
                 $target_user = trim(strtolower($target_user));
+
                 if ($target_user != '') {
                     if ($_CONF['show_fullname'] == 1) {
                         $target_uid = DB_getItem($_TABLES['users'],"uid", "fullname='{$target_user}'");
                     } else {
                         $target_uid = DB_getItem($_TABLES['users'],"uid", "username='{$target_user}'");
                     }
+
                     $query2 = DB_query("SELECT notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid={$target_uid}");
                     list($notifyoption,$sitepreference) = DB_fetchArray($query2);
+
                     // Check if user has messenger_userinfo record and possibly disabled notifications
                     // Also don't need to send a notification if user has messenger as their default for notifications
-                    if (DB_numRows($query2) == 0 OR (DB_numRows($query2) == 1 and $notifyoption == 1 and $sitepreference == 0)) {
+                    if (DB_numRows($query2) == 0 || (DB_numRows($query2) == 1 && $notifyoption == 1 && $sitepreference == 0)) {
                         DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
-                        $notifySubject = '' . $_CONF['site_name'] . ' ' .$LANG_MSG01['SUBJECT']. '';
-                        $notifyMessage  = $LANG_MSG01['HELLO'] .' '. $target_user . ",\n\n";
-                        $notifyMessage .= sprintf($LANG_MSG01['LINE1'], $_USER['username'],$subject);
+                        $notifySubject = '' . $_CONF['site_name'] . ' ' . $LANG_MSG01['SUBJECT'] . '';
+                        $notifyMessage  = $LANG_MSG01['HELLO'] . ' ' . $target_user . ",\n\n";
+                        $notifyMessage .= sprintf($LANG_MSG01['LINE1'], $_USER['username'], $subject);
                         $notifyMessage .= $LANG_MSG01['LINE2'];
-                        $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'].' '.$LANG_MSG01['ADMIN']."\n";
-                        $notifyMessage .= "\n" .$_CONF['site_url']. "\n";
-                        msg_sendNotification($target_user,$notifySubject,$notifyMessage,"messenger");
+                        $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'] . ' ' . $LANG_MSG01['ADMIN'] ."\n";
+                        $notifyMessage .= "\n" . $_CONF['site_url'] . "\n";
+                        msg_sendNotification($target_user, $notifySubject, $notifyMessage, 'messenger');
                     } else {
                         DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
                     }
@@ -530,29 +582,32 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
     return true;
 }
 
-function msg_sendNotification($user,$subject,$message,$type="") {
-    global $_USER,$_CONF,$_TABLES,$CONF_MSG;
+function msg_sendNotification($user, $subject, $message, $type = '') {
+    global $_USER, $_CONF, $_TABLES, $CONF_MSG;
 
-    /* Added to handle domain\user.name type usernames - occured at Inco where we have NTLM integration */
+    // Added to handle domain\user.name type usernames - occured at Inco where we have NTLM integration
     if (!get_magic_quotes_gpc()) {
        $user = addslashes($user);
     }
+
     if ($_CONF['show_fullname'] == 1) {
         $target_uid = DB_getItem($_TABLES['users'],"uid", "fullname='{$user}'");
     } else {
         $target_uid = DB_getItem($_TABLES['users'],"uid", "username='{$user}'");
     }
+
     $sql = DB_query("SELECT sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid='$target_uid'");
     list($sitepreference) = DB_fetchArray($sql);
-    $emailaddress = DB_getItem($_TABLES['users'],"email", "uid = '$target_uid'");
-    // Check if user has enabled Messenger to be used for a notification messages
-    if (isset($sitepreference) AND $sitepreference) {
-        messenger_send($user,$subject,$message,0,false,false);
-    } else {    // Send out regular email notificaton
+    $emailaddress = DB_getItem($_TABLES['users'], "email", "uid = '$target_uid'");
 
-        if (empty ($LANG_CHARSET)) {
+    // Check if user has enabled Messenger to be used for a notification messages
+    if (isset($sitepreference) && $sitepreference) {
+        messenger_send($user, $subject, $message, 0, false, false);
+    } else {
+        // Send out regular email notificaton
+        if (empty($LANG_CHARSET)) {
             $charset = $_CONF['default_charset'];
-            if (empty ($charset)) {
+            if (empty($charset)) {
                 $charset = "iso-8859-1";
             }
         } else {
@@ -570,28 +625,24 @@ function msg_sendNotification($user,$subject,$message,$type="") {
             COM_errorLOG("PM notification to $emailaddress NOT sent - Messenger config.php 'mailoff' setting.");
         } else {
             //@mail($emailaddress, $subject, $message, $headers);
-            COM_mail($emailaddress,$subject,$message);
+            COM_mail($emailaddress, $subject, $message);
        }
     }
 
     // Log notification for admin viewing and tracking
-    $type = ($type == "") ? "unknown" : $type;
+    $type = ($type == '') ? 'unknown' : $type;
     $logentry = "$type ,.$user ($emailaddress), .$subject";
     msg_logNotification($logentry);
+
     return true;
 }
 
 function msg_logNotification($logentry) {
-    global $_CONF, $LANG01, $_CONF;
-    $timestamp = strftime( "%b %d %H:%M" );
-    $logfile = $_CONF['path_log'] . 'notifiction.log';
+    global $_CONF, $LANG01;
 
-    if( !$file = @fopen( $logfile, a )) {
-        $retval .= $LANG01[33] . ' ' . $logfile . ' (' . $timestamp . ')<br>' . LB;
-    } else {
-        @fputs( $file, "$timestamp,$logentry \n" );
-    }
-
+    $timestamp = strftime('%b %d %H:%M');
+    $logfile = $_CONF['path_log'] . 'notification.log';
+    @file_put_contents($logfile, "$timestamp,$logentry \n", FILE_APPEND);
 }
 
 /**
@@ -600,9 +651,6 @@ function msg_logNotification($logentry) {
 function plugin_getHeaderCode_messenger()
 {
     global $_CONF;
-    return '<script language="JavaScript" type="text/javascript" src="' . $_CONF['site_url'] . '/messenger/library.js"></script>';
 
+    return '<script type="text/javascript" src="' . $_CONF['site_url'] . '/messenger/library.js"></script>';
 }
-
-
-?>

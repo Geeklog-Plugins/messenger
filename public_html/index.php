@@ -39,7 +39,6 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
 
 use Geeklog\Input;
 
@@ -58,7 +57,7 @@ if (empty($_USER['uid']) || $_USER['uid'] == 1) {
 if (isset($_REQUEST['folder'])) {
     $folder = msg_cleandata($_REQUEST['folder']);
 } elseif (isset($_REQUEST['curfolder'])) {
-    $folder =  msg_cleandata($_REQUEST['curfolder']);
+    $folder = msg_cleandata($_REQUEST['curfolder']);
 } else {
     $folder = 'inbox';
 }
@@ -88,7 +87,7 @@ $phpself = $_CONF['site_url'] . '/messenger/index.php';
 ob_start();
 
 if ($mode === 'newpm' && $_POST['submit'] == $LANG_MSG['SUBMIT']) {
-    if (( $toname != '' || $_POST['chk_broadcast']) && ($_POST['message'] != '')) {
+    if (($toname != '' || isset($_POST['chk_broadcast'])) && isset($_POST['message']) && ($_POST['message'] != '')) {
         $subject = $_POST['subject'];
         $broadcast = (empty($_POST['chk_broadcast'])) ? 0 : 1;
         $timestamp = time();
@@ -251,6 +250,7 @@ $msg_main->set_file(array(
     'msg_main'   => 'msg_main.thtml',
     'msg_navbar' => 'msg_mainoptions.thtml'
 ));
+$msg_main->set_var('selected_folder', $folder);
 
 switch ($folder) {
     case 'SENT' :
@@ -406,12 +406,12 @@ if ($action === 'newpm' || $mode === 'newpm') {
 
     $msg_new = new Template($_CONF['path_layout'] . '/messenger');
     $msg_new->set_file(array('msg_new' => 'msg_new.thtml'));
-	$rows = '';
+    $rows = '';
 
     if (isset($_POST['submit']) && ($_POST['submit'] == $LANG_MSG['PREVIEW'])) {
         echo '<br><p>';
 
-        if (get_magic_quotes_gpc() ) {
+        if (get_magic_quotes_gpc()) {
             $message = stripslashes($message);
         }
 

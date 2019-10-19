@@ -1,4 +1,5 @@
 <?php
+
 /* Reminder: always indent with 4 spaces (no tabs). */
 // +-----------------------------------------------------------------------------+
 // | glMessenger Plugin 1.0 for Geeklog- The Ultimate OSS Portal                 |
@@ -38,41 +39,51 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
 
-require_once("../lib-common.php"); // Path to your lib-common.php
+require_once '../lib-common.php';
 
-$sql = DB_query("SELECT uid,username,fullname FROM $_TABLES[users] WHERE uid > 1 ORDER BY username");
-header('Content-Type: text/html;' . COM_getCharset());
-echo '<html><head>';
-echo '<title>' . $LANG_MSG['MEMBERS'] . '</title>';
-echo '<link rel="stylesheet" href="' . $_CONF['site_url']. '/layout/' .$_CONF['theme']. '/style.css" type="text/css">';
-echo "<script language='javascript'>
+$charset = COM_getCharset();
+$sql = DB_query("SELECT uid, username, fullname FROM $_TABLES[users] WHERE (uid > 1) AND (uid <> {$_USER['uid']}) ORDER BY username");
+header('Content-Type: text/html;' . $charset);
+echo <<<HTML
+<!DOCTYPE html>
+<html>
+<head>
+<title>{$LANG_MSG['MEMBERS']}</title>
+<link rel="stylesheet" href="{$_CONF['site_url']}/layout/{$_CONF['theme']}/style.css" type="text/css">
+<script type="text/javascript">
 <!--
 function add_name(name,uid)
 {
-opener.window.top.document.newpm.toname.value += name + ';';
-opener.window.top.document.newpm.touid.value += uid + '';
+opener.window.top.document.newpm.toname.value += name + ";";
+opener.window.top.document.newpm.touid.value += uid + "";
 //return true;
 }
 //-->
-</script>";
+</script>
+</head>
+<body class="msgText">
+<div style="text-align: center; font-size: small;"><strong>{$_CONF['site_name']} {$LANG_MSG['MEMBERS']}</strong></div>
+<table style="width: 100%; border-collapse: collapse;" class="msgText">
+HTML;
 
-echo '</head><body class="msgText">';
-echo '<center><font size="2"><br><b>' .$_CONF['site_name'] . ' ' . $LANG_MSG['MEMBERS']. '</b></font></center>';
-echo '<br>';
-echo '<table width="100%" class="msgText" cellpadding="2" cellspacing="1">';
-
-while($A = DB_fetchArray($sql)) {
-    if ($_CONF['show_fullname'] == 1 AND trim($A['fullname']) != '') {
-        echo "<tr><td align=\"center>\" class=\"msgText\">&raquo; <a href='javascript:add_name(\"$A[fullname]\",\"$A[uid]\")'>$A[fullname]</a></td></tr>";
+while ($A = DB_fetchArray($sql)) {
+    $uid = $A['uid'];
+    
+    if ($_CONF['show_fullname'] == 1 && trim($A['fullname']) != '') {
+        $name = $A['fullname'];
     } else {
-        echo "<tr><td align=\"center>\" class=\"msgText\">&raquo; <a href='javascript:add_name(\"$A[username]\",\"$A[uid]\")'>$A[username]</a></td></tr>";
+        $name = $A['username'];
     }
+
+    echo '<tr><td align="center>" class="msgText">&raquo; <a href="javascript:add_name(\'' . $name . '\', \'' . $uid . '\')">'
+        . htmlspecialchars($name, ENT_QUOTES, $charset) . '</a></td></tr>';
 }
 
-echo '</table>';
-echo '<br><center><input type="button" value="Close" onClick="window.close()"></center>';
-echo '<br>';
-echo '</body></html>';
-exit;
+echo <<<HTML
+</table>
+<hr>
+<div style="text-align: center;"><input type="button" value="Close" onClick="window.close()"></div>
+</body>
+</html>
+HTML;

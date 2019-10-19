@@ -39,9 +39,10 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
 
-$CONF_MSG['version']             = '1.8.2';
+global $_DB_table_prefix;
+
+$CONF_MSG['version']             = '1.9.0';
 
 $CONF_MSG['SMILIE_PATH']         = $_CONF['path_html'] . '/images/smilies/';
 $CONF_MSG['SMILIE_URL']          = $_CONF['site_url'] . '/images/smilies/';
