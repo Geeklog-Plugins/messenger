@@ -1,4 +1,4 @@
-<script language="javascript">
+<script type="text/javascript">
     <!--
     function emoticon(text) {
         text = ' ' + text + ' ';
@@ -29,7 +29,7 @@
     //  End -->
 </script>
 {location}
-                <FORM ACTION="{phpself}" METHOD="POST" name="newpm">
+                <form action="{phpself}" method="post" name="newpm">
                 <input type="hidden" name="mode" value="newpm">
                 <input type="hidden" name="replyid" value="{replyid}">
                 <input type="hidden" name="touid" value="{touid}">
@@ -55,7 +55,7 @@
                         <tr>
                             <td class="pluginCellTitle">&nbsp;</td>
                             <td class="pluginCellText" colspan="2" style="padding:5 5 5 50;">
-                                <input name="togglesmilies" type=button value="Show Smilies" onclick="toggle('smilies'); (this.value=='Show Smilies')?this.value='Hide Smilies':this.value='Show Smilies';return true;">
+                                <input name="togglesmilies" type=button value="{show_smilies}" onclick="toggle('smilies'); (this.value=='{show_smilies}')?this.value='{hide_smilies}':this.value='{show_smilies}';return true;">
                                 <div id="smilies" style="display:none;">{smilies}</div>
                             </td>
                         </tr>
@@ -67,7 +67,7 @@
                         <td nowrap>{broadcast_option}</td>
                         <td style="text-align:right;padding-right:10px;" nowrap><input type="submit" name="submit" value="{LANG_submit}">&nbsp;<input type="submit" name="submit" value="{LANG_preview}"></td>
                     </tr>
-                </FORM>
+                </form>
                 </table>
                 </td>
             </tr>

@@ -12,7 +12,8 @@
                                 <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=OUTBOX"><img src="{imgset}/outbox.gif" border="0" align="absmiddle">&nbsp;{lang_outbox}</a></td>
                                 <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=SENT"><img src="{imgset}/sent.gif" border="0" align="absmiddle">&nbsp;{lang_sent}</a></td>
                                 <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><a class="btn1" href="{phpself}?folder=ARCHIVE"><img src="{imgset}/archive.gif" border="0" align="absmiddle">&nbsp;{lang_archive}</a></td>
-                                <td width="20%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><b><a class="btn1" href="{phpself}?action=newpm">{LANG_NEWMESSAGE}</a></b></td>
+                                <td width="15%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><b><a class="btn1" href="{phpself}?action=newpm">{LANG_NEWMESSAGE}</a></b></td>
+                                <td width="5%" style="padding:0px;background: center url({imgset}/button.gif);" nowrap><b><a class="btn1" href="{phpself}?action=settings">{LANG_SETTINGS}</a></b></td>
                             </tr>
                         </form>
                       </table>

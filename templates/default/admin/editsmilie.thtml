@@ -1,4 +1,4 @@
-<script type="text/JavaScript" >
+<script type="text/javascript" >
 function previewPic(sel) {
     document.previewpic.src = "" + sel.options[sel.selectedIndex].value;
 }

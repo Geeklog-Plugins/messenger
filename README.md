@@ -1,8 +1,8 @@
-# Geeklog Messenger plugin - version 1.9.0
+# Geeklog Messenger plugin - version 1.9.1
 
 * Current Maintainers: [Geeklog Community Members](https://github.com/orgs/Geeklog-Plugins/people)
 * Original Author: Blaine Lang < blaine@portalparts.com >
-* Release Date: 2019-10-12
+* Release Date: ?
 
 **Requires minimum Geeklog version 2.2.0 and MySQL 4.1+**
 

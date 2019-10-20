@@ -97,7 +97,7 @@ function display_smilies() {
 
     $baseurl = $CONF_MSG['SMILIE_URL'];
     $query = DB_query("SELECT smilie_id,code,smile_url,emoticon FROM {$_TABLES['smilies']} ORDER BY smilie_id");
-    $header = new Template($_CONF['path_layout'] . '/messenger/admin');
+    $header = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
     $header->set_file(array('header' => 'smiliedisp_header.thtml'));
     $header->set_var('help_msg', $LANG_MSG02['HELPMSG1']);
     $header->set_var('phpself', $phpself);
@@ -110,7 +110,7 @@ function display_smilies() {
 
     while (list($smilie_id, $code, $smile_url, $emoticon) = DB_fetchARRAY($query)) {
         $cssid = $smilie_id % 2 + 1;
-        $row = new Template($_CONF['path_layout'] . '/messenger/admin');
+        $row = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
         $row->set_file(array('row' => 'smiliedisp_row.thtml'));
         $row->set_var('phpself', $phpself);
         $row->set_var('cssid', $cssid);
@@ -133,7 +133,7 @@ function add_smilie() {
 
     $currentsmilie = $CONF_MSG['SMILIE_URL'] .'icon_smile.gif';
     $smilies_select = fill_smilieSelect();
-    $addsmilie = new Template($_CONF['path_layout'] . '/messenger/admin');
+    $addsmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
     $addsmilie->set_file (array ('addsmilie'=>'addsmilie.thtml'));
     $addsmilie->set_var ('phpself', $phpself);
     $addsmilie->set_var ('smilies_select',$smilies_select);
@@ -165,7 +165,7 @@ function edit_smilie($id) {
 
     $smilies_select = fill_smilieSelect($smile_url);
 
-    $editsmilie = new Template($_CONF['path_layout'] . '/messenger/admin');
+    $editsmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
     $editsmilie->set_file (array ('editsmilie'=>'editsmilie.thtml'));
     $editsmilie->set_var ('phpself', $phpself);
     $editsmilie->set_var ('smilies_select',$smilies_select);

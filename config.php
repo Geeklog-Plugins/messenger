@@ -42,7 +42,7 @@
 
 global $_DB_table_prefix;
 
-$CONF_MSG['version']             = '1.9.0';
+$CONF_MSG['version']             = '1.9.1';
 
 $CONF_MSG['SMILIE_PATH']         = $_CONF['path_html'] . '/images/smilies/';
 $CONF_MSG['SMILIE_URL']          = $_CONF['site_url'] . '/images/smilies/';

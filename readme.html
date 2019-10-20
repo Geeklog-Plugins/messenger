@@ -1,8 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN"
+    "http://www.w3.org/TR/REC-html40/strict.dtd">
+
+<html>
 <head>
-<meta charset="utf-8"></meta>
+
 <!-- The embedded style sheet below controls the look and feel of the document. All display fonts are sans-serif, and headings are bold. You can change the styles to suit your needs, or replace them with a link to an external style sheet. -->
+
 <style type="text/css">
 body {
     margin-left: 20px;
@@ -81,17 +84,20 @@ li {
     font-size:small;
     font-weight:normal;
 }
+
 </style>
+
 <title>Portalparts plugin Installation Guide</title>
 </head>
 
 <body>
 <a name="_top"></a>
 <h1>Geeklog Plugins by Portalparts - www.portalparts.com</h1>
-<h2>glMessenger plugin - version 1.9.0</h2>
-<h3>Author: Blaine Lang <span class="email">< blaine@portalparts.com ></span></h3>
-<h3>Current Maintainers: [Geeklog Community Members](https://github.com/orgs/Geeklog-Plugins/people)</h3>
-<h3>Date: Oct 12, 2019</h3>
+<h2>glMessenger plugin - version 1.9.1</h2>
+<h3>Author: Blaine Lang <span class="email">&lt; blaine@portalparts.com &gt;</span></h3>
+<h3>Current Maintainers: <a href="https://github.com/orgs/Geeklog-Plugins/people">Geeklog Community Members</a></h3>
+<h3>Date: April 8, 2007</h3>
+<h3>Updaed: Oct 20, 2019</h3>
 <h4>Requires minimum Geeklog version 2.2.0.</h4>
 
 <!-- This document is essentially a "cover page," describing what the chapter is about. It also contains links to other sections -->
@@ -114,7 +120,7 @@ li {
 <ul>
     <li><a href="#_installation">New installation</a></li>
     <li><a href="#_update">Upgrading from previous version</a></li>
-    <li><a href="#_profile">Extending the account profile templates</a></li>
+    <li><a href="#_profile"><del>Extending the account profile templates</del></a></li>
 </ul>
 
 
@@ -144,11 +150,14 @@ li {
 </ul>
 </p>
 
+<del>
 <p>Step 4 - Copy the the required theme files
 <ul>
 <li>Copy the directory called <b>messenger</b> and contents from the new plugin's themefiles directory to your sites theme's directory. Assuming your site is running the <i>professional</i> theme this  would be <i>public_html/layout/professional</i> directory where you would copy the messenger template theme files - creating the new messenger folder under <i>public_html/layout/professional</i> </li>
 </ul>
 </p>
+</del>
+<ins>Step 4 is no longer necessary as of Messenger plugin v1.9.1</ins>
 
 <p>Step 5 - Update your theme's style.css file
 <ul>
@@ -162,11 +171,15 @@ li {
 <p>Copy the directory called <b>smilies</b> and contents from the new plugin's directory to your sites <i>public_html/images</i> directory. </p> </li>
 </ul>
 
+<del>
 <p>Step 7 - Update or copy the lib-portalparts.php file
 <ul>
 <li>The plugins from portalparts use a number of common functions that are placed in the lib-portalparts.php file. Copy the file from the plugin archive to your system folder where there are other lib-xxxxx.php files
 </ul>
 </p>
+</del>
+<ins>Step 7 is no longer necessary as of Messenger plugin v1.9.1</ins>
+
 
 <p>Step 8 - Run the plugin install
 <ul>
@@ -219,9 +232,11 @@ li {
 
 <div style="margin:10px 0px 20px 10px;"><a href="#_top">Goto Top</a></div>
 
-
+<del>
 <p class="sectionheading" style="margin-bottom:0px;"><a name="_profile">3) Extending the User Profile and Preferences</a></p>
 <p>For updated installation notes on how to extend the user account preferences allowing a user to control the email notification settings and add the Buddy Admin quick links to the member profile page, refer to the wiki on the www.portalparts.com site <a href="http://www.portalparts.com/dokuwiki/doku.php?id=glmessenger">here</a></p>
+</del>
+<ins>The section above is no longer valid as of Messenger plugin v1.9.1</ins>
 
 
 

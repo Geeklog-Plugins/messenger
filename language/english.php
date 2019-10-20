@@ -88,6 +88,7 @@ $LANG_MSG  = array(
     'ARCHIVEBOX'        => 'Archive',
     'REMOVE'            => 'Delete this message',
     'SUBMIT'            => 'Submit',
+    'CANCEL'            => 'Cancel',
     'PREVIEW'           => 'Preview',
     'MESSAGE'           => 'Message',
     'MEMBERS'           => 'Members',
@@ -107,6 +108,7 @@ $LANG_MSG  = array(
     'ADDBUDDY'          => 'Add Buddy',
     'DELBUDDY'          => 'Delete Buddy',
     'HOME'              => 'Home',
+    'SETTINGS'          => 'Settings',
     'prompt01'          => 'the page does not automatically reload, please click <a href=%s>here</a>',
     'prompt02'          => '* Broadcast message. Only originator or Admin can delete.<br>&nbsp;Delete will remove all copies.',
     'prompt02b'         => '* Broadcast message. Only originator or Admin can delete.',
@@ -134,7 +136,9 @@ $LANG_MSG  = array(
     'help_notifications'       => 'Enable email notifications for new Private Messages or subscribed updates',
     'lang_sitenotifications'   => 'Messenger as default',
     'help_sitenotifications'   => 'Send all notifications to my Messenger inbox',
-    'outboxmsg'         => 'Outbox messages can not be deleted. They represent the messages still in receipient\'s INBOX.'
+    'outboxmsg'         => 'Outbox messages can not be deleted. They represent the messages still in receipient\'s INBOX.',
+    'show_smilies'      => 'Show Smilies',
+    'hide_smilies'      => 'Hide Smilies',
 );
 
 

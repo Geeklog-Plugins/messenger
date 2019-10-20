@@ -111,7 +111,7 @@ function editbuddies() {
     $lang_archivebox  = $LANG_MSG['ARCHIVEBOX'] . "&nbsp;($archiveCnt)";
 
     $retval = COM_startBlock($LANG_MSG04['MAINHEADER'] , '', COM_getBlockTemplate('_admin_block', 'header'));
-    $buddymembers = new Template($_CONF['path_layout'] . 'messenger');
+    $buddymembers = COM_newTemplate(CTL_plugin_templatePath('messenger'));
     $buddymembers->set_file(array('buddymembers'=>'msg_buddyadmin.thtml'));
     $buddymembers->set_var('site_url', $_CONF['site_url']);
     $buddymembers->set_var('actionurl', $_CONF['site_url'] .'/messenger/index.php');

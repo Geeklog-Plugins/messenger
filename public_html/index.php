@@ -185,23 +185,32 @@ if ($action === 'delall') {
     }
 
     while (list($id) = DB_fetchARRAY($delquery)) {
-        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}') AND ((target_uid = '{$_USER[uid]}') OR target_uid = '0')");
+        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}') AND ((target_uid = '{$_USER['uid']}') OR target_uid = '0')");
         if (DB_count($_TABLES[messenger_dist], 'msg_id', $id) == 0) {
             DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = '{$id}')");
         }
     }
 } elseif ($action === 'addbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
-    DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ('{$_USER[uid]}', '{$buddy}')");
+    DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ('{$_USER['uid']}', '{$buddy}')");
     if ($_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
 } elseif ($action === 'delbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
-    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid='{$_USER[uid]}' AND buddy_id = '{$buddy}'");
+    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid='{$_USER['uid']}' AND buddy_id = '{$buddy}'");
     if ($_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
+} elseif ($action === 'save_settings') {
+    $option1 = (int) Input::fPost('msg_opt1', 0);
+    $option2 = (int) Input::fPost('msg_opt2', 0);
+    $option3 = (int) Input::fPost('msg_opt3', 0);
+    DB_query(
+        "UPDATE {$_TABLES['messenger_userinfo']} SET broadcasts = {$option1}, notifications = {$option2}, sitepreference = {$option3} "
+        . "WHERE uid = {$_USER['uid']}"
+    );
+    COM_redirect($_CONF['site_url'] . '/messenger/index.php');
 }
 
 // Display the Top Tool Bar
@@ -245,7 +254,7 @@ $lang_outbox      = $LANG_MSG['OUTBOX'] . "&nbsp;({$outboxCnt})";
 $lang_sentbox     = $LANG_MSG['SENTBOX'] . "&nbsp;({$sentCnt})";
 $lang_archivebox  = $LANG_MSG['ARCHIVEBOX'] ."&nbsp;({$archiveCnt})";
 
-$msg_main = new Template($_CONF['path_layout'] . '/messenger');
+$msg_main = COM_newTemplate(CTL_plugin_templatePath('messenger'));
 $msg_main->set_file(array(
     'msg_main'   => 'msg_main.thtml',
     'msg_navbar' => 'msg_mainoptions.thtml'
@@ -338,6 +347,7 @@ $msg_main->set_var('message', $LANG_MSG['MESSAGE']);
 $msg_main->set_var('options', $LANG_MSG['OPTIONS']);
 $msg_main->set_var('curfolder', $folder);
 $msg_main->set_var('LANG_newmsghelp', $LANG_MSG['newmsghelp']);
+$msg_main->set_var('LANG_SETTINGS', $LANG_MSG['SETTINGS']);
 $msg_main->set_var('rows', @$rows);
 
 if ($folder === 'SENT') {
@@ -374,17 +384,20 @@ if ($action !== 'newpm' && $mode !== 'newpm') {
 
 $archive = '';
 $delete = '';
+$footernote = '';
 $msg_main->parse('output', 'msg_main');
 echo $msg_main->finish($msg_main->get_var('output'));
 
 if ($action === 'newpm' || $mode === 'newpm') {
     if (isset($_POST['subject'])) {
         $subject = $_POST['subject'];
-    } elseif (isset($replyid) && $replyid != '') {
+    } elseif (!empty($replyid)) {
         $subject = DB_getItem($_TABLES['messenger_msg'], 'subject', "id = '{$replyid}'");
         if (strpos($subject, $LANG_MSG['RE']) ===  false) {
             $subject = $LANG_MSG['RE'] . "&nbsp;{$subject}";
         }
+    } else {
+        $subject = '';
     }
 
     $buddies = '';
@@ -404,7 +417,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
         }
     }
 
-    $msg_new = new Template($_CONF['path_layout'] . '/messenger');
+    $msg_new = COM_newTemplate(CTL_plugin_templatePath('messenger'));
     $msg_new->set_file(array('msg_new' => 'msg_new.thtml'));
     $rows = '';
 
@@ -426,7 +439,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
             $subject = stripslashes($subject);
         }
         
-        $msg_row = new Template($_CONF['path_layout'] . '/messenger');
+        $msg_row = COM_newTemplate(CTL_plugin_templatePath('messenger'));
         $msg_row->set_file(array('msg_row' => 'msg_row.thtml'));
         $msg_row->set_var('LANG_subject', $LANG_MSG['SUBJECT']);
         $msg_row->set_var('subject', $subject);
@@ -482,12 +495,43 @@ if ($action === 'newpm' || $mode === 'newpm') {
     $msg_new->set_var('message', $LANG_MSG['MESSAGE']);
     $msg_new->set_var('replyid' , $replyid);
     $msg_new->set_var('endblock', COM_endBlock());
+    $msg_new->set_var('show_smilies', $LANG_MSG['show_smilies']);
+    $msg_new->set_var('hide_smilies', $LANG_MSG['hide_smilies']);
     $msg_new->parse('output', 'msg_new');
     echo $msg_new->finish($msg_new->get_var('output'));
+} elseif ($action === 'settings') {
+    $uid = (int) $_USER['uid'];
+
+    if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
+        DB_save($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+    }
+
+    $result = DB_query(
+        "SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} "
+        . "WHERE uid = $uid"
+    );
+    list($option1, $option2, $option3) = DB_fetchArray($result);
+    $T = COM_newTemplate(CTL_plugin_templatePath('messenger'));
+    $T->set_file(array('settings' => 'msg_settings.thtml'));
+    $T->set_var(array(
+        'action'                      => $_CONF['site_url'] . '/messenger/index.php?action=save_settings',
+        'option1'                     => (empty($option1) ? '' : ' checked="checked"'),
+        'option2'                     => (empty($option2) ? '' : ' checked="checked"'),
+        'option3'                     => (empty($option3) ? '' : ' checked="checked"'),
+        'lang_title'                  => $LANG_MSG['SETTINGS'],
+        'lang_broadcasts'             => $LANG_MSG['lang_broadcasts'],
+        'lang_help_broadcasts'        => $LANG_MSG['help_broadcasts'],
+        'lang_notifications'          => $LANG_MSG['lang_notifications'],
+        'lang_help_notifications'     => $LANG_MSG['help_notifications'],
+        'lang_sitenotifications'      => $LANG_MSG['lang_sitenotifications'],
+        'lang_help_sitenotifications' => $LANG_MSG['help_sitenotifications'],
+        'lang_submit'                 => $LANG_MSG['SUBMIT'],
+        'lang_cancel'                 => $LANG_MSG['CANCEL'],
+    ));
+    $T->parse('output', 'settings');
+    echo $T->finish($T->get_var('output'));
 } else {
     if ($mode == '') {
-        $footernote = '';
-
         switch ($folder) {
             case 'SENT' :
                 if (empty($replyid)) {
@@ -544,7 +588,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                 $reply = '';
                 $archive = '';
 
-                $msg_row = new Template($_CONF['path_layout'] . '/messenger');
+                $msg_row = COM_newTemplate(CTL_plugin_templatePath('messenger'));
                 $msg_row->set_file(array('msg_row' => 'msg_row.thtml'));
                 $msg_row->set_var('imgset', $CONF_MSG['imgset'] );
                 $msg_row->set_var('spacing', '1');
@@ -702,7 +746,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
 }
 
 if ($action !== 'newpm' && $mode !== 'newpm') {
-    $msg_footer = new Template($_CONF['path_layout'] . '/messenger');
+    $msg_footer = COM_newTemplate(CTL_plugin_templatePath('messenger'));
     $msg_footer->set_file(array('msg_footer' => 'msg_footer.thtml'));
     $msg_footer->set_var('pagenavigation', COM_printPageNavigation($base_url, $page, $numpages));
 

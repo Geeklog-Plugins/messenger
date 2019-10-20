@@ -1,0 +1,41 @@
+<h3>{lang_title}</h3>
+
+<form action="{action}" method="post">
+  <table>
+    <tr>
+      <th>
+        {lang_broadcasts}
+      </th>
+      <td>
+        <input type="checkbox" id="msg_opt1" name="msg_opt1" value="1"{option1}{xhtml}>
+        <label for="msg_opt1">{lang_help_broadcasts}</label>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        {lang_notifications}
+      </th>
+      <td>
+        <input type="checkbox" id="msg_opt2" name="msg_opt2" value="1"{option2}{xhtml}>
+        <label for="msg_opt2">{lang_help_notifications}</label>
+      </td>
+    </tr>
+
+    <tr>
+      <th>
+        {lang_sitenotifications}
+      </th>
+      <td>
+        <input type="checkbox" id="msg_opt3" name="msg_opt3" value="1"{option3}{xhtml}>
+        <label for="msg_opt3">{lang_help_sitenotifications}</label>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2">
+        <input type="submit" name="sumit" value="{lang_submit}"{xhtml}>
+      </td>
+    </tr>
+  </table>
+</form>

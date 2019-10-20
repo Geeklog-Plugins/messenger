@@ -135,54 +135,12 @@ function plugin_user_delete_messenger($uid)
     DB_query("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = '{$uid}'");
 }
 
-function plugin_profilevariablesedit_messenger($uid, &$template)
-{
-    global $_TABLES, $LANG_MSG, $CONF_MSG;
-    
-    $uid = (int) $uid;
-    if ($uid <= 1) {
-        return;
-    }
-
-    if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
-        DB_save($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
-    }
-
-    $result = DB_query(
-        "SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} "
-        . "WHERE uid = $uid"
-    );
-    list($option1, $option2, $option3) = DB_fetchArray($result);
-
-    if ($option1) {
-        $template->set_var('msgoption1_checked', 'CHECKED');
-    } else {
-        $template->set_var('msgoption1_checked', '');
-    }
-    
-    if ($option2) {
-        $template->set_var('msgoption2_checked', 'CHECKED');
-    } else {
-        $template->set_var('msgoption2_checked', '');
-    }
-    
-    if ($option3) {
-        $template->set_var('msgoption3_checked', 'CHECKED');
-    } else {
-        $template->set_var('msgoption3_checked', '');
-    }
-    
-    $template->set_var('messenger_option1', $option1);
-    $template->set_var('lang_messengeroption1', $LANG_MSG['lang_broadcasts']);
-    $template->set_var('lang_messengerhelp1', $LANG_MSG['help_broadcasts']);
-    $template->set_var('messenger_option2', $option2);
-    $template->set_var('lang_messengeroption2', $LANG_MSG['lang_notifications']);
-    $template->set_var('lang_messengerhelp2', $LANG_MSG['help_notifications']);
-    $template->set_var('messenger_option3', $option3);
-    $template->set_var('lang_messengeroption3', $LANG_MSG['lang_sitenotifications']);
-    $template->set_var('lang_messengerhelp3', $LANG_MSG['help_sitenotifications']);
-}
-
+/**
+ * Called by PLG_profilevariablesdisplay just before displaying a user's profile
+ *
+ * @param  int      $uid
+ * @param  Template $template
+ */
 function plugin_profilevariablesdisplay_messenger($uid, $template)
 {
     global $_USER, $_CONF, $_TABLES, $LANG_MSG;
@@ -191,44 +149,19 @@ function plugin_profilevariablesdisplay_messenger($uid, $template)
 
     if (isset($_USER['uid']) && ($_USER['uid'] > 1) && ($_USER['uid'] != $uid)) {
         if (DB_count($_TABLES['messenger_buddies'], array('uid', 'buddy_id'), array($_USER['uid'], $uid)) > 0) {
-            $template->set_var('LANG_favorites', $LANG_MSG['MSGFAVORITES']);
-            $template->set_var(
-                'favorites_link',
-                '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=delbuddy&amp;buddy=' . $uid
-                    . '&amp;fromprofile=1">' . $LANG_MSG['DELBUDDY'] . '</a>'
-            );
+            $field = '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=delbuddy&amp;buddy=' . $uid
+                   . '&amp;fromprofile=1">' . $LANG_MSG['DELBUDDY'] . '</a>';
         } else {
-            $template->set_var('LANG_favorites', $LANG_MSG['MSGFAVORITES']);
-            $template->set_var(
-                'favorites_link',
-                '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=addbuddy&amp;buddy=' . $uid
-                    . '&amp;fromprofile=1">' . $LANG_MSG['ADDBUDDY'] . '</a>'
-            );
+            $field = '<a href="' . $_CONF['site_url'] . '/messenger/index.php?action=addbuddy&amp;buddy=' . $uid
+                   . '&amp;fromprofile=1">' . $LANG_MSG['ADDBUDDY'] . '</a>';
         }
-    }
-}
 
-function plugin_profileextrassave_messenger()
-{
-    global $_USER, $_TABLES;
-    
-    $uid = (int) $_USER['uid'];
-    if (empty($uid)) {
-        $uid = DB_getItem($_TABLES['users'], "uid", "username = '{$_POST['username']}'");
+        $template->set_var(array(
+            'lang_field' => $LANG_MSG['MSGFAVORITES'],
+            'field'      => $field,
+        ));
+        $template->parse('display_fields', 'display_field', true);
     }
-    
-    $msgOpt1 = Input::post('msg_opt1', '');
-    $msgOpt2 = Input::post('msg_opt2', '');
-    $msgOpt3 = Input::post('msg_opt3', '');
-    $msgOpt1 = DB_escapeString($msgOpt1);
-    $msgOpt2 = DB_escapeString($msgOpt2);
-    $msgOpt3 = DB_escapeString($msgOpt3);
-    
-    DB_save(
-        $_TABLES['messenger_userinfo'],
-        "uid, broadcasts, notifications, sitepreference",
-        "'{$uid}', '{$msgOpt1}', '{$msgOpt2}', '{$msgOpt3}'"
-    );
 }
 
 /**
@@ -422,6 +355,8 @@ function msg_showsmilies() {
     }
 
     // Now build the HTML to return with the smilie images and help line when you hover over image
+    $smilies = '';
+
     foreach ($arr_emoticons as $key => $smilie) {
         $pos1 = strpos($smilie['code'], '=>') + 3;
         $pos2 = strpos($smilie['code'], ',', $pos1);
@@ -433,8 +368,8 @@ function msg_showsmilies() {
             $code = substr($smilie['code'], $pos1);
         }
 
-        $smilies = '<a href="javascript:emoticon(\'' . $code . '\')"><img align=absmiddle  vspace="1" src="'
-            . $baseurl . $key . '" alt="' . $smilie['code'] . '" title="' . $smilie['code'] . '" border="0"></a> ';
+        $smilies .= '<a href="javascript:emoticon(\'' . $code . '\')"><img style="border-width: 0;" src="'
+            . $baseurl . $key . '" alt="' . $smilie['code'] . '" title="' . $smilie['code'] . '"></a> ';
     }
 
     return $smilies;
