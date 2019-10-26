@@ -83,7 +83,7 @@ $replyid = msg_cleandata(Input::request('replyid', 0));
 $userBlockBrdcast = DB_getItem($_TABLES['messenger_userinfo'],"broadcasts", "uid='{$uid}'");
 $phpself = $_CONF['site_url'] . '/messenger/index.php';
 
-/* Begin main logic */
+// Begin main logic
 ob_start();
 
 if ($mode === 'newpm' && $_POST['submit'] == $LANG_MSG['SUBMIT']) {

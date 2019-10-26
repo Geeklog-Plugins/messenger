@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="../docstyle.css" rel="stylesheet" type="text/css">
+	<title>Geeklog Messenger plugin</title>
+</head>
+
+<body>
+	<h1>Install/Uninstall instruction for the Geeklog Messenger plugin</h1>
+
+	<p>In the following descriptions</p>
+	<ul>
+		<li><span class="geeklog">&lt;geeklog_dir&gt;</span> is the directory where the system config.php file resides</li>
+		<li><span class="public">&lt;public_html&gt;</span> is the directory where the lib-common.php file resides</li>
+		<li><span class="admin">&lt;admin&gt;</span> is the directory where the administration files reside (usually, under <span class="public">&lt;public_html&gt;</span>)</li>
+	</ul>
+
+	<h2>INSTALL:</h2>
+
+	<ol>
+		<li>Back up your Geeklog Database.  The messenger plugin adds tables to your Geeklog database.  You can do this with the built in admin backup facility.</li>
+		<li>Uncompress the messenger plugin archive while in the <span class="geeklog">&lt;geeklog_dir&gt;</span>/plugins directory.  The archive will create a directory called messenger in the plugins directory.</li>
+		<li>Create the public_html and admin directories.  Under your html directory (usually <span class="public">&lt;public_html&gt;</span>) create a directory called messenger.  Under your <span class="admin">&lt;admin&gt;</span>/plugins/ directory create a directory called messenger.</li>
+		<li>Change to your <span class="geeklog">&lt;geeklog_dir&gt;</span>/plugins/messenger/ directory.  Copy the files in the admin directory to the <span class="admin">&lt;admin&gt;</span>/plugins/messenger/ directory your created in step 3.  Copy the files and directories in the public_html directory to the <span class="public">&lt;public_html&gt;</span>/messenger/ directory your created in step 3.</li>
+		<li>Edit the config.php in the messenger directory and confirm the table prefix and anonymous access settings and other display settings.  The default is to use the geeklog table prefix and not allow anonymous access.</li>
+		<li>Log in to your Geeklog as a root user and run install.php in your <span class="admin">&lt;admin&gt;</span>/plugins/messenger/ directory.  The install page will tell you if the install was successful or not.  If not, examine Geeklog system errorlog for possible problems.  The messenger plugin should now be installed and functioning.  Clicking on the messenger Icon will take you to the admin page.</li>
+		<li>Set up security.  On install only the root users have access to messenger administration and Viewing.  You can delegate control for either of these functions through the user and group editors.</li>
+	</ol>
+
+	<h2>UNINSTALL:</h2>
+
+	<ol>
+		<li>Run the install.php page in your <span class="admin">&lt;admin&gt;</span>/plugins/messenger directory.  This will remove all the data from your database.</li>
+		<li>Delete the three plugin directories created in the install process:  <span class="geeklog">&lt;geeklog-dir&gt;</span>/plugins/messenger/, <span class="public">&lt;public_html&gt;</span>/messenger/ and <span class="admin">&lt;admin&gt;</span>/plugins/messenger/</li>
+	</ol>
+
+	<p>That's it.</p>
+
+</body>
+</html>

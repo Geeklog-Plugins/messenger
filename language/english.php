@@ -39,27 +39,6 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
-
-$LANG_MSG00 = array (
-    'usermenu'          => 'Private Messages',
-    'plugin'            => 'Plugin',
-    'access_denied'     => 'Access Denied',
-    'access_denied_msg' => 'Only Root Users have Access to this Page.  Your user name and IP have been recorded.',
-    'admin'             => 'Plugin Admin',
-    'install_header'    => 'Install/Uninstall Plugin',
-    'installed'         => 'The glMessenger Plugin and Smilie Editor are now installed.<p />Next Steps:<br>1) Update your Theme(s) and CSS as per the install notes<br>2) Create a notification.log file if you want to log notifications<p><i>Enjoy,<br><a href="MAILTO:langmail@sympatico.ca">Blaine</a></i>',
-    'uninstalled'       => 'The Plugin is Not Installed',
-    'install_success'   => 'Installation Successful', 
-    'install_failed'    => 'Installation Failed -- See your error log to find out why.',
-    'uninstall_msg'     => 'Plugin Successfully Uninstalled',
-    'install'           => 'Install',
-    'uninstall'         => 'Remove',
-    'enabled'           => '<br>Plugin is installed and enabled.<br>Disable first if you want to De-Install it.<p>',
-    'warning'           => 'Messenger De-Install Warning',
-    'editor'            => 'Return to Plugin Editor',
-
-);
 
 $LANG_MSG  = array(
     'err01'             => 'Access not permitted to this feature',
@@ -139,62 +118,100 @@ $LANG_MSG  = array(
     'outboxmsg'         => 'Outbox messages can not be deleted. They represent the messages still in receipient\'s INBOX.',
     'show_smilies'      => 'Show Smilies',
     'hide_smilies'      => 'Hide Smilies',
+    'usermenu'          => 'Messenger',
 );
-
 
 // Language used for Notification Feature
 $LANG_MSG01 = array (
-    'HELLO'          => "Hello",
-    'ADMIN'          => "Site Administrator",
-    'SUBJECT'        => "- New Private Message Notifiction",
-    'BROADCAST'      => "- Broadcast Message Notifiction",
-    'LINE1'          => "You have a new Private message from fellow site member: %s\nSubject:%s",
-    'LINE1B'         => "There is a new broadcast message waiting in your private message area from: %s\nSubject: %s",
-    'LINE2'          => "\n \nYou are receiving this because you requested to be notified of any new Private Messages.\n\n",
-    'LINE3'          => "Have a great day!\n"
+    'HELLO'     => "Hello",
+    'ADMIN'     => "Site Administrator",
+    'SUBJECT'   => "- New Private Message Notifiction",
+    'BROADCAST' => "- Broadcast Message Notifiction",
+    'LINE1'     => "You have a new Private message from fellow site member: %s\nSubject:%s",
+    'LINE1B'    => "There is a new broadcast message waiting in your private message area from: %s\nSubject: %s",
+    'LINE2'     => "\n \nYou are receiving this because you requested to be notified of any new Private Messages.\n\n",
+    'LINE3'     => "Have a great day!\n"
 );
 
 // Language used for Admin screens
 $LANG_MSG02 = array (
-    'BLOCKHEADER'     => "Smilie Administration",
-    'IMAGE'           => "Image",
-    'CODE'            => "Emoticon",
-    'DESCRIPTION'     => "Description",
-    'ADDSMILIE'       => "Add Smilie",
-    'EDIT'            => "Edit",
-    'DELETE'          => "Delete",
-    'ADDPROMPT'       => "Add New Smilie",
-    'ADDSUBMIT'       => "Add New Smilie",
-    'EDITPROMPT'      => "Edit Smilie",
-    'EDITSUBMIT'      => "Update Smilie",
-    'FILENAME'        => "Image Filename",
-    'EDIT'            => "Edit",
-    'HELPMSG1'        => 'You are able to Add, Edit or Delete the allowable smilies. It is possible to have multiple emoticons for a single smilie image. To add a new smilie, upload the image to your smilie images directory on you server and use Add link to add a new emoticon record. Use Edit to change the emoticon or change the assigned image.'
+    'BLOCKHEADER' => 'Smilie Administration',
+    'IMAGE'       => 'Image',
+    'CODE'        => 'Emoticon',
+    'DESCRIPTION' => 'Description',
+    'ADDSMILIE'   => 'Add Smilie',
+    'EDIT'        => 'Edit',
+    'DELETE'      => 'Delete',
+    'ADDPROMPT'   => 'Add New Smilie',
+    'ADDSUBMIT'   => 'Add New Smilie',
+    'EDITPROMPT'  => 'Edit Smilie',
+    'EDITSUBMIT'  => 'Update Smilie',
+    'FILENAME'    => 'Image Filename',
+    'EDIT'        => 'Edit',
+    'HELPMSG1'    => 'You are able to Add, Edit or Delete the allowable smilies. It is possible to have multiple emoticons for a single smilie image. To add a new smilie, upload the image to your smilie images directory on you server and use Add link to add a new emoticon record. Use Edit to change the emoticon or change the assigned image.'
 );
 
 // Language used for Sortby Filter in main message view
 $LANG_MSG03 = array (
-    'BUDDYADMIN'  => "Buddy Admin",
-    'SORTBY'      => "Sorted by",
-    'OLDFIRST'    => "Oldest First",
-    'NEWFIRST'    => "Newest First",
-    'MEMBER'      => "Member Name"
+    'BUDDYADMIN' => 'Buddy Admin',
+    'SORTBY'     => 'Sorted by',
+    'OLDFIRST'   => 'Oldest First',
+    'NEWFIRST'   => 'Newest First',
+    'MEMBER'     => 'Member Name'
 );
 
 // Language used in the Buddy Admin screen
 $LANG_MSG04 = array (
-    'MAINHEADER'      => "Buddy Administration",
-    'HEADER1'         => "Available Members",
-    'HEADER2'         => "My Buddies",
-    'ADD'             => "Add",
-    'REMOVE'          => "Remove",
-    'CANCEL'          => "Cancel",
-    'SAVE'           => "Save"
+    'MAINHEADER' => 'Buddy Administration',
+    'HEADER1'    => 'Available Members',
+    'HEADER2'    => 'My Buddies',
+    'ADD'        => 'Add',
+    'REMOVE'     => 'Remove',
+    'CANCEL'     => 'Cancel',
+    'SAVE'       => 'Save'
 );
-
 
 // Language used to send message to new members - intro message
 $LANG_MSG05 = array (
-    'subject'     => "Welcome to my site!",
-    'message'     => "Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>"
+    'subject' => 'Welcome to my site!',
+    'message' => 'Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>'
+);
+
+// Localization of the Admin Configuration UI
+$LANG_configsections['messenger'] = array(
+    'label' => 'Messenger',
+    'title' => 'Messenger Configuration',
+);
+
+$LANG_confignames['messenger'] = array(
+    'debug'                 => 'Debug request vars',
+    'smiliesEnabled'        => 'Display smilies in Messenger',
+    'RestrictedAccess'      => 'Only allow access with messenger.user access right',
+    'messagedelay'          => 'Message delay in milliseconds',
+    'automsg'               => 'Show message automatically',
+    'notification'          => 'Enable site notifications of Private messages',
+    'mailoff'               => 'Disable outgoing mail notifications',
+    'RootBdcastNotificaton' => 'Notifications should also be sent out for Broadcast message',
+    'newmember'             => 'Send out a PM to new members upon signup',
+    'USER_PMBLOCK'          => 'Users should not receive broadcast messages',
+    'USER_NOTIFY'           => 'User should receive email notifications of new PM\'s by default',
+    'USER_INBOX'            => 'All system and plugin notifications should be sent to users INBOX',
+);
+
+$LANG_configsubgroups['messenger'] = array(
+    'sg_main' => 'Main Settings',
+);
+
+$LANG_tab['messenger'] = array(
+    'tab_main' => 'Messenger Settings',
+);
+
+$LANG_fs['messenger'] = array(
+    'fs_main'  => 'Main Settings',
+);
+
+// Note: entries 0, 1, 9, and 12 are the same as in $LANG_configselects['Core']
+$LANG_configselects['messenger'] = array(
+    0 => array('Yes' => 1, 'No' => 0),
+    1 => array('Yes' => true, 'No' => false),
 );

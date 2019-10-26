@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html lang="ja">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="Content-Style-Type" content="text/css">
+	<link href="../docstyle.css" rel="stylesheet" type="text/css">
+	<title>Geeklog Messengerプラグイン</title>
+</head>
+
+<body>
+	<h1>Geeklog Messenger プラグインのインストール/アンインストール</h1>
+
+	<h2>インストール:</h2>
+	
+	<p>以下の説明で，</p>
+	<ul>
+		<li><span class="geeklog">&lt;geeklog_dir&gt;</span>は，システムの config.php が存在するディレクトリ</li>
+		<li><span class="public">&lt;public_html&gt;</span>は，lib-common.php が存在するディレクトリ</li>
+		<li><span class="admin">&lt;admin&gt;</span>は，管理者用ファイルが存在するディレクトリ（ふつうは，<span class="public">&lt;public_html&gt;</span>ディレクトリの下）</li>
+	</ul>
+	<p>を表しています。</p>
+
+	<ol>
+		<li>messenger プラグインはテーブルを追加するので，管理者メニューの「DBのバックアップ」やphpMyAdminを使用して，事前にGeeklogのデータベースをバックアップしておきます。</li>
+		<li>messengerプラグインのアーカイブを<span class="geeklog">&lt;geeklog_dir&gt;</span>/pluginsディレクトリに展開します。messengerという名前のディレクトリができます。</li>
+		<li>public_htmlディレクトリとadminディレクトリを作ります。htmlファイルを納めるディレクトリ（普通は <span class="public">&lt;public_html&gt;</span>）の下に，messengerという名前のディレクトリを作ります。<span class="admin">&lt;admin&gt;</span>/plugins/ ディレクトリの下にも messengerという名前のディレクトリを作ります。</li>
+		<li><span class="geeklog">&lt;geeklog_dir&gt;</span>/plugins/messenger/ ディレクトリに移動します。adminディレクトリの内容を，3.で作成した <span class="admin">&lt;admin&gt;</span>/plugins/messenger/ ディレクトリにコピーします。public_htmlディレクトリの内容を，3.で作成した <span class="public">&lt;public_html&gt;</span>/messenger/ ディレクトリにコピーします。</li>
+		<li>messengerディレクトリの config.php ファイルを編集し，データベースのテーブルのプレフィックスとゲストユーザーのアクセス権，表示設定などを確認します。デフォルトでは，Geeklogのテーブルのプレフィックスを使用し，ゲストユーザーのアクセスを認めないようになっています。</li>
+		<li>Rootユーザーとしてログインし，プラグインエディタからインストールを実行します。失敗した場合には，エラーログ（error.log）を調べます。この時点で，messenger プラグインはインストールされ，機能しているはずです。messenger アイコンをクリックすると，管理機能ページへジャンプするでしょう。</li>
+		<li>セキュリティを設定します。インストール直後には，messengerプラグインの管理権限を持っているのは，Rootユーザーだけです。ユーザーエディタやグループエディタを使用して，管理権限を他の人やグループに委譲することができます</li>
+	</ol>
+
+	<h2>アンインストール:</h2>
+
+	<ol>
+		<li>プラグインエディタから，messenger プラグインをアンインストールします。このとき，messengerプラグインが使用していたテーブルは破棄され，その中に記録されていたデータも削除されます。</li>
+		<li>インストールの過程で作成した3つのディレクトリ（<span class="geeklog">&lt;geeklog-dir&gt;</span>/plugins/messenger/ <span class="public">&lt;public_html&gt;</span>/messenger/ and <span class="admin">&lt;admin&gt;</span>/plugins/messenger/ を削除します。</li>
+	</ol>
+
+	<p>これでおしまいです。</p>
+
+</body>
+</html>

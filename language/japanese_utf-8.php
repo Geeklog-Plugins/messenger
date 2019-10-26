@@ -1,6 +1,5 @@
 <?php
 
-/* Reminder: always indent with 4 spaces (no tabs). */
 // +-----------------------------------------------------------------------------+
 // | glMessenger Plugin 1.0 for Geeklog- The Ultimate OSS Portal                 |
 // | Date: November 15, 2003                                                     |
@@ -40,40 +39,19 @@
 // | Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             |
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
-//
-
-$LANG_MSG00 = array (
-    'usermenu'          => 'メッセンジャー',
-    'plugin'            => 'プラグイン',
-    'access_denied'     => 'アクセスが拒否されました。',
-    'access_denied_msg' => 'このページにアクセスできるのはRootユーザーだけです。あなたのユーザー名とIPアドレスは記録されました。',
-    'admin'             => 'プラグイン管理者',
-    'install_header'    => 'プラグインのインストール/アンインストール',
-    'installed'         => 'glMessengerプラグインとSmilieエディターがインストールされました。<p/>次のステップ:<br>1) インストールの注意書きに従ってテーマとCSSを更新する<br>2) 通知のログをとるには notification.log を作成する<p><i>楽しんでください,<br><a href="MAILTO:langmail@sympatico.ca">Blaine</a></i>',
-    'uninstalled'       => 'プラグインがインストールされていません',
-    'install_success'   => 'インストール成功', 
-    'install_failed'    => 'インストール失敗 -- 詳細は error.log を参照してください。',
-    'uninstall_msg'     => 'プラグインをアンインストールしました。',
-    'install'           => 'インストール',
-    'uninstall'         => 'アンインストール',
-    'enabled'           => '<br>プラグインがインストールされ有効になっています。<br>アンインストールする前にまず無効にしてください。<p>',
-    'warning'           => 'Messengerプラグインアンインストール警告',
-    'editor'            => 'プラグインエディターへ戻る',
-
-);
 
 $LANG_MSG  = array(
     'err01'             => 'この機能へのアクセス権がありません',
     'err02'             => '不正な操作を実行しようとしました',
     'err03'             => 'エラー: メンバー名が無効です',
-    'BLOCKHEADER'       => 'メッセンジャー',
+    'BLOCKHEADER'       => 'プライベートメッセージ',
     'RE'                => 'Re:',
     'ERROR'             => 'エラー!',
     'FROM'              => '差出人',
     'TO'                => '宛先',
     'SUBJECT'           => '件名',
-    'PM'                => 'メッセンジャー',
-    'NEW_PM'            => '新しいメッセージ',
+    'PM'                => 'PM',
+    'NEW_PM'            => '新しいPM',
     'NEW'               => 'New',
     'NEWMESSAGE'        => 'メッセージ作成',
     'DATE'              => '日付',
@@ -124,78 +102,116 @@ $LANG_MSG  = array(
     'msgdelok'          => '削除しました',
     'msgdelsuccess'     => 'メッセージを削除しました。',
     'msgdelerr'         => 'メッセージを削除しませんでした。<a href=\"javascript:history.back()\">ここをクリック</a>して、メッセージを選択してください',
-    'msgpriv'           => 'メッセンジャー',
+    'msgpriv'           => 'プライベートメッセージ',
     'msgprivnote1'      => 'You have %s private message in your %s folder.',
     'msgprivnote2'      => 'You have %s private messages in your %s folder.',
     'msgto'             => '宛先: ',
     'msgmembers'        => 'メンバーリスト',
     'msgarchive'        => 'メッセージを保存しました。',
     'newmsghelp'        => 'メッセージの新規作成',
-    'lang_broadcasts'   => 'メッセージの一括送信',
-    'help_broadcasts'   => 'メッセージの一括送信をブロック',
+    'lang_broadcasts'   => 'PMの一括送信',
+    'help_broadcasts'   => 'メッセンジャーの一括送信をブロック',
     'lang_notifications'       => '通知',
     'help_notifications'       => '新しいメッセージや購読しているメッセージの更新があった際にメールで通知',
     'lang_sitenotifications'   => 'メッセンジャーをデフォルトにする',
-    'help_sitenotifications'   => 'すべての通知をメッセンジャーの受信箱に送る',
+    'help_sitenotifications'   => 'すべての通知をプライベートメッセージの受信箱に送る',
     'outboxmsg'         => '受信者がまだ削除していないため、送信箱のメッセージを削除できません。',
     'show_smilies'      => '顔文字を表示',
     'hide_smilies'      => '顔文字を隠す',
+    'usermenu'          => 'メッセンジャー',
 );
-
 
 // Language used for Notification Feature
 $LANG_MSG01 = array (
-    'HELLO'          => "Hello",
-    'ADMIN'          => "Site Administrator",
-    'SUBJECT'        => "- New Private Message Notifiction",
-    'BROADCAST'      => "- Broadcast Message Notifiction",
-    'LINE1'          => "You have a new Private message from fellow site member: %s\nSubject:%s",
-    'LINE1B'         => "There is a new broadcast message waiting in your private message area from: %s\nSubject: %s",
-    'LINE2'          => "\n \nYou are receiving this because you requested to be notified of any new Private Messages.\n\n",
-    'LINE3'          => "Have a great day!\n"
+    'HELLO'     => "Hello",
+    'ADMIN'     => "Site Administrator",
+    'SUBJECT'   => "- New Private Message Notifiction",
+    'BROADCAST' => "- Broadcast Message Notifiction",
+    'LINE1'     => "You have a new Private message from fellow site member: %s\nSubject:%s",
+    'LINE1B'    => "There is a new broadcast message waiting in your private message area from: %s\nSubject: %s",
+    'LINE2'     => "\n \nYou are receiving this because you requested to be notified of any new Private Messages.\n\n",
+    'LINE3'     => "Have a great day!\n"
 );
 
 // Language used for Admin screens
 $LANG_MSG02 = array (
-    'BLOCKHEADER'     => "スマイリー管理",
-    'IMAGE'           => "画像",
-    'CODE'            => "絵文字",
-    'DESCRIPTION'     => "説明",
-    'ADDSMILIE'       => "スマイリーを追加",
-    'EDIT'            => "編集",
-    'DELETE'          => "削除",
-    'ADDPROMPT'       => "新しいスマイリーを追加",
-    'ADDSUBMIT'       => "新しいスマイリーを追加",
-    'EDITPROMPT'      => "スマイリーの編集",
-    'EDITSUBMIT'      => "スマイリーの更新",
-    'FILENAME'        => "画像ファイル名",
-    'EDIT'            => "編集",
-    'HELPMSG1'        => 'この画面でスマイリーの追加・編集・削除を行います。同じスマイリーの画像に対して複数の顔文字を設定することができます。スマイリーを追加するには、画像ファイルをサーバーのスマイリーを保存しているディレクトリにアップロードしてから「スマイリーを追加」をクリックしてください。顔文字や割り当てる画像を変更するには「編集」をクリックしてください。'
+    'BLOCKHEADER' => 'スマイリー管理',
+    'IMAGE'       => '画像',
+    'CODE'        => '絵文字',
+    'DESCRIPTION' => '説明',
+    'ADDSMILIE'   => 'スマイリーを追加',
+    'EDIT'        => '編集',
+    'DELETE'      => '削除',
+    'ADDPROMPT'   => '新しいスマイリーを追加',
+    'ADDSUBMIT'   => '新しいスマイリーを追加',
+    'EDITPROMPT'  => 'スマイリーの編集',
+    'EDITSUBMIT'  => 'スマイリーの更新',
+    'FILENAME'    => '画像ファイル名',
+    'EDIT'        => '編集',
+    'HELPMSG1'    => 'この画面でスマイリーの追加・編集・削除を行います。同じスマイリーの画像に対して複数の顔文字を設定することができます。スマイリーを追加するには、画像ファイルをサーバーのスマイリーを保存しているディレクトリにアップロードしてから「スマイリーを追加」をクリックしてください。顔文字や割り当てる画像を変更するには「編集」をクリックしてください。'
 );
 
 // Language used for Sortby Filter in main message view
 $LANG_MSG03 = array (
-    'BUDDYADMIN'  => "メンバー管理",
-    'SORTBY'      => "ソート基準",
-    'OLDFIRST'    => "古い順",
-    'NEWFIRST'    => "新しい順",
-    'MEMBER'      => "メンバー名"
+    'BUDDYADMIN' => 'メンバー管理',
+    'SORTBY'     => 'ソート基準',
+    'OLDFIRST'   => '古い順',
+    'NEWFIRST'   => '新しい順',
+    'MEMBER'     => 'メンバー名'
 );
 
 // Language used in the Buddy Admin screen
 $LANG_MSG04 = array (
-    'MAINHEADER'      => "メンバー管理",
-    'HEADER1'         => "追加可能なメンバー",
-    'HEADER2'         => "メンバーリスト",
-    'ADD'             => "追加",
-    'REMOVE'          => "削除",
-    'CANCEL'          => "キャンセル",
-    'SAVE'           => "保存"
+    'MAINHEADER' => 'メンバー管理',
+    'HEADER1'    => '追加可能なメンバー',
+    'HEADER2'    => 'メンバーリスト',
+    'ADD'        => '追加',
+    'REMOVE'     => '削除',
+    'CANCEL'     => 'キャンセル',
+    'SAVE'       => '保存'
 );
-
 
 // Language used to send message to new members - intro message
 $LANG_MSG05 = array (
-    'subject'     => "Welcome to my site!",
-    'message'     => "Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>"
+    'subject'     => 'Welcome to my site!',
+    'message'     => 'Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>'
+);
+
+// Localization of the Admin Configuration UI
+$LANG_configsections['messenger'] = array(
+    'label' => 'メッセンジャー',
+    'title' => 'メッセンジャー',
+);
+
+$LANG_confignames['messenger'] = array(
+    'debug'                 => 'リクエスト変数をデバッグする',
+    'smiliesEnabled'        => 'スマイリーを表示する',
+    'RestrictedAccess'      => 'messenger.userアクセス権を持つユーザーだけを許可する',
+    'messagedelay'          => 'メッセージ表示時の待ち時間(ミリ秒)',
+    'automsg'               => 'メッセージを自動的に表示する',
+    'notification'          => 'サイトにプライベートメッセージを通知する',
+    'mailoff'               => 'メールによる通知を無効にする',
+    'RootBdcastNotificaton' => '一斉送信の際にも通知する',
+    'newmember'             => '新規メンバーログイン時にプライベートメッセージを送信する',
+    'USER_PMBLOCK'          => 'プラグイン規定値: ユーザーは一斉送信されるメッセージの受信を拒否する',
+    'USER_NOTIFY'           => 'プラグイン規定値: ユーザーは新規メッセージの通知をメールで受け取る',
+    'USER_INBOX'            => 'プラグイン規定値: すべてのシステムとプラグインの通知を受信箱に送る',
+);
+
+$LANG_configsubgroups['messenger'] = array(
+    'sg_main' => '主要設定',
+);
+
+$LANG_tab['messenger'] = array(
+    'tab_main' => '主要設定',
+);
+
+$LANG_fs['messenger'] = array(
+    'fs_main' => '主要設定',
+);
+
+// Note: entries 0, 1, 9, and 12 are the same as in $LANG_configselects['Core']
+$LANG_configselects['messenger'] = array(
+    0 => array('はい' => 1, 'いいえ' => 0),
+    1 => array('はい' => true, 'いいえ' => false),
 );

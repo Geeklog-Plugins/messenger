@@ -43,43 +43,63 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
     die('This file cannot be used on its own!');
 }
 
-global $_DB_table_prefix, $_TABLES, $_CONF, $CONF_MSG;
+/**
+* Plugin autoinstall function
+*
+* @param    string  $pi_name    Plugin name
+* @return   array               Plugin information
+*/
+function plugin_autoinstall_messenger($pi_name) {
+    global $CONF_MSG;
 
-// Add to $_TABLES array the tables your plugin uses
-$_TABLES['messenger_msg']      = $_DB_table_prefix . 'messenger_msg';
-$_TABLES['messenger_dist']     = $_DB_table_prefix . 'messenger_dist';
-$_TABLES['messenger_userinfo'] = $_DB_table_prefix . 'messenger_userinfo';
-$_TABLES['messenger_buddies']  = $_DB_table_prefix . 'messenger_buddies';
-$_TABLES['smilies']            = $_DB_table_prefix . 'smilies';
+    require_once __DIR__ . '/config.php';
+    $piName = 'messenger';
 
-// Plugin info
-$CONF_MSG = array(
-    'pi_version' => '1.9.2',                                        // Plugin Version
-    'gl_version' => '2.2.0',                                        // GL Version plugin for
-    'pi_url'     => 'https://github.com/Geeklog-Plugins/messenger', // Plugin Homepage
-    'GROUPS'     => array(
-        'Messenger Admin' => 'Users in this group can administer the Messenger plugin',
-    ),
-    'FEATURES'   => array(
-        'messenger.edit'            => 'Messenger Admin Rights',
-        'messenger.user'            => 'Messenger User',
-        'messenger.broadcast'       => 'Ability to send Broadcast Messages',
-        'smilie.edit'               => 'Ability to admin Smilies',
-        'config.messenger.tab_main' => 'Access to configure Messenger main settings',
-     ),
-    'MAPPINGS'   => array(
-        'messenger.edit'            => array('Messenger Admin'),
-        'messenger.user'            => array('Messenger Admin'),
-        'messenger.broadcast'       => array('Messenger Admin'),
-        'smilie.edit'               => array('Messenger Admin'),
-        'config.messenger.tab_main' => array('Messenger Admin'),
-    ),
-    'TABLES'     => array(
-        'messenger_msg', 'messenger_dist', 'messenger_userinfo', 'messenger_buddies', 'smilies',
-    ),
+    return array(
+        'info'      => array(
+            'pi_name'         => $piName,
+            'pi_display_name' => ucfirst($piName),
+            'pi_version'      => $CONF_MSG['pi_version'],
+            'pi_gl_version'   => $CONF_MSG['gl_version'],
+            'pi_homepage'     => $CONF_MSG['pi_url'],
+        ),
+        'groups'    => $CONF_MSG['GROUPS'],
+        'features'  => $CONF_MSG['FEATURES'],
+        'mappings'  => $CONF_MSG['MAPPINGS'],
+        'tables'    => $CONF_MSG['TABLES'],
+    );
+}
 
-    // Settings not available on Geeklog Configuration screen
-    'SMILIE_PATH'                   => $_CONF['path_html'] . 'messenger/images/smilies/',
-    'SMILIE_URL'                    => $_CONF['site_url'] . '/messenger/images/smilies/',
-    'imgset'                        => $_CONF['site_url'] . '/messenger/images',
-);
+/**
+* Load plugin configuration from database
+*
+* @param    string  $pi_name    Plugin name
+* @return   boolean             true on success, otherwise false
+* @see      plugin_initconfig_messenger
+*/
+function plugin_load_configuration_messenger($pi_name) {
+    require_once __DIR__ . '/install_defaults.php';
+
+    return plugin_initconfig_messenger();
+}
+
+/**
+* Checks if the plugin is compatible with this Geeklog version
+*
+* @param    string  $pi_name    Plugin name
+* @return   boolean             true: plugin compatible; false: not compatible
+*/
+function plugin_compatible_with_this_version_messenger($pi_name) {
+    global $_CONF, $_DB_dbms;
+
+    // checks if we support the DBMS the site is running on
+    $dbFile = __DIR__ . '/sql/' . $_DB_dbms . '_install.php';
+    clearstatcache();
+
+    if (!file_exists($dbFile)) {
+        return false;
+    }
+
+    // adds checks here
+    return is_callable('COM_newTemplate') && is_callable('CTL_plugin_templatePath');
+}

@@ -1,11 +1,10 @@
 <?php
 
-/* Reminder: always indent with 4 spaces (no tabs). */
 // +-----------------------------------------------------------------------------+
 // | glMessenger Plugin 1.0 for Geeklog- The Ultimate OSS Portal                 |
 // | Date: November 15, 2003                                                     |
 // +-----------------------------------------------------------------------------+
-// | functions.inc - Geeklog Plugin API functions and support functions          |
+// | config.php - Main glMessenger config file                                   |
 // +-----------------------------------------------------------------------------+
 // | Copyright (C) 2003 by the following authors:                                |
 // |                                                                             |
@@ -40,53 +39,155 @@
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
 
-use Geeklog\Input;
-
-if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
-    die('This file can not be used on its own.');
+if (stripos($_SERVER['PHP_SELF'], 'functions.inc') !== false) {
+    die('This file cannot be used on its own.');
 }
 
-$langfile = $_CONF['path'] . 'plugins/messenger/language/' . $_CONF['language'] . '.php';
+// Language file Include
+$langfile = __DIR__ . '/language/' . $_CONF['language'] . '.php';
+clearstatcache();
+
 if (file_exists($langfile)) {
     include_once $langfile;
 } else {
-    include_once $_CONF['path'] . 'plugins/messenger/language/english.php';
+    include_once __DIR__ . '/language/english.php';
 }
+
+// Loads the plugin configuration
+global $CONF_MSG;
 
 require_once $_CONF['path'] . 'plugins/messenger/config.php';
+MSG_loadConfig();
+
+// +---------------------------------------------------------------------------+
+// | Geeklog Plugin API Implementations                                        |
+// +---------------------------------------------------------------------------+
 
 /**
-* Returns the user menuitem option for this plugin
-* Only one menu item can be returned.
+* Returns a URL to icon
 */
-function plugin_getuseroption_messenger()
-{
-   global $_USER, $_CONF, $_TABLES, $LANG_MSG00, $CONF_MSG;
+function plugin_geticon_messenger() {
+    global $_CONF;
 
-   // If restricted access has been enabled in the plugins config.php then check access right
-   if (!$CONF_MSG['RestrictedAccess'] || SEC_hasRights('messenger.user') ) {
-       // Check and see if user wants to view Broadcast messages - if not exclude them
-       if (DB_getItem($_TABLES['messenger_userinfo'],"broadcasts", "uid={$_USER['uid']}") == '1') {
-            $sql = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_dist']} dist LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id=msg.id WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) ");
-       } else {
-           $sql = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_dist']} dist LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id=msg.id WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) OR (target_uid = '0' AND archive='0')");
-       }
-       list($count) = DB_fetchArray($sql);
-       if ($count > 0) {
-           return array($LANG_MSG00['usermenu'] . '&nbsp;(' .$count. ')', $_CONF['site_url'] . '/messenger/index.php', 0);
-       } else {
-           return array($LANG_MSG00['usermenu'], $_CONF['site_url'] . '/messenger/index.php', 0);
-       }
-   }
+    return $_CONF['site_url'] . '/messenger/images/messenger.gif';
 }
 
 /**
-* returns the administrative option for this plugin
-*
+* Returns code to be added to <head> section
 */
-function plugin_getadminoption_messenger()
-{
-    global $_TABLES, $_CONF, $CONF_MSG;
+function plugin_getheadercode_messenger() {
+    global $_CONF;
+
+    return '<script type="text/javascript" src="' . $_CONF['site_url'] . '/messenger/library.js"></script>';
+}
+
+/**
+* Returns code to be added to footer
+*
+* @since  GL-1.8.0
+*/
+function plugin_getfootercode_messenger() {
+    global $_CONF;
+    
+}
+
+/**
+* Callback function when an item was just saved
+*
+* @param   string  $id     unique ID of the item
+* @param   string  $type   type of the item, e.g. 'article'
+* @param   string  $old_id (optional) old ID when the ID was changed
+*/
+function plugin_itemsaved_messenger($id, $type, $old_id) {
+    global $_CONF;
+    
+}
+
+/**
+* Checks to see if this plugin uses comments
+*
+* @return   boolean true or false
+*/
+function plugin_commentsupport_messenger() {
+    return false;
+}
+
+/**
+* Shows the statistics for the plugin on stats.php.  If
+* $showsitestats is 1 then we are to only print the overall stats in the 'site
+* statistics' box otherwise we show the detailed stats for the plugin
+*
+* Universal Plugin:  Modify/uncomment use it
+*
+* @param    int showsitestate   Flag to let us know which stats to get
+* @return   string  returns formatted HTML to insert in stats page
+*/
+function plugin_showstats_messenger($showsitestats) {
+//    global $_CONF, $_TABLES;
+
+//    $stat_templates = new Template($_CONF['path_layout'] . 'stats');
+//    $stat_templates->set_file(array('itemstats'=>'itemstatistics.thtml',
+//                            'statrow'=>'singlestat.thtml'));
+        $retval='';
+//    if ($showsitestats == 1) {
+        // This shows in the summary box
+//        $total_pages=DB_count($_TABLES['table1']);     // Fill this with count for summary
+//        $summary_label = "messenger";                   // Fill this with label displayed
+        
+//        $retval  = '<table border = "0" width="100%" cellspacing="0" cellpadding="0">';
+//        $retval .= '<tr><td>{$summary_label}</td>';
+//        $retval .= '<td align="right">' . $total_pages . '&nbsp;&nbsp;</td></tr></table>';
+//    } else {
+        // This fills the top the box  Use the following as a template
+//        $result = DB_query("SELECT id, title, hits FROM {$_TABLES['table1'] WHERE (hits > 0) ORDER BY hits desc LIMIT 10");
+//        $nrows  = DB_numRows($result);
+//        $retval .= COM_startBlock("Top Ten Static Pages");
+//        if ($nrows > 0) {
+//            $stat_templates->set_var('item_label', "Page Title");
+//            $stat_templates->set_var('stat_name', "Hits");
+//            for ($i = 0; $i < $nrows; $i++) {
+//                $A = DB_fetchArray($result);
+//                $stat_templates->set_var('item_url', $_CONF['site_url'] . '/messenger/index.php?item=' . $A['id']);
+//                $stat_templates->set_var('item_text', $A['title']);
+//                $stat_templates->set_var('item_stat', $A['hits']);
+//                $stat_templates->parse('stat_row','statrow', true); 
+//            }
+//            $stat_templates->parse('output', 'itemstats');
+//            $retval .= $stat_templates->finish($stat_templates->get_var('output'));
+//        } else {
+//            $retval .= 'It appears that there are no messengers on this site or no one has ever viewed them.';
+//        } 
+//        $retval .= COM_endBlock();
+//    }
+    return $retval;
+}
+
+/**
+* Puts an option for the plugin in the command and control block on moderation.php
+*
+* @return   array   Array containing (plugin name, admin url, url of plugin icon)
+*/
+function plugin_cclabel_messenger() {
+    global $_CONF;
+    
+    if (SEC_hasRights('messenger.edit')) {
+        $pi_name   = 'Smilies';
+        $admin_url = $_CONF['site_admin_url'] . '/plugins/messenger/editsmilies.php';
+        $icon_url  = plugin_geticon_messenger();
+
+        return array($pi_name, $admin_url, $icon_url);
+    } else {
+        return array();
+    }
+}
+
+/**
+ * Returns the administrative option for this plugin
+ *
+ * @return   array   Array containing (plugin name, plugin admin url, # of items in plugin or '')
+ */
+function plugin_getadminoption_messenger() {
+    global $_CONF, $CONF_MSG;
 
     if ($CONF_MSG['smiliesEnabled'] && SEC_hasRights('smilie.edit')) {
         return array('Smilies', $_CONF['site_admin_url'] . '/plugins/messenger/editsmilies.php');
@@ -96,43 +197,55 @@ function plugin_getadminoption_messenger()
 }
 
 /**
-* Called if user is created - Adds a default userpref record which is used when member edits account preferences
-*/
+ * Called if user is created - Adds a default userpref record which is used when member edits account preferences
+ *
+ * @param   int  $uid
+ */
 function plugin_user_create_messenger($uid)
 {
     global $_TABLES, $CONF_MSG, $LANG_MSG05;
+
+    $uid = (int) $uid;
+    if ($uid <= 1) {
+        return;
+    }
 
     DB_query("INSERT INTO {$_TABLES['messenger_userinfo']} (uid) VALUES ('{$uid}')");
 
     // Check if new members should receive the welcome private message
     if ($CONF_MSG['newmember']) {
-        $toname = DB_getItem($_TABLES['users'],"username","uid=$uid");
-        $subject = $LANG_MSG05['subject'];
-        $message = $LANG_MSG05['message'];
-        messenger_send($toname,$subject,$message);
+        $toname = DB_getItem($_TABLES['users'], 'username', "uid={$uid}");
+        messenger_send($toname, $LANG_MSG05['subject'], $LANG_MSG05['message']);
     }
 }
 
 /**
-* Called if admin deletes a user - remove all user messages as well
-*/
+ * Called if admin deletes a user - remove all user messages as well
+ *
+ * @param   int  $uid
+ */
 function plugin_user_delete_messenger($uid)
 {
     global $_TABLES;
 
-    $sql = DB_query("SELECT msg_id FROM {$_TABLES['messenger_dist']} WHERE target_uid = '{$uid}'");
+    $uid = (int) $uid;
+    if ($uid <= 1) {
+        return;
+    }
+
+    $sql = DB_query("SELECT msg_id FROM {$_TABLES['messenger_dist']} WHERE target_uid = {$uid}");
 
     while (list($msg_id) = DB_fetchArray($sql)) {
         // Only delete any actual messages if only this member was on the distribution
-        if (DB_count($_TABLES['messenger_dist'],"msg_id", "$msg_id") == 1) {
-            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE id = '{$msg_id}'");
+        if (DB_count($_TABLES['messenger_dist'], 'msg_id', $msg_id) == 1) {
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE id = {$msg_id}");
         }
 
-        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE msg_id = '{$msg_id}' AND target_uid = '{$uid}'");
+        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE msg_id = {$msg_id} AND target_uid = {$uid}");
     }
 
     // Finally - Delete the user preference record
-    DB_query("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = '{$uid}'");
+    DB_query("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = {$uid}");
 }
 
 /**
@@ -165,107 +278,186 @@ function plugin_profilevariablesdisplay_messenger($uid, $template)
 }
 
 /**
-* Called by the plugin Editor to display the current plugin code version
-* This may be different then the version installed and registered currently.
-* If newer then you may want to run the update
+* Returns the version for this plugin
+*
+* @return string VersionNo
 */
 function plugin_chkVersion_messenger() {
     global $CONF_MSG;
-
-    return $CONF_MSG['version'] ;
+    
+    return $CONF_MSG['pi_version'];
 }
 
 /**
-* Called by the plugin Editor to run the SQL Update for a plugin update
+* Returns the user option for this plugin
+*
+* @return  array  Array containing (plugin name, plugin user url, 0)
+*/
+function plugin_getuseroption_messenger() {
+   global $_USER, $_CONF, $_TABLES, $LANG_MSG, $CONF_MSG;
+
+   // If restricted access has been enabled in the plugin's configuration, then check access right
+   if (!$CONF_MSG['RestrictedAccess'] || SEC_hasRights('messenger.user')) {
+       // Check and see if user wants to view Broadcast messages - if not exclude them
+       if (DB_getItem($_TABLES['messenger_userinfo'], 'broadcasts', "uid={$_USER['uid']}") == '1') {
+            $sql = DB_query(
+                "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_dist']} dist "
+                . "LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id = msg.id "
+                . "WHERE (target_uid = {$_USER['uid']} AND read_date is NULL)"
+            );
+       } else {
+           $sql = DB_query(
+                "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_dist']} dist "
+                . "LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id = msg.id "
+                . "WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) OR (target_uid = '0' AND archive='0')");
+       }
+       
+       list($count) = DB_fetchArray($sql);
+       
+       if ($count > 0) {
+           return array($LANG_MSG['usermenu'] . '&nbsp;(' .$count. ')', $_CONF['site_url'] . '/messenger/index.php', 0);
+       } else {
+           return array($LANG_MSG['usermenu'], $_CONF['site_url'] . '/messenger/index.php', 0);
+       }
+   }
+}
+
+/**
+* Upgrade the plugin
+*
+* @return   boolean true (= success)
 */
 function plugin_upgrade_messenger() {
-    global $_TABLES, $CONF_MSG;
+    global $_CONF, $_TABLES, $CONF_MSG;
 
-    $curversion = DB_getItem($_TABLES['plugins'],'pi_version',"pi_name = 'messenger'");
-    DB_query("UPDATE {$_TABLES['plugins']} SET pi_version = '{$CONF_MSG['version']}' WHERE pi_name = 'messenger'");
-
-    // Check if update completed and return a message number to be shown
-    return (DB_getItem($_TABLES['plugins'],'pi_version',"pi_name = 'messenger'") == $CONF_MSG['version']);
-}
-
-/**
-* Removes the datastructures for this plugin from the Geeklog database
-* This may get called by the install routine to undue anything created during the install.
-* Added check to see that plugin is first disabled.
-*/
-function plugin_uninstall_messenger($installCheck='')
-{
-    global $_TABLES, $LANG_MSG00, $_CONF;
-
-    $pi_name = 'messenger';
-    $FEATURES = array('messenger.user', 'messenger.edit', 'messenger.broadcast', 'smilie.edit');
-    $TABLES = array('messenger_msg', 'messenger_dist', 'messenger_userinfo', 'messenger_buddies', 'smilies');
-
-    // Check and see if plugin is still enabled - if so display warning and exit
-    if ($installCheck != '' && DB_getItem($_TABLES['plugins'],'pi_enabled', 'pi_name = "' . $pi_name . '"')) {
-        COM_errorLog("Plugin is installed and enabled. Disable first if you want to de-install it", 1);
-        $display = COM_startBlock($LANG_MSG00['warning'])
-            . $LANG_MSG00['enabled']
-            . COM_endBlock();
-        $display = COM_createHTMLDocument($display);
-        COM_output($display);
-        exit;
-    }
-
-    // Ok to proceed and delete plugin - Unregister the plugin with Geeklog
-    COM_errorLog('Attempting to unregister the Messenger plugin from Geeklog', 1);
-    DB_query("DELETE FROM {$_TABLES['plugins']} WHERE pi_name = 'messenger'", 1);
+    $sql = "SELECT pi_version FROM {$_TABLES['plugins']} "
+        . "WHERE (pi_name = 'messenger') ";
+    $result = DB_query($sql);
+    $A = DB_fetchArray($result);
+    $pi_version = $A['pi_version'];     // Version info stored in database
     
-    // Drop Messenger Plugin tables
-    foreach($TABLES as $table) {
-        $t = $_TABLES["$table"];
-        COM_errorLog("Removing Table $t", 1);
-        DB_query("DROP TABLE $t", 1);
+    // Do upgrading
+    if (version_compare($pi_version, '1.9.1', '<=')) {
+        require_once __DIR__ . '/install_defaults.php';
+        plugin_initconfig_messenger();
+        $pi_version = '1.9.2';
     }
 
-    // Remove Admin Security for this plugin
-    $grp_id = DB_getItem($_TABLES['vars'], 'value', "name = '{$pi_name}_admin'");
-    COM_errorLog("Removing $pi_name Admin Group", 1);
-    DB_query("DELETE FROM {$_TABLES['groups']} WHERE grp_id = $grp_id", 1);
-    DB_query("DELETE FROM {$_TABLES['vars']} WHERE name = '{$pi_name}_admin'");
-    COM_errorLog("Removing root users from admin of $pi_name");
-    DB_query("DELETE FROM {$_TABLES['group_assignments']} WHERE ug_main_grp_id = $grp_id", 1);
-
-    // Remove all the associated features - access rights. The feature ID's were stored in the vars table during install.
-    foreach ($FEATURES as $feature) {
-        COM_errorLog("Removing $feature feature and rights to it", 1);
-        $feat_id = DB_getItem($_TABLES['features'], 'ft_id', "ft_name = '$feature'");
-        COM_errorLog("DELETE FROM {$_TABLES['access']} WHERE acc_ft_id = $feat_id");
-        DB_query("DELETE FROM {$_TABLES['access']} WHERE acc_ft_id = $feat_id", 1);
-        DB_query("DELETE FROM {$_TABLES['features']} WHERE ft_id = $feat_id", 1);
+    while (version_compare($pi_version, $CONF_MSG['pi_version'], '<')) {
+        switch ($pi_version) {
+            default:
+                break;
+        }
     }
-    
-    /* DO NOT REMOVE OR CHANGE THE FOLLOWING CODE UNDER ANY CONDITION */
-    /* This Plugin requires a license to be installed and information collected is only used to track that license */
-    /* Blaine Lang: glmessenger author */
-    $message =  'Completed plugin DE-INSTALL: ' .date('m d Y',time()) . "   AT " . date('H:i', time()) . "\n";
-    $message .= 'Site: ' . $_CONF['site_url'] . ' and Sitename: ' . $_CONF['site_name'] . "\n";
-    $message .= 'Admin: ' . $_CONF['site_mail'] . "\n";
-    $message .= 'Hostname: ' . $_ENV['HOSTNAME'] . ' and RemoteAddress: ' .$_ENV['REMOTE_ADDR'];
-    COM_mail('glmessenger@portalparts.com','glMessenger DE-INSTALL',$message);
-    COM_errorLog('...success',1);
+
+    // Updates plugin info
+    $sql = "UPDATE {$_TABLES['plugins']} "
+         . "SET pi_version = '" . DB_escapeString($CONF_MSG['pi_version']) . "' "
+         . "WHERE (pi_name = 'messenger') ";
+    DB_query($sql);
+    COM_errorLog("Messenger plugin was successfully updated to version {$CONF_MSG['pi_version']}.");
+
     return true;
 }
 
-function messenger_statusMessage($message = '', $url, $prompt) {
-    global $_CONF,$_USER,$LANG_MSG,$CONF_MSG;
+/**
+* Automatic uninstall function for plugins
+*
+* @return   array
+*/
+function plugin_autouninstall_messenger() {
+    global $_CONF, $CONF_MSG;
 
-    include_once $_CONF['path'] . 'plugins/messenger/config.php';
+    require_once __DIR__ . '/config.php';
+
+    return array (
+        // give the name of the tables, without $_TABLES[]
+        'tables' => $CONF_MSG['TABLES'],
+        // give the full name of the group, as in the db
+        'groups' => array_keys($CONF_MSG['GROUPS']),
+        // give the full name of the feature, as in the db
+        'features' => array_keys($CONF_MSG['FEATURES']),
+        // give the full name of the block, including 'phpblock_', etc
+        'php_blocks' => array(),
+        // give all vars with their name
+        'vars'=> array('messenger_status'),
+    );
+}
+
+/**
+* Returns the URL to a given document
+*/
+function plugin_getdocumentationurl_messenger($file) {
+    global $_CONF;
+    
+    $lang = COM_getLanguageName();
+    $path = $_CONF['path_html'] . 'admin/plugins/messenger/docs/' . $lang . '/' . $file . '.html';
+    clearstatcache();
+    
+    if (!file_exists($path)) {
+        $lang = 'english';
+    }
+
+    $retval = $_CONF['site_admin_url'] . '/plugins/messenger/docs/' . $lang . '/' . $file . '.html';
+
+    return $retval;
+}
+
+/**
+* Provides text for a Configuration tooltip
+*
+* @param    string  $id     Id of config value
+* @return   mixed           Text to use regular tooltip, null to use config 
+*                           tooltip hack, or empty string when not available
+*/
+function plugin_getconfigtooltip_messenger($id) {
+    // Use config tooltip hack where tooltip is read from the config documentation
+    return null;
+}
+
+/**
+* Loads config infor with config.class.php
+*/
+function MSG_loadConfig() {
+    global $CONF_MSG;
+
+    $config = config::get_instance();
+
+    if ($config->group_exists('messenger')) {
+        $temp = $config->get_config('messenger');
+        if (is_array($temp) && (count($temp) > 0)) {
+            $CONF_MSG = array_merge($CONF_MSG, $temp);
+        }
+    }
+}
+
+/**
+* Gets Geeklog blocks from plugins
+*
+* Returns data for blocks on a given side and, potentially, for
+* a given topic.
+*
+* @param    string  $side   Side to get blocks for (right or left for now)
+* @param    string  $topic  Only get blocks for this topic
+* @return   array           array of block data
+* @link     http://wiki.geeklog.net/index.php/Dynamic_Blocks
+*/
+function plugin_getBlocks_messenger($side, $topic = '') {
+    return array();
+}
+
+function messenger_statusMessage($message = '', $url, $prompt) {
+    global $_CONF, $_USER, $LANG_MSG, $CONF_MSG;
 
     if (empty($prompt)) {
         $prompt = $LANG_MSG['statusmsg2'];
     }
 
     echo COM_startBlock();
-    echo "<font class='alert'><br><p/>$message</font>";
+    echo "<font class='alert'><br><p/>{$message}</font>";
     echo "<br><p/>";
 
-    if ($CONF_MSG['automsg'] == "0") {
+    if ($CONF_MSG['automsg'] == 0) {
         echo sprintf($LANG_MSG['statusmsg1'], $prompt, $url);
         echo "<br><p>";
     } else {
@@ -278,27 +470,26 @@ function messenger_statusMessage($message = '', $url, $prompt) {
     }
 
     echo COM_endBlock();
-
-    return;
 }
 
 /**
-* Replace emoticons in string with formated HTML of smilies.
-* Emoticon mapping to images are defined in a the table.
-* This function will replace all the emoticons in the past string.
-* @param   string  $text  The text
-* @return  string  The text, possibly with emoticons replaced with the HTML img tags for the smilie image.
-*/
-function msg_replaceEmoticons( $text ) {
+ * Replace emoticons in string with formated HTML of smilies.
+ * Emoticon mapping to images are defined in a the table.
+ * This function will replace all the emoticons in the past string.
+ *
+ * @param   string  $text  The text
+ * @return  string  The text, possibly with emoticons replaced with the HTML img tags for the smilie image.
+ */
+function msg_replaceEmoticons($text) {
     global $CONF_MSG, $_TABLES;
 
     $arr_smilies = array();
-    $sql = DB_query("SELECT code,smile_url,emoticon from {$_TABLES['smilies']} ORDER BY length(code) desc");
+    $sql = DB_query("SELECT code, smile_url, emoticon FROM {$_TABLES['smilies']} ORDER BY length(code) DESC");
 
-    while ( list($code,$icon,$emoticon) = DB_fetchARRAY($sql)) {
+    while (list($code, $icon, $emoticon) = DB_fetchArray($sql)) {
         $text = str_replace(
             $code,
-            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" ALT="' . $emoticon . '" TITLE="' . $emoticon . '" BORDER="0">',
+            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" alt="' . $emoticon . '" title="' . $emoticon . '" border="0">',
             $text
         );
     }
@@ -307,25 +498,26 @@ function msg_replaceEmoticons( $text ) {
 }
 
 /**
-* Replace formatted smilie HTML for emoticons - so message can be edited
-* @param   string  $text  The text, possibly with HTML img tags for the smilie image
-* @return  string  The text, possibly with the replaced smilie emoticon.
-*/
-function msg_restoreEmoticons( $text ) {
+ * Replace formatted smilie HTML for emoticons - so message can be edited
+ *
+ * @param   string  $text  The text, possibly with HTML img tags for the smilie image
+ * @return  string  The text, possibly with the replaced smilie emoticon.
+ */
+function msg_restoreEmoticons($text) {
     global $CONF_MSG, $_TABLES;
 
     $arr_smilies = array();
-    $sql = DB_query("SELECT code,smile_url,emoticon from {$_TABLES['smilies']} ORDER BY length(code) desc");
+    $sql = DB_query("SELECT code, smile_url, emoticon FROM {$_TABLES['smilies']} ORDER BY length(code) DESC");
 
     while (list($code, $icon, $emoticon) = DB_fetchArray($sql)) {
         // Check for HTML that is formatted the new way and how it was used in earlier releases
         $text = str_replace(
-            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" ALT="' . $emoticon . '" TITLE="' . $emoticon .'" BORDER="0">',
+            '<img src="' . $CONF_MSG['SMILIE_URL'] . $icon . '" alt="' . $emoticon . '" title="' . $emoticon .'" border="0">',
             $code,
             $text
         );
         $text = str_replace(
-            '<img src=' . $CONF_MSG['SMILIE_URL'] . $icon . ' BORDER="0">',
+            '<img src=' . $CONF_MSG['SMILIE_URL'] . $icon . ' border="0">',
             $code,
             $text
         );
@@ -344,7 +536,7 @@ function msg_showsmilies() {
     // Since I can have multiple emoticons for the same smilie image,
     // I need to sort this out and only show 1 but display a help message with all the possible codes
     $arr_emoticons = array();
-    $query = DB_query("SELECT smilie_id,code,smile_url,emoticon FROM {$_TABLES['smilies']}");
+    $query = DB_query("SELECT smilie_id, code, smile_url, emoticon FROM {$_TABLES['smilies']}");
 
     while (list($smilie_id, $code, $smile_url, $emoticon) = DB_fetchArray($query)) {
         if (!array_key_exists($smile_url, $arr_emoticons)) {
@@ -368,8 +560,8 @@ function msg_showsmilies() {
             $code = substr($smilie['code'], $pos1);
         }
 
-        $smilies .= '<a href="javascript:emoticon(\'' . $code . '\')"><img style="border-width: 0;" src="'
-            . $baseurl . $key . '" alt="' . $smilie['code'] . '" title="' . $smilie['code'] . '"></a> ';
+        $smilies .= '<a href="javascript:emoticon(\'' . $code . '\')"><img align=absmiddle  vspace="1" src="'
+            . $baseurl . $key . '" alt="' . $smilie['code'] . '" title="' . $smilie['code'] . '" border="0"></a> ';
     }
 
     return $smilies;
@@ -575,17 +767,11 @@ function msg_sendNotification($user, $subject, $message, $type = '') {
 function msg_logNotification($logentry) {
     global $_CONF, $LANG01;
 
-    $timestamp = strftime('%b %d %H:%M');
-    $logfile = $_CONF['path_log'] . 'notification.log';
-    @file_put_contents($logfile, "$timestamp,$logentry \n", FILE_APPEND);
-}
-
-/**
-* Returns the items for this plugin that should appear on the main menu
-*/
-function plugin_getHeaderCode_messenger()
-{
-    global $_CONF;
-
-    return '<script type="text/javascript" src="' . $_CONF['site_url'] . '/messenger/library.js"></script>';
+    if (version_compare(VERSION, '2.2.1', '>=')) {
+        Geeklog\Log::notification($logentry);
+    } else {
+        $timestamp = strftime('%b %d %H:%M');
+        $logfile = $_CONF['path_log'] . 'notification.log';
+        @file_put_contents($logfile, "$timestamp,$logentry \n", FILE_APPEND);
+    }
 }

@@ -43,43 +43,18 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
     die('This file cannot be used on its own!');
 }
 
-global $_DB_table_prefix, $_TABLES, $_CONF, $CONF_MSG;
-
-// Add to $_TABLES array the tables your plugin uses
-$_TABLES['messenger_msg']      = $_DB_table_prefix . 'messenger_msg';
-$_TABLES['messenger_dist']     = $_DB_table_prefix . 'messenger_dist';
-$_TABLES['messenger_userinfo'] = $_DB_table_prefix . 'messenger_userinfo';
-$_TABLES['messenger_buddies']  = $_DB_table_prefix . 'messenger_buddies';
-$_TABLES['smilies']            = $_DB_table_prefix . 'smilies';
-
-// Plugin info
-$CONF_MSG = array(
-    'pi_version' => '1.9.2',                                        // Plugin Version
-    'gl_version' => '2.2.0',                                        // GL Version plugin for
-    'pi_url'     => 'https://github.com/Geeklog-Plugins/messenger', // Plugin Homepage
-    'GROUPS'     => array(
-        'Messenger Admin' => 'Users in this group can administer the Messenger plugin',
-    ),
-    'FEATURES'   => array(
-        'messenger.edit'            => 'Messenger Admin Rights',
-        'messenger.user'            => 'Messenger User',
-        'messenger.broadcast'       => 'Ability to send Broadcast Messages',
-        'smilie.edit'               => 'Ability to admin Smilies',
-        'config.messenger.tab_main' => 'Access to configure Messenger main settings',
-     ),
-    'MAPPINGS'   => array(
-        'messenger.edit'            => array('Messenger Admin'),
-        'messenger.user'            => array('Messenger Admin'),
-        'messenger.broadcast'       => array('Messenger Admin'),
-        'smilie.edit'               => array('Messenger Admin'),
-        'config.messenger.tab_main' => array('Messenger Admin'),
-    ),
-    'TABLES'     => array(
-        'messenger_msg', 'messenger_dist', 'messenger_userinfo', 'messenger_buddies', 'smilies',
-    ),
-
-    // Settings not available on Geeklog Configuration screen
-    'SMILIE_PATH'                   => $_CONF['path_html'] . 'messenger/images/smilies/',
-    'SMILIE_URL'                    => $_CONF['site_url'] . '/messenger/images/smilies/',
-    'imgset'                        => $_CONF['site_url'] . '/messenger/images',
+// Messenger Plugin Main Settings
+$_CONF_VALIDATE['messenger'] = array(
+    'debug'                 => array('rule' => 'boolean'),
+    'smiliesEnabled'        => array('rule' => 'boolean'),
+    'RestrictedAccess'      => array('rule' => 'boolean'),
+    'messagedelay'          => array('rule' => 'numeric'),
+    'automsg'               => array('rule' => array('inList', array(0, 1), false)),
+    'notification'          => array('rule' => 'boolean'),
+    'mailoff'               => array('rule' => 'boolean'),
+    'RootBdcastNotificaton' => array('rule' => 'boolean'),
+    'newmember'             => array('rule' => 'boolean'),
+    'USER_PMBLOCK'          => array('rule' => 'boolean'),
+    'USER_NOTIFY'           => array('rule' => 'boolean'),
+    'USER_INBOX'            => array('rule' => 'boolean'),
 );
