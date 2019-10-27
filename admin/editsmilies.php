@@ -48,17 +48,22 @@ require_once $_CONF['path'] . 'plugins/messenger/debug.php';  // Common Debug Co
 ob_start();
 echo COM_startBlock($LANG_MSG02['BLOCKHEADER']);
 
-if (isset($_POST['edit']) && ($_POST['edit'] == $LANG_MSG02['EDITSUBMIT'])) {
+if (Input::post('edit') == $LANG_MSG02['EDITSUBMIT']) {
     $pos = strrpos($_POST['sel_smilie'],'/') + 1;
     $image_filename = strtolower(substr($_POST['sel_smilie'], $pos));
-    DB_query("UPDATE {$_TABLES['smilies']} SET code='{$_POST['smile_code']}', smile_url='$image_filename', emoticon='{$_POST['smile_desc']}' WHERE smilie_id='{$_POST['id']}'");
+    DB_query(
+        "UPDATE {$_TABLES['smilies']} SET code = '{$_POST['smile_code']}', smile_url = '{$image_filename}', emoticon ='{$_POST['smile_desc']}' "
+        . "WHERE smilie_id = {$_POST['id']} "
+    );
     echo '<p>Smilie Record Updated ...';
 }
 
-if (isset($_POST['add']) && ($_POST['add'] == $LANG_MSG02['ADDSUBMIT'])) {
+if (Input::post('add') == $LANG_MSG02['ADDSUBMIT']) {
     $pos = strrpos($_POST['sel_smilie'],'/') + 1;
     $image_filename = strtolower(substr($_POST['sel_smilie'], $pos));
-    DB_query("INSERT INTO {$_TABLES['smilies']} (code, smile_url, emoticon) VALUES ('{$_POST['smile_code']}', '$image_filename', '{$_POST['smile_desc']}')");
+    DB_query(
+        "INSERT INTO {$_TABLES['smilies']} (code, smile_url, emoticon) VALUES ('{$_POST['smile_code']}', '$image_filename', '{$_POST['smile_desc']}')"
+    );
     echo '<p>Smilie Record Added ...';
 }
 
@@ -96,7 +101,7 @@ function display_smilies() {
     global $_CONF, $CONF_MSG, $_TABLES, $phpself, $LANG_MSG02;
 
     $baseurl = $CONF_MSG['SMILIE_URL'];
-    $query = DB_query("SELECT smilie_id,code,smile_url,emoticon FROM {$_TABLES['smilies']} ORDER BY smilie_id");
+    $query = DB_query("SELECT smilie_id, code, smile_url, emoticon FROM {$_TABLES['smilies']} ORDER BY smilie_id");
     $header = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
     $header->set_file(array('header' => 'smiliedisp_header.thtml'));
     $header->set_var('help_msg', $LANG_MSG02['HELPMSG1']);
@@ -155,7 +160,7 @@ function edit_smilie($id) {
     global $_CONF,$_TABLES,$phpself,$LANG_MSG02,$CONF_MSG;
 
     $baseurl = $CONF_MSG['SMILIE_URL'];
-    $query = DB_query("SELECT code,smile_url,emoticon FROM {$_TABLES['smilies']} WHERE smilie_id='$id'");
+    $query = DB_query("SELECT code, smile_url, emoticon FROM {$_TABLES['smilies']} WHERE smilie_id = {$id} ");
     list($code,$smile_url,$emoticon) = DB_fetchARRAY($query);
     if (!empty($smile_url)) {
         $currentsmilie = $baseurl .$smile_url;
@@ -189,7 +194,7 @@ $action = Input::request('action');
 
 switch ($action) {
     case 'delete':
-        DB_query("DELETE FROM {$_TABLES['smilies']} WHERE smilie_id = '$id'");
+        DB_query("DELETE FROM {$_TABLES['smilies']} WHERE smilie_id = {$id}");
         echo display_smilies();
         break;
 

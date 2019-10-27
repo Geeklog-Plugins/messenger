@@ -210,7 +210,7 @@ function plugin_user_create_messenger($uid)
         return;
     }
 
-    DB_query("INSERT INTO {$_TABLES['messenger_userinfo']} (uid) VALUES ('{$uid}')");
+    DB_query("INSERT INTO {$_TABLES['messenger_userinfo']} (uid) VALUES ({$uid})");
 
     // Check if new members should receive the welcome private message
     if ($CONF_MSG['newmember']) {
@@ -309,7 +309,7 @@ function plugin_getuseroption_messenger() {
            $sql = DB_query(
                 "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_dist']} dist "
                 . "LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id = msg.id "
-                . "WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) OR (target_uid = '0' AND archive='0')");
+                . "WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) OR (target_uid = 0 AND archive = 0)");
        }
        
        list($count) = DB_fetchArray($sql);
@@ -345,7 +345,9 @@ function plugin_upgrade_messenger() {
 
     while (version_compare($pi_version, $CONF_MSG['pi_version'], '<')) {
         switch ($pi_version) {
+            case '1.9.2':
             default:
+                $pi_version = $CONF_MSG['pi_version'];
                 break;
         }
     }
@@ -614,7 +616,7 @@ function msg_preparefordb($message, $postmode = 'text', $censor = true, $htmlfil
 
 function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=false,$notify=true)
 {
-    global $_CONF, $_TABLES, $_USER, $REMOTE_ADDR, $CONF_MSG,$LANG_MSG01;
+    global $_CONF, $_TABLES, $_USER, $CONF_MSG,$LANG_MSG01;
 
     $subject = msg_preparefordb($subject, 'html');
     $message = msg_preparefordb($message, 'html');
@@ -623,18 +625,25 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
         $reply_msgid = 0;
     }
 
+    $ip = $_SERVER['REMOTE_ADDR'];
+
     if ($broadcast) {
         $target_uid = "0";
-        DB_query("INSERT INTO $_TABLES[messenger_msg] (message,source_uid,subject,datetime,reply_msgid,ip) VALUES ('$message','$_USER[uid]','$subject',UNIX_TIMESTAMP(),$reply_msgid,'$REMOTE_ADDR')");
+        $now = time();
+        DB_query(
+            "INSERT INTO {$_TABLES[messenger_msg]} (message, source_uid, subject, datetime, reply_msgid, ip) "
+            . "VALUES ('{$message}', {$_USER[uid]}, '{$subject}', {$now}, {$reply_msgid}, '{$ip}')");
         $lastmsg_id = DB_insertID();
-        DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
+        DB_query(
+            "INSERT INTO $_TABLES[messenger_dist] (msg_id, target_uid, archive) "
+            . "VALUES ({$lastmsg_id}, {$target_uid}, 0)");
 
         // If admin then allow notifications to be sent to all members
         if (SEC_inGroup('Root') && $CONF_MSG['RootBdcastNotificaton'] && $CONF_MSG['notification']) {
-           $query = DB_query("SELECT username,uid from {$_TABLES['users']} where uid != {$_USER['uid']} AND uid > 1");
+           $query = DB_query("SELECT username, uid FROM {$_TABLES['users']} WHERE uid <> {$_USER['uid']} AND uid > 1");
 
            while (list($target_user, $target_uid) = DB_fetchARRAY($query)) {
-                $query2 = DB_query("SELECT broadcasts, notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid={$target_uid}");
+                $query2 = DB_query("SELECT broadcasts, notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid= {$target_uid}");
                 list($broadcastblock,$notifyoption,$sitepreference) = DB_fetchArray($query2);
 
                 // Check if user has messenger_userinfo record and possibly disabled notifications
@@ -668,29 +677,33 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
             }
         }
 
-        reset($target_users);
-        DB_query("INSERT INTO $_TABLES[messenger_msg] (message,source_uid,subject,datetime,reply_msgid,ip) VALUES ('$message','$_USER[uid]','$subject',UNIX_TIMESTAMP(),$reply_msgid,'$REMOTE_ADDR')");
+        $now = time();
+        DB_query(
+            "INSERT INTO {$_TABLES['messenger_msg']} (message, source_uid, subject, datetime, reply_msgid, ip) "
+            . "VALUES ('{$message}', {$_USER['uid']}, '{$subject}', {$now}, {$reply_msgid}, '{$ip}')");
         $lastmsg_id = DB_insertID();
 
         if ($notify) {
             // Send out Notifications to all users on distribution
             foreach ($target_users as $target_user) {
-                $target_user = trim(strtolower($target_user));
+                $target_user = DB_escapeString(trim($target_user));
 
                 if ($target_user != '') {
                     if ($_CONF['show_fullname'] == 1) {
-                        $target_uid = DB_getItem($_TABLES['users'],"uid", "fullname='{$target_user}'");
+                        $target_uid = DB_getItem($_TABLES['users'], 'uid', "fullname = '{$target_user}'");
                     } else {
-                        $target_uid = DB_getItem($_TABLES['users'],"uid", "username='{$target_user}'");
+                        $target_uid = DB_getItem($_TABLES['users'], 'uid', "username = '{$target_user}'");
                     }
 
-                    $query2 = DB_query("SELECT notifications,sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid={$target_uid}");
+                    $query2 = DB_query("SELECT notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = {$target_uid}");
                     list($notifyoption,$sitepreference) = DB_fetchArray($query2);
 
                     // Check if user has messenger_userinfo record and possibly disabled notifications
                     // Also don't need to send a notification if user has messenger as their default for notifications
                     if (DB_numRows($query2) == 0 || (DB_numRows($query2) == 1 && $notifyoption == 1 && $sitepreference == 0)) {
-                        DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
+                        DB_query(
+                            "INSERT INTO $_TABLES[messenger_dist] (msg_id, target_uid, archive) "
+                            . "VALUES ({$lastmsg_id}, {$target_uid}, 0)");
                         $notifySubject = '' . $_CONF['site_name'] . ' ' . $LANG_MSG01['SUBJECT'] . '';
                         $notifyMessage  = $LANG_MSG01['HELLO'] . ' ' . $target_user . ",\n\n";
                         $notifyMessage .= sprintf($LANG_MSG01['LINE1'], $_USER['username'], $subject);
@@ -699,7 +712,9 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
                         $notifyMessage .= "\n" . $_CONF['site_url'] . "\n";
                         msg_sendNotification($target_user, $notifySubject, $notifyMessage, 'messenger');
                     } else {
-                        DB_query("INSERT INTO $_TABLES[messenger_dist] (msg_id,target_uid,archive) VALUES ('$lastmsg_id','$target_uid','0')");
+                        DB_query(
+                            "INSERT INTO $_TABLES[messenger_dist] (msg_id, target_uid, archive) "
+                            . "VALUES ({$lastmsg_id}, {$target_uid}, 0)");
                     }
                 }
             }
@@ -723,9 +738,9 @@ function msg_sendNotification($user, $subject, $message, $type = '') {
         $target_uid = DB_getItem($_TABLES['users'],"uid", "username='{$user}'");
     }
 
-    $sql = DB_query("SELECT sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid='$target_uid'");
+    $sql = DB_query("SELECT sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = {$target_uid}");
     list($sitepreference) = DB_fetchArray($sql);
-    $emailaddress = DB_getItem($_TABLES['users'], "email", "uid = '$target_uid'");
+    $emailaddress = DB_getItem($_TABLES['users'], 'email', "uid = {$target_uid}");
 
     // Check if user has enabled Messenger to be used for a notification messages
     if (isset($sitepreference) && $sitepreference) {

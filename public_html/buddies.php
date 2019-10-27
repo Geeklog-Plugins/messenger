@@ -88,17 +88,17 @@ function editbuddies() {
     global $_CONF, $LANG_MSG04, $_TABLES, $_USER, $CONF_MSG, $LANG_MSG;
 
     $uid = $_USER['uid'];
-    $userBlockBrdcast = DB_getItem($_TABLES['messenger_userinfo'], 'broadcasts', "uid='{$uid}'");
+    $userBlockBrdcast = DB_getItem($_TABLES['messenger_userinfo'], 'broadcasts', "uid = {$uid}");
 
     if ($userBlockBrdcast)  {   // If user does not want to receive broadcast messages then I can't include them in count
-        $inboxquery   = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON  id = msg_id WHERE (target_uid='$uid') AND archive='0' ");
-        $archivequery = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON  id = msg_id WHERE (target_uid='$uid') AND archive='1' ");
+        $inboxquery   = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id WHERE (target_uid = {$uid}) AND archive = 0 ");
+        $archivequery = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id WHERE (target_uid = {$uid}) AND archive = 1 ");
     } else {
-        $inboxquery   = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON  id = msg_id WHERE (target_uid='$uid' OR target_uid='0') AND archive='0' ");
-        $archivequery = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON  id = msg_id WHERE (target_uid='$uid' OR target_uid='0') AND archive='1' ");
+        $inboxquery   = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 0 ");
+        $archivequery = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 1 ");
     }
-    $outboxquery  = DB_query("SELECT COUNT(*) as count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON  id = msg_id WHERE (source_uid='$uid' AND read_date is NULL) ");
-    $sentquery    = DB_query("SELECT count(*) as count FROM {$_TABLES['messenger_msg']} WHERE (source_uid='$uid')");
+    $outboxquery  = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id WHERE (source_uid = {$uid} AND read_date IS NULL) ");
+    $sentquery    = DB_query("SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} WHERE (source_uid = $uid)");
 
     list($inboxCnt) = DB_fetchArray($inboxquery);
     list($outboxCnt) = DB_fetchArray($outboxquery);
@@ -141,11 +141,11 @@ function savebuddies($buddylist) {
     $uid = $_USER['uid'];
 
     // Delete all the current buddy records for this user and add all the selected ones
-    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid='$uid'");
+    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid = {$uid}");
     $buddies = explode('|', $buddylist);
     foreach ($buddies as $buddy) {
         $buddy_uid = COM_applyFilter($buddy);
-        DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ('$uid', '$buddy_uid')");
+        DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ({$uid}, {$buddy_uid})");
     }
     COM_redirect($_CONF['site_url'] . '/messenger/index.php');
 }

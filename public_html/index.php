@@ -117,13 +117,13 @@ if ($mode === 'newpm' && $_POST['submit'] == $LANG_MSG['SUBMIT']) {
 if ($mode === 'delete') {
     if ($id != '') {
         if ($folder === 'OUTBOX') {
-            DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}')");
-            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = '{$id}')");
+            DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = {$id})");
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = {$id})");
         } else {
-            DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}') AND ((target_uid = '{$_USER['uid']}') OR target_uid = 0)");
+            DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = {$id}) AND ((target_uid = {$_USER['uid']}) OR target_uid = 0)");
         }
         if (DB_count($_TABLES['messenger_dist'], 'msg_id', $id) == 0) {
-            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = '{$id}')");
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = {$id})");
         }
         messenger_statusMessage($LANG_MSG['msgdelsuccess'], $phpself . '?folder=' . $folder, $LANG_MSG['msgreturn']);
     } else {
@@ -140,9 +140,9 @@ if ($mode === 'delete') {
 
 if ($mode === 'archive') {
     // Check that user has rights
-    $source = DB_getItem($_TABLES['messenger_msg'], 'source_uid', "id='{$id}'");
+    $source = DB_getItem($_TABLES['messenger_msg'], 'source_uid', "id = {$id}");
     if ($source = $uid || SEC_hasRights('messenger.edit')) {
-        DB_query("UPDATE {$_TABLES['messenger_dist']} SET archive='1' WHERE msg_id='{$id}'");
+        DB_query("UPDATE {$_TABLES['messenger_dist']} SET archive = 1 WHERE msg_id = {$id}");
         messenger_statusMessage($LANG_MSG['msgarchive'], $phpself . '?folder=' . $folder, $LANG_MSG['msgreturn']);
     } else {
         messenger_statusMessage($LANG_MSG['err02'], $phpself . '?folder=' . $folder, $LANG_MSG['msgreturn']);
@@ -158,17 +158,17 @@ if ($action === 'delall') {
     if ($folder === 'ARCHIVE') {
         $delquery = DB_query(
             "SELECT id FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-            . "WHERE (target_uid = '{$uid}' AND archive = '1')");
+            . "WHERE (target_uid = {$uid} AND archive = 1)");
     } else {
         $delquery = DB_query(
             "SELECT id FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-            . "WHERE (target_uid = '{$uid}' AND archive = '0')");
+            . "WHERE (target_uid = {$uid} AND archive = 0)");
     }
 
     while (list($id) = DB_fetchARRAY($delquery)) {
-        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}') AND ((target_uid = '{$_USER['uid']}') OR target_uid = '0')"); 
+        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = {$id}) AND ((target_uid = {$_USER['uid']}) OR target_uid = 0)"); 
         if (DB_count($_TABLES['messenger_dist'], 'msg_id', $id) == 0) {
-            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = '{$id}')"); 
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = {$id})"); 
         }
     }
 } elseif ($action === 'delolder') {
@@ -176,29 +176,29 @@ if ($action === 'delall') {
     if ($folder === 'ARCHIVE') {
         $delquery = DB_query(
             "SELECT id FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-            . "WHERE (target_uid = '{$uid}' AND (datetime < '{$today}'))"
+            . "WHERE (target_uid = {$uid} AND (datetime < '{$today}'))"
         );
     } else {
         $delquery = DB_query(
             "SELECT id FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-            . "WHERE (target_uid = '{$uid}' AND (datetime < '$today'))");
+            . "WHERE (target_uid = {$uid} AND (datetime < '$today'))");
     }
 
     while (list($id) = DB_fetchARRAY($delquery)) {
-        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = '{$id}') AND ((target_uid = '{$_USER['uid']}') OR target_uid = '0')");
+        DB_query("DELETE FROM {$_TABLES['messenger_dist']} WHERE (msg_id = {$id}) AND ((target_uid = {$_USER['uid']}) OR target_uid = 0)");
         if (DB_count($_TABLES[messenger_dist], 'msg_id', $id) == 0) {
-            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = '{$id}')");
+            DB_query("DELETE FROM {$_TABLES['messenger_msg']} WHERE (id = {$id})");
         }
     }
 } elseif ($action === 'addbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
-    DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ('{$_USER['uid']}', '{$buddy}')");
+    DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ({$_USER['uid']}, {$buddy})");
     if ($_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
 } elseif ($action === 'delbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
-    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid='{$_USER['uid']}' AND buddy_id = '{$buddy}'");
+    DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid = {$_USER['uid']} AND buddy_id = {$buddy}");
     if ($_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
@@ -219,29 +219,29 @@ if ($action === 'delall') {
 if ($userBlockBrdcast)  {   // If user does not want to receive broadcast messages then I can't include them in count
     $inboxquery   = DB_query(
         "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-        . "WHERE (target_uid = '{$uid}') AND archive = '0'"
+        . "WHERE (target_uid = {$uid}) AND archive = 0"
     );
     $archivequery = DB_query(
         "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-        . "WHERE (target_uid='{$uid}') AND archive = '1'"
+        . "WHERE (target_uid = {$uid}) AND archive = 1"
     );
 } else {
     $inboxquery   = DB_query(
         "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-        . "WHERE (target_uid = '{$uid}' OR target_uid = '0') AND archive = '0'"
+        . "WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 0"
     );
     $archivequery = DB_query(
         "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-        . "WHERE (target_uid = '{$uid}' OR target_uid = '0') AND archive = '1'"
+        . "WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 1"
     );
 }
 
 $outboxquery  = DB_query(
     "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-        . "WHERE (source_uid = '{$uid}' AND read_date is NULL)"
+        . "WHERE (source_uid = {$uid} AND read_date is NULL)"
 );
 $sentquery    = DB_query(
-    "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} WHERE (source_uid = '{$uid}')"
+    "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} WHERE (source_uid = {$uid})"
 );
 
 list($inboxCnt) = DB_fetchArray($inboxquery);
@@ -267,12 +267,12 @@ switch ($folder) {
         if (empty($replyid)) {
             $query = DB_query(
                 "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-                . "WHERE (source_uid = '{$uid}')"
+                . "WHERE (source_uid = {$uid})"
             );
         } else {
             $query = DB_query(
                 "SELECT COUNT(*) AS count FROM {$_TABLES['messenger_msg']} LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-                . "WHERE id = '{$replyid}'"
+                . "WHERE id = {$replyid}"
             );
         }
         list ($nrows) = DB_fetchArray($query);
@@ -404,7 +404,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
     $buddyquery = DB_query(
         "SELECT buddy_id, username, fullname FROM {$_TABLES['messenger_buddies']} buddies "
         . "LEFT JOIN {$_TABLES['users']} users on buddies.buddy_id = users.uid "
-        . "WHERE buddies.uid={$_USER['uid']} ORDER BY username"
+        . "WHERE buddies.uid = {$_USER['uid']} ORDER BY username"
     );
 
     if (!DB_error() && (DB_numRows($buddyquery) > 0)) {
@@ -502,13 +502,19 @@ if ($action === 'newpm' || $mode === 'newpm') {
 } elseif ($action === 'settings') {
     $uid = (int) $_USER['uid'];
 
-    if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
-        DB_save($_TABLES['messenger_userinfo'], "uid,broadcasts,notifications,sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+    if (DB_count($_TABLES['messenger_userinfo'], 'uid', $uid) == 0)  {
+        $CONF_MSG['USER_PMBLOCK'] = empty($CONF_MSG['USER_PMBLOCK']) ? 0 : 1;
+        $CONF_MSG['USER_NOTIFY'] = empty($CONF_MSG['USER_NOTIFY']) ? 0 : 1;
+        $CONF_MSG['USER_INBOX'] = empty($CONF_MSG['USER_INBOX']) ? 0 : 1;
+        DB_query(
+            "INSERT INTO {$_TABLES['messenger_userinfo']} (uid, broadcasts, notifications, sitepreference) "
+            . "VALUES ({$uid}, {$CONF_MSG['USER_PMBLOCK']}, {$CONF_MSG['USER_NOTIFY']}, {$CONF_MSG['USER_INBOX']})"
+        );
     }
 
     $result = DB_query(
         "SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} "
-        . "WHERE uid = $uid"
+        . "WHERE uid = {$uid}"
     );
     list($option1, $option2, $option3) = DB_fetchArray($result);
     $T = COM_newTemplate(CTL_plugin_templatePath('messenger'));
@@ -553,7 +559,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                 $query = DB_query(
                     "SELECT id, source_uid, target_uid, message, subject, datetime, read_date, reply_msgid FROM {$_TABLES['messenger_msg']} "
                     . "LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-                    . "WHERE (target_uid = {$uid} OR target_uid = '0') AND archive = '1' {$orderby} LIMIT {$offset}, {$show}"
+                    . "WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 1 {$orderby} LIMIT {$offset}, {$show}"
                 );
                 break;
 
@@ -569,7 +575,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                 $query = DB_query(
                     "SELECT id, source_uid, target_uid, message, subject, datetime, read_date, reply_msgid FROM {$_TABLES['messenger_msg']} "
                     . "LEFT JOIN {$_TABLES['messenger_dist']} ON id = msg_id "
-                    . "WHERE (target_uid = {$uid} OR target_uid = '0') AND archive = '0' {$orderby} LIMIT {$offset}, {$show}"
+                    . "WHERE (target_uid = {$uid} OR target_uid = 0) AND archive = 0 {$orderby} LIMIT {$offset}, {$show}"
                 );
                 break;
         }
@@ -599,7 +605,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                 if (empty($read_date) && ($folder !== 'OUTBOX' && $folder !== 'SENT')) {
                     DB_query(
                         "UPDATE {$_TABLES['messenger_dist']} SET read_date = UNIX_TIMESTAMP() "
-                        . "WHERE msg_id = '{$msg_id}' AND (target_uid = '{$uid}' OR target_uid = '0')"
+                        . "WHERE msg_id = {$msg_id} AND (target_uid = {$uid} OR target_uid = 0)"
                     );
                     $newmsg_flag = '<img src="' . $CONF_MSG['imgset'] . '/pm_new.gif" border="0" alt="' . $LANG_MSG['NEW'] . '"><br>';
                 } else {
@@ -618,7 +624,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                 // Set name for message listing
 
                 if ((($folder === 'SENT') && ($target > 0)) || (($folder === 'OUTBOX') && ($source == $uid)) ) {
-                    $uname_sql = DB_query("SELECT uid, username, fullname FROM {$_TABLES['users']} WHERE uid = '{$target}'");
+                    $uname_sql = DB_query("SELECT uid, username, fullname FROM {$_TABLES['users']} WHERE uid = {$target}");
                     $N = DB_fetchArray($uname_sql);
 
                     if ($_CONF['show_fullname'] == 1 && $N['fullname'] != '') {
@@ -627,7 +633,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
                         $name  = '<a href="' . $_CONF['site_url'] . '/users.php?mode=profile&amp;uid=' . $target . '">' . $N['username'] . '</a>';
                     }
                 } elseif ($source > 1) {
-                    $uname_sql = DB_query("SELECT uid, username, fullname FROM {$_TABLES['users']} WHERE uid = '{$source}'");
+                    $uname_sql = DB_query("SELECT uid, username, fullname FROM {$_TABLES['users']} WHERE uid = {$source}");
                     $N = DB_fetchArray($uname_sql);
                     
                     if ($_CONF['show_fullname'] == 1 && $N['fullname'] != '') {
