@@ -334,7 +334,8 @@ function plugin_upgrade_messenger() {
         . "WHERE (pi_name = 'messenger') ";
     $result = DB_query($sql);
     $A = DB_fetchArray($result);
-    $pi_version = $A['pi_version'];     // Version info stored in database
+    $installed_version = $A['pi_version'];     // Version info stored in database
+	$pi_version = $installed_version;
     
     // Do upgrading
     if (version_compare($pi_version, '1.9.1', '<=')) {
@@ -346,19 +347,23 @@ function plugin_upgrade_messenger() {
     while (version_compare($pi_version, $CONF_MSG['pi_version'], '<')) {
         switch ($pi_version) {
             case '1.9.2':
+			case '1.9.3':
             default:
                 $pi_version = $CONF_MSG['pi_version'];
                 break;
         }
     }
-
+	
     // Updates plugin info
     $sql = "UPDATE {$_TABLES['plugins']} "
          . "SET pi_version = '" . DB_escapeString($CONF_MSG['pi_version']) . "' "
+		 . ",  pi_gl_version = '" . DB_escapeString($CONF_MSG['gl_version']) . "' "
+		 . ",  pi_homepage = '" . DB_escapeString($CONF_MSG['pi_url']) . "' "
          . "WHERE (pi_name = 'messenger') ";
     DB_query($sql);
-    COM_errorLog("Messenger plugin was successfully updated to version {$CONF_MSG['pi_version']}.");
-
+	
+	COM_errorLog( "Updated Messenger plugin from v$installed_version to v{$CONF_MSG['pi_version']}", 1 );
+	
     return true;
 }
 
@@ -386,9 +391,11 @@ function plugin_autouninstall_messenger() {
     );
 }
 
+// NOTE: DISABLED CONFIGURATION DOCS AS NONE HAVE BEEN WRITTEN YET
 /**
 * Returns the URL to a given document
 */
+/*
 function plugin_getdocumentationurl_messenger($file) {
     global $_CONF;
     
@@ -403,7 +410,7 @@ function plugin_getdocumentationurl_messenger($file) {
     $retval = $_CONF['site_admin_url'] . '/plugins/messenger/docs/' . $lang . '/' . $file . '.html';
 
     return $retval;
-}
+} */
 
 /**
 * Provides text for a Configuration tooltip
@@ -412,10 +419,11 @@ function plugin_getdocumentationurl_messenger($file) {
 * @return   mixed           Text to use regular tooltip, null to use config 
 *                           tooltip hack, or empty string when not available
 */
+/*
 function plugin_getconfigtooltip_messenger($id) {
     // Use config tooltip hack where tooltip is read from the config documentation
-    return null;
-}
+    return;
+}*/ 
 
 /**
 * Loads config infor with config.class.php
