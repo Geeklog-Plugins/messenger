@@ -43,7 +43,14 @@
 require_once '../lib-common.php';
 
 $charset = COM_getCharset();
-$sql = DB_query("SELECT uid, username, fullname FROM $_TABLES[users] WHERE (uid > 1) AND (uid <> {$_USER['uid']}) ORDER BY username");
+
+$sql = "SELECT uid, username, fullname 
+	FROM {$_TABLES['users']} 
+	WHERE (uid > 1) AND (uid <> {$_USER['uid']}) 
+	AND (status = " . USER_ACCOUNT_ACTIVE . " OR status = " . USER_ACCOUNT_NEW_EMAIL . " OR status = " . USER_ACCOUNT_NEW_PASSWORD . ") 
+	ORDER BY username";
+
+$sql = DB_query($sql);
 header('Content-Type: text/html;' . $charset);
 echo <<<HTML
 <!DOCTYPE html>
