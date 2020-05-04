@@ -639,8 +639,8 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
         $target_uid = "0";
         $now = time();
         DB_query(
-            "INSERT INTO {$_TABLES[messenger_msg]} (message, source_uid, subject, datetime, reply_msgid, ip) "
-            . "VALUES ('{$message}', {$_USER[uid]}, '{$subject}', {$now}, {$reply_msgid}, '{$ip}')");
+            "INSERT INTO {$_TABLES['messenger_msg']} (message, source_uid, subject, datetime, reply_msgid, ip) "
+            . "VALUES ('{$message}', {$_USER['uid']}, '{$subject}', {$now}, {$reply_msgid}, '{$ip}')");
         $lastmsg_id = DB_insertID();
         DB_query(
             "INSERT INTO $_TABLES[messenger_dist] (msg_id, target_uid, archive) "
@@ -662,7 +662,7 @@ function messenger_send($towhom,$subject,$message,$reply_msgid=0,$broadcast=fals
                     $notifyMessage .= sprintf($LANG_MSG01['LINE1B'], $_USER['username'], $subject);
                     $notifyMessage .= $LANG_MSG01['LINE2'];
                     $notifyMessage .= $LANG_MSG01['LINE3'] . $_CONF['site_name'] . ' ' . $LANG_MSG01['ADMIN'] . "\n";
-                    $notifyMessage .= "\n" . $_CONF[site_url] . "\n";
+                    $notifyMessage .= "\n" . $_CONF['site_url'] . "\n";
                     msg_sendNotification($target_user, $notifySubject, $notifyMessage, 'messenger');
                 }
             }

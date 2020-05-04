@@ -2,7 +2,7 @@
 
 * Original Author: Blaine Lang < blaine@portalparts.com >
 * Maintainers: [Geeklog Community Members](https://github.com/Geeklog-Plugins/messenger/graphs/contributors)
-* Latest Release Supports: Geeklog v2.2.0 or higher and MySQL 4.1 or higher
+* Latest Release Supports: Geeklog v2.2.1 or higher and MySQL 4.1 or higher
 
 ## Summary
 
