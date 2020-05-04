@@ -55,7 +55,7 @@ $_TABLES['smilies']            = $_DB_table_prefix . 'smilies';
 // Plugin info
 $CONF_MSG = array(
     'pi_version' => '1.9.4',                                        // Plugin Version
-    'gl_version' => '2.2.0',                                        // GL Version plugin for
+    'gl_version' => '2.2.1',                                        // GL Version plugin for
     'pi_url'     => 'https://github.com/Geeklog-Plugins/messenger', // Plugin Homepage
     'GROUPS'     => array(
         'Messenger Admin' => 'Users in this group can administer the Messenger plugin',
