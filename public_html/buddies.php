@@ -53,6 +53,7 @@ function msg_selectbuddies($uid, $allusers = false) {
         $result = DB_query(
             "SELECT uid, username, fullname FROM {$_TABLES['users']} "
             . "WHERE (uid > 1) AND (uid <> {$uid}) "
+			. "AND (status = " . USER_ACCOUNT_ACTIVE . " OR status = " . USER_ACCOUNT_NEW_EMAIL . " OR status = " . USER_ACCOUNT_NEW_PASSWORD . ") "
             . "ORDER BY username"
         );
 
