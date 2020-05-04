@@ -43,6 +43,8 @@ if (stripos($_SERVER['PHP_SELF'], 'functions.inc') !== false) {
     die('This file cannot be used on its own.');
 }
 
+use Geeklog\Input;
+
 // Language file Include
 $langfile = __DIR__ . '/language/' . $_CONF['language'] . '.php';
 clearstatcache();
@@ -246,6 +248,65 @@ function plugin_user_delete_messenger($uid)
 
     // Finally - Delete the user preference record
     DB_query("DELETE FROM {$_TABLES['messenger_userinfo']} WHERE uid = {$uid}");
+}
+
+// Adds privacy options to user settings page under Privacy
+function plugin_profilevariablesedit_messenger($uid, &$template)
+{
+    global $_TABLES, $LANG_MSG, $CONF_MSG;
+    if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
+	DB_save ($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+    }
+    $result = DB_query ("SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = $uid");
+    list ($option1,$option2,$option3) = DB_fetchArray ($result);
+	
+	$template->set_var ('lang_field', $LANG_MSG['lang_broadcasts']);
+	$template->set_var ('lang_field_text', $LANG_MSG['help_broadcasts']);
+	$template->set_var('fieldname', 'messenger_broadcasts');
+	$template->set_var('fieldvalue', '1');
+	if ($option1) {
+        $template->set_var('fieldchecked', 'checked="checked"');
+    } else {
+        $template->set_var('fieldchecked', '');
+    }
+	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+	
+	$template->set_var ('lang_field', $LANG_MSG['lang_notifications']);
+	$template->set_var ('lang_field_text', $LANG_MSG['help_notifications']);
+	$template->set_var('fieldname', 'messenger_notifications');
+	$template->set_var('fieldvalue', '1');
+    if ($option2) {
+        $template->set_var('fieldchecked', 'checked="checked"');
+    } else {
+        $template->set_var('fieldchecked', '');
+    }
+	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+	
+	$template->set_var ('lang_field', $LANG_MSG['lang_sitenotifications']);
+	$template->set_var ('lang_field_text', $LANG_MSG['help_sitenotifications']);
+	$template->set_var('fieldname', 'messenger_sitepreference');
+	$template->set_var('fieldvalue', '1');
+    if ($option3) {
+        $template->set_var('fieldchecked', 'checked="checked"');
+    } else {
+        $template->set_var('fieldchecked', '');
+    }
+	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);	
+}
+
+function plugin_profileextrassave_messenger($uid = '')
+{
+    global $_USER, $_TABLES;
+    
+	if (empty($uid)) {
+        $uid = $_USER['uid'];
+    }
+	
+	$broadcasts = (int) Input::fPost('messenger_broadcasts', 0);
+	$notifications = (int) Input::fPost('messenger_notifications', 0);
+	$sitepreference = (int) Input::fPost('messenger_sitepreference', 0);
+	
+    DB_save($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference", "'$uid', $broadcasts, $notifications, $sitepreference");
 }
 
 /**
