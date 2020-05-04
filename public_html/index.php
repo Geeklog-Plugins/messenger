@@ -193,13 +193,13 @@ if ($action === 'delall') {
 } elseif ($action === 'addbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
     DB_query("INSERT INTO {$_TABLES['messenger_buddies']} (uid, buddy_id) VALUES ({$_USER['uid']}, {$buddy})");
-    if ($_GET['fromprofile'] == '1') {
+    if (isset($_GET['fromprofile']) && $_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
 } elseif ($action === 'delbuddy') {
     $buddy = (int) Input::fRequest('buddy', 0);
     DB_query("DELETE FROM {$_TABLES['messenger_buddies']} WHERE uid = {$_USER['uid']} AND buddy_id = {$buddy}");
-    if ($_GET['fromprofile'] == '1') {
+    if (isset($_GET['fromprofile']) && $_GET['fromprofile'] == '1') {
         COM_redirect($_CONF['site_url'] ."/users.php?mode=profile&amp;uid={$buddy}");
     }
 } elseif ($action === 'save_settings') {
