@@ -49,7 +49,7 @@ ob_start();
 echo COM_startBlock($LANG_MSG02['BLOCKHEADER']);
 
 if (Input::post('edit') == $LANG_MSG02['EDITSUBMIT']) {
-    $pos = strrpos($_POST['sel_smilie'],'/') + 1;
+    $pos = strrpos($_POST['sel_smilie'], '/') + 1;
     $image_filename = strtolower(substr($_POST['sel_smilie'], $pos));
     DB_query(
         "UPDATE {$_TABLES['smilies']} SET code = '{$_POST['smile_code']}', smile_url = '{$image_filename}', emoticon ='{$_POST['smile_desc']}' "
@@ -59,7 +59,7 @@ if (Input::post('edit') == $LANG_MSG02['EDITSUBMIT']) {
 }
 
 if (Input::post('add') == $LANG_MSG02['ADDSUBMIT']) {
-    $pos = strrpos($_POST['sel_smilie'],'/') + 1;
+    $pos = strrpos($_POST['sel_smilie'], '/') + 1;
     $image_filename = strtolower(substr($_POST['sel_smilie'], $pos));
     DB_query(
         "INSERT INTO {$_TABLES['smilies']} (code, smile_url, emoticon) VALUES ('{$_POST['smile_code']}', '$image_filename', '{$_POST['smile_desc']}')"
@@ -69,16 +69,17 @@ if (Input::post('add') == $LANG_MSG02['ADDSUBMIT']) {
 
 $phpself = $_CONF['site_admin_url'] . '/plugins/messenger/editsmilies.php';
 
-function fill_smilieSelect($currentsmilie='') {
-    global $_CONF,$CONF_MSG;
+function fill_smilieSelect($currentSmilie = '')
+{
+    global $_CONF, $CONF_MSG;
 
-    $baseurl = $CONF_MSG['SMILIE_URL'];
+    $baseUrl = $CONF_MSG['SMILIE_URL'];
     $dirPath = $CONF_MSG['SMILIE_PATH'];
 
     if ($handle = opendir($dirPath)) {
         while (false !== ($file = readdir($handle))) {
             if ($file != "." && $file != "..") {
-                $filesArr[] = trim($file); 
+                $filesArr[] = trim($file);
             }
         }
         closedir($handle);
@@ -86,8 +87,8 @@ function fill_smilieSelect($currentsmilie='') {
 
     $smilies_select = '';
     foreach ($filesArr as $file) {
-        $smilies_select .= '<option value="' . $baseurl . $file . '" ';
-        if ($file == $currentsmilie) {
+        $smilies_select .= '<option value="' . $baseUrl . $file . '" ';
+        if ($file == $currentSmilie) {
             $smilies_select .= 'selected="selected"';
         }
         $smilies_select .= '>' . $file . '</option>';
@@ -97,13 +98,14 @@ function fill_smilieSelect($currentsmilie='') {
 }
 
 
-function display_smilies() {
+function display_smilies()
+{
     global $_CONF, $CONF_MSG, $_TABLES, $phpself, $LANG_MSG02;
 
-    $baseurl = $CONF_MSG['SMILIE_URL'];
+    $baseUrl = $CONF_MSG['SMILIE_URL'];
     $query = DB_query("SELECT smilie_id, code, smile_url, emoticon FROM {$_TABLES['smilies']} ORDER BY smilie_id");
     $header = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
-    $header->set_file(array('header' => 'smiliedisp_header.thtml'));
+    $header->set_file(['header' => 'smiliedisp_header.thtml']);
     $header->set_var('help_msg', $LANG_MSG02['HELPMSG1']);
     $header->set_var('phpself', $phpself);
     $header->set_var('LANG_image', $LANG_MSG02['IMAGE']);
@@ -114,12 +116,12 @@ function display_smilies() {
     $retval = $header->finish($header->get_var('output'));
 
     while (list($smilie_id, $code, $smile_url, $emoticon) = DB_fetchARRAY($query)) {
-        $cssid = $smilie_id % 2 + 1;
+        $cssId = $smilie_id % 2 + 1;
         $row = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
-        $row->set_file(array('row' => 'smiliedisp_row.thtml'));
+        $row->set_file(['row' => 'smiliedisp_row.thtml']);
         $row->set_var('phpself', $phpself);
-        $row->set_var('cssid', $cssid);
-        $row->set_var('smilie_url',$baseurl . $smile_url );
+        $row->set_var('cssid', $cssId);
+        $row->set_var('smilie_url', $baseUrl . $smile_url);
         $row->set_var('code', $code);
         $row->set_var('emoticon', $emoticon);
         $row->set_var('smilie_id', $smilie_id);
@@ -130,63 +132,66 @@ function display_smilies() {
     }
 
     $retval .= '</table>';
+
     return $retval;
 }
 
-function add_smilie() {
-    global $_CONF,$CONF_MSG,$_TABLES,$phpself,$LANG_MSG02;
+function add_smilie()
+{
+    global $_CONF, $CONF_MSG, $_TABLES, $phpself, $LANG_MSG02;
 
-    $currentsmilie = $CONF_MSG['SMILIE_URL'] .'icon_smile.gif';
+    $currentSmilie = $CONF_MSG['SMILIE_URL'] . 'icon_smile.gif';
     $smilies_select = fill_smilieSelect();
-    $addsmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
-    $addsmilie->set_file (array ('addsmilie'=>'addsmilie.thtml'));
-    $addsmilie->set_var ('phpself', $phpself);
-    $addsmilie->set_var ('smilies_select',$smilies_select);
-    $addsmilie->set_var ('currentsmilie', $currentsmilie);
-    $addsmilie->set_var ('emoticon', $emoticon);
-    $addsmilie->set_var ('smilie_id', $smilie_id);
-    $addsmilie->set_var ('LANG_add', $LANG_MSG02['ADDPROMPT']);
-    $addsmilie->set_var ('LANG_filename', $LANG_MSG02['FILENAME']);
-    $addsmilie->set_var ('LANG_description', $LANG_MSG02['DESCRIPTION']);
-    $addsmilie->set_var ('LANG_filename', $LANG_MSG02['FILENAME']);
-    $addsmilie->set_var ('LANG_emoticon', $LANG_MSG02['CODE']);
-    $addsmilie->set_var ('LANG_addsmilie', $LANG_MSG02['ADDSUBMIT']);
-    $addsmilie->parse ('output', 'addsmilie');
-    $retval .= $addsmilie->finish($addsmilie->get_var('output'));
-    return $retval;
+    $addSmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
+    $addSmilie->set_file(['addsmilie' => 'addsmilie.thtml']);
+    $addSmilie->set_var('phpself', $phpself);
+    $addSmilie->set_var('smilies_select', $smilies_select);
+    $addSmilie->set_var('currentsmilie', $currentSmilie);
+    $addSmilie->set_var('emoticon', $emoticon);
+    $addSmilie->set_var('smilie_id', $smilie_id);
+    $addSmilie->set_var('LANG_add', $LANG_MSG02['ADDPROMPT']);
+    $addSmilie->set_var('LANG_filename', $LANG_MSG02['FILENAME']);
+    $addSmilie->set_var('LANG_description', $LANG_MSG02['DESCRIPTION']);
+    $addSmilie->set_var('LANG_filename', $LANG_MSG02['FILENAME']);
+    $addSmilie->set_var('LANG_emoticon', $LANG_MSG02['CODE']);
+    $addSmilie->set_var('LANG_addsmilie', $LANG_MSG02['ADDSUBMIT']);
+    $addSmilie->parse('output', 'addsmilie');
+
+    return $addSmilie->finish($addSmilie->get_var('output'));
 }
 
-function edit_smilie($id) {
-    global $_CONF,$_TABLES,$phpself,$LANG_MSG02,$CONF_MSG;
+function edit_smilie($id)
+{
+    global $_CONF, $_TABLES, $phpself, $LANG_MSG02, $CONF_MSG;
 
-    $baseurl = $CONF_MSG['SMILIE_URL'];
+    $baseUrl = $CONF_MSG['SMILIE_URL'];
     $query = DB_query("SELECT code, smile_url, emoticon FROM {$_TABLES['smilies']} WHERE smilie_id = {$id} ");
-    list($code,$smile_url,$emoticon) = DB_fetchARRAY($query);
+    list($code, $smile_url, $emoticon) = DB_fetchARRAY($query);
     if (!empty($smile_url)) {
-        $currentsmilie = $baseurl .$smile_url;
+        $currentSmilie = $baseUrl . $smile_url;
     } else {
-        $currentsmilie = $baseurl .'icon_smile.gif';
+        $currentSmilie = $baseUrl . 'icon_smile.gif';
     }
 
     $smilies_select = fill_smilieSelect($smile_url);
 
-    $editsmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
-    $editsmilie->set_file (array ('editsmilie'=>'editsmilie.thtml'));
-    $editsmilie->set_var ('phpself', $phpself);
-    $editsmilie->set_var ('smilies_select',$smilies_select);
-    $editsmilie->set_var ('currentsmilie', $currentsmilie);
-    $editsmilie->set_var ('code', $code);
-    $editsmilie->set_var ('emoticon', $emoticon);
-    $editsmilie->set_var ('id', $id);
-    $editsmilie->set_var ('LANG_edit', $LANG_MSG02['EDITPROMPT']);
-    $editsmilie->set_var ('LANG_filename', $LANG_MSG02['FILENAME']);
-    $editsmilie->set_var ('LANG_description', $LANG_MSG02['DESCRIPTION']);
-    $editsmilie->set_var ('LANG_filename', $LANG_MSG02['FILENAME']);
-    $editsmilie->set_var ('LANG_emoticon', $LANG_MSG02['CODE']);
-    $editsmilie->set_var ('LANG_editsmilie', $LANG_MSG02['EDITSUBMIT']);
-    $editsmilie->parse ('output', 'editsmilie');
-    $retval = $editsmilie->finish($editsmilie->get_var('output'));
-    return $retval;
+    $editSmilie = COM_newTemplate(CTL_plugin_templatePath('messenger', 'admin'));
+    $editSmilie->set_file(['editsmilie' => 'editsmilie.thtml']);
+    $editSmilie->set_var('phpself', $phpself);
+    $editSmilie->set_var('smilies_select', $smilies_select);
+    $editSmilie->set_var('currentsmilie', $currentSmilie);
+    $editSmilie->set_var('code', $code);
+    $editSmilie->set_var('emoticon', $emoticon);
+    $editSmilie->set_var('id', $id);
+    $editSmilie->set_var('LANG_edit', $LANG_MSG02['EDITPROMPT']);
+    $editSmilie->set_var('LANG_filename', $LANG_MSG02['FILENAME']);
+    $editSmilie->set_var('LANG_description', $LANG_MSG02['DESCRIPTION']);
+    $editSmilie->set_var('LANG_filename', $LANG_MSG02['FILENAME']);
+    $editSmilie->set_var('LANG_emoticon', $LANG_MSG02['CODE']);
+    $editSmilie->set_var('LANG_editsmilie', $LANG_MSG02['EDITSUBMIT']);
+    $editSmilie->parse('output', 'editsmilie');
+
+    return $editSmilie->finish($editSmilie->get_var('output'));
 }
 
 $id = (int) Input::fGet('id', 0);

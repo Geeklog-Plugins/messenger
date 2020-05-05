@@ -44,17 +44,17 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
 }
 
 // Messenger Plugin Main Settings
-$_CONF_VALIDATE['messenger'] = array(
-    'debug'                 => array('rule' => 'boolean'),
-    'smiliesEnabled'        => array('rule' => 'boolean'),
-    'RestrictedAccess'      => array('rule' => 'boolean'),
-    'messagedelay'          => array('rule' => 'numeric'),
-    'automsg'               => array('rule' => array('inList', array(0, 1), false)),
-    'notification'          => array('rule' => 'boolean'),
-    'mailoff'               => array('rule' => 'boolean'),
-    'RootBdcastNotificaton' => array('rule' => 'boolean'),
-    'newmember'             => array('rule' => 'boolean'),
-    'USER_PMBLOCK'          => array('rule' => 'boolean'),
-    'USER_NOTIFY'           => array('rule' => 'boolean'),
-    'USER_INBOX'            => array('rule' => 'boolean'),
-);
+$_CONF_VALIDATE['messenger'] = [
+    'debug'                 => ['rule' => 'boolean'],
+    'smiliesEnabled'        => ['rule' => 'boolean'],
+    'RestrictedAccess'      => ['rule' => 'boolean'],
+    'messagedelay'          => ['rule' => 'numeric'],
+    'automsg'               => ['rule' => ['inList', [0, 1], false]],
+    'notification'          => ['rule' => 'boolean'],
+    'mailoff'               => ['rule' => 'boolean'],
+    'RootBdcastNotificaton' => ['rule' => 'boolean'],
+    'newmember'             => ['rule' => 'boolean'],
+    'USER_PMBLOCK'          => ['rule' => 'boolean'],
+    'USER_NOTIFY'           => ['rule' => 'boolean'],
+    'USER_INBOX'            => ['rule' => 'boolean'],
+];

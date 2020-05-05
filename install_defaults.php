@@ -44,15 +44,15 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
 }
 
 /**
-* Messenger default settings
-*
-* Initial Installation Defaults used when loading the online configuration
-* records.  These settings are only used during the initial installation
-* and not referenced any more once the plugin is installed
+ * Messenger default settings
+ *
+ * Initial Installation Defaults used when loading the online configuration
+ * records.  These settings are only used during the initial installation
+ * and not referenced any more once the plugin is installed
 */
 global $_CONF, $_MSG_DEFAULT;
 
-$_MSG_DEFAULT = array();
+$_MSG_DEFAULT = [];
 
 // Global setting for plugin
 $_MSG_DEFAULT['debug']                 = false;   // Set true to display POST and GET vars
@@ -92,11 +92,11 @@ function plugin_initconfig_messenger() {
 
     $me = 'messenger';
     $c = config::get_instance();
-    
+
     if ($c->group_exists($me)) {
         return true;
     }
-    
+
     $sg = 0;
     $fs = 0;
     $tab = 0;

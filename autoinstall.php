@@ -44,53 +44,56 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
 }
 
 /**
-* Plugin autoinstall function
-*
-* @param    string  $pi_name    Plugin name
-* @return   array               Plugin information
-*/
-function plugin_autoinstall_messenger($pi_name) {
+ * Plugin autoinstall function
+ *
+ * @param  string  $pi_name  Plugin name
+ * @return   array               Plugin information
+ */
+function plugin_autoinstall_messenger($pi_name)
+{
     global $CONF_MSG;
 
     require_once __DIR__ . '/config.php';
     $piName = 'messenger';
 
-    return array(
-        'info'      => array(
+    return [
+        'info'     => [
             'pi_name'         => $piName,
             'pi_display_name' => ucfirst($piName),
             'pi_version'      => $CONF_MSG['pi_version'],
             'pi_gl_version'   => $CONF_MSG['gl_version'],
             'pi_homepage'     => $CONF_MSG['pi_url'],
-        ),
-        'groups'    => $CONF_MSG['GROUPS'],
-        'features'  => $CONF_MSG['FEATURES'],
-        'mappings'  => $CONF_MSG['MAPPINGS'],
-        'tables'    => $CONF_MSG['TABLES'],
-    );
+        ],
+        'groups'   => $CONF_MSG['GROUPS'],
+        'features' => $CONF_MSG['FEATURES'],
+        'mappings' => $CONF_MSG['MAPPINGS'],
+        'tables'   => $CONF_MSG['TABLES'],
+    ];
 }
 
 /**
-* Load plugin configuration from database
-*
-* @param    string  $pi_name    Plugin name
-* @return   boolean             true on success, otherwise false
-* @see      plugin_initconfig_messenger
-*/
-function plugin_load_configuration_messenger($pi_name) {
+ * Load plugin configuration from database
+ *
+ * @param  string  $pi_name  Plugin name
+ * @return   boolean             true on success, otherwise false
+ * @see      plugin_initconfig_messenger
+ */
+function plugin_load_configuration_messenger($pi_name)
+{
     require_once __DIR__ . '/install_defaults.php';
 
     return plugin_initconfig_messenger();
 }
 
 /**
-* Checks if the plugin is compatible with this Geeklog version
-*
-* @param    string  $pi_name    Plugin name
-* @return   boolean             true: plugin compatible; false: not compatible
-*/
-function plugin_compatible_with_this_version_messenger($pi_name) {
-    global $_CONF, $_DB_dbms;
+ * Checks if the plugin is compatible with this Geeklog version
+ *
+ * @param  string  $pi_name  Plugin name
+ * @return   boolean             true: plugin compatible; false: not compatible
+ */
+function plugin_compatible_with_this_version_messenger($pi_name)
+{
+    global $_DB_dbms;
 
     // checks if we support the DBMS the site is running on
     $dbFile = __DIR__ . '/sql/' . $_DB_dbms . '_install.php';

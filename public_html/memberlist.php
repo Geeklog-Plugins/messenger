@@ -76,7 +76,7 @@ HTML;
 
 while ($A = DB_fetchArray($sql)) {
     $uid = $A['uid'];
-    
+
     if ($_CONF['show_fullname'] == 1 && trim($A['fullname']) != '') {
         $name = $A['fullname'];
     } else {
