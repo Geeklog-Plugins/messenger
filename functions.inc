@@ -90,7 +90,7 @@ function plugin_getheadercode_messenger() {
 */
 function plugin_getfootercode_messenger() {
     global $_CONF;
-    
+
 }
 
 /**
@@ -102,7 +102,7 @@ function plugin_getfootercode_messenger() {
 */
 function plugin_itemsaved_messenger($id, $type, $old_id) {
     global $_CONF;
-    
+
 }
 
 /**
@@ -135,7 +135,7 @@ function plugin_showstats_messenger($showsitestats) {
         // This shows in the summary box
 //        $total_pages=DB_count($_TABLES['table1']);     // Fill this with count for summary
 //        $summary_label = "messenger";                   // Fill this with label displayed
-        
+
 //        $retval  = '<table border = "0" width="100%" cellspacing="0" cellpadding="0">';
 //        $retval .= '<tr><td>{$summary_label}</td>';
 //        $retval .= '<td align="right">' . $total_pages . '&nbsp;&nbsp;</td></tr></table>';
@@ -152,13 +152,13 @@ function plugin_showstats_messenger($showsitestats) {
 //                $stat_templates->set_var('item_url', $_CONF['site_url'] . '/messenger/index.php?item=' . $A['id']);
 //                $stat_templates->set_var('item_text', $A['title']);
 //                $stat_templates->set_var('item_stat', $A['hits']);
-//                $stat_templates->parse('stat_row','statrow', true); 
+//                $stat_templates->parse('stat_row','statrow', true);
 //            }
 //            $stat_templates->parse('output', 'itemstats');
 //            $retval .= $stat_templates->finish($stat_templates->get_var('output'));
 //        } else {
 //            $retval .= 'It appears that there are no messengers on this site or no one has ever viewed them.';
-//        } 
+//        }
 //        $retval .= COM_endBlock();
 //    }
     return $retval;
@@ -171,7 +171,7 @@ function plugin_showstats_messenger($showsitestats) {
 */
 function plugin_cclabel_messenger() {
     global $_CONF;
-    
+
     if (SEC_hasRights('messenger.edit')) {
         $pi_name   = 'Smilies';
         $admin_url = $_CONF['site_admin_url'] . '/plugins/messenger/editsmilies.php';
@@ -254,59 +254,80 @@ function plugin_user_delete_messenger($uid)
 function plugin_profilevariablesedit_messenger($uid, &$template)
 {
     global $_TABLES, $LANG_MSG, $CONF_MSG;
-    if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
-	DB_save ($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+
+    // Remember edit can happen by User for User Settings and edit/new by Admin on User Admin form
+    // Messenger plugin privacy fields do not display on the Admin User form, only the User Settings form
+    // Check for Privacy Title field which is present in privacyblock.thtml to confirm we are on usersettings page and privacyblock is being used.
+    // Could have used basename($_SERVER['SCRIPT_FILENAME']) but this function gets called for the preview as well on usersettings.php which does not display the privacy settings so the Privacy Block is not set
+    if (!empty($template->get_var('lang_privacy_title'))) {
+        // Note: This should never happen (a user not existing) since privacy settings only display on the user settings form so the user must exist
+        if ($uid > 1) {
+            if (DB_count($_TABLES['messenger_userinfo'],"uid", $uid) == 0)  {
+               DB_save ($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference","'$uid','{$CONF_MSG['USER_PMBLOCK']}','{$CONF_MSG['USER_NOTIFY']}','{$CONF_MSG['USER_INBOX']}'");
+            }
+
+            $result = DB_query ("SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = $uid");
+            list ($option1,$option2,$option3) = DB_fetchArray ($result);
+        } else {
+            $option1 = $CONF_MSG['USER_PMBLOCK'];
+            $option2 = $CONF_MSG['USER_NOTIFY'];
+            $option3 = $CONF_MSG['USER_INBOX'];
+        }
+
+    	$template->set_var ('lang_field', $LANG_MSG['lang_broadcasts']);
+    	$template->set_var ('lang_field_text', $LANG_MSG['help_broadcasts']);
+    	$template->set_var('fieldname', 'messenger_broadcasts');
+    	$template->set_var('fieldvalue', '1');
+    	if ($option1) {
+            $template->set_var('fieldchecked', 'checked="checked"');
+        } else {
+            $template->set_var('fieldchecked', '');
+        }
+    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+
+    	$template->set_var ('lang_field', $LANG_MSG['lang_notifications']);
+    	$template->set_var ('lang_field_text', $LANG_MSG['help_notifications']);
+    	$template->set_var('fieldname', 'messenger_notifications');
+    	$template->set_var('fieldvalue', '1');
+        if ($option2) {
+            $template->set_var('fieldchecked', 'checked="checked"');
+        } else {
+            $template->set_var('fieldchecked', '');
+        }
+    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+
+    	$template->set_var ('lang_field', $LANG_MSG['lang_sitenotifications']);
+    	$template->set_var ('lang_field_text', $LANG_MSG['help_sitenotifications']);
+    	$template->set_var('fieldname', 'messenger_sitepreference');
+    	$template->set_var('fieldvalue', '1');
+        if ($option3) {
+            $template->set_var('fieldchecked', 'checked="checked"');
+        } else {
+            $template->set_var('fieldchecked', '');
+        }
+
+    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
     }
-    $result = DB_query ("SELECT broadcasts, notifications, sitepreference FROM {$_TABLES['messenger_userinfo']} WHERE uid = $uid");
-    list ($option1,$option2,$option3) = DB_fetchArray ($result);
-	
-	$template->set_var ('lang_field', $LANG_MSG['lang_broadcasts']);
-	$template->set_var ('lang_field_text', $LANG_MSG['help_broadcasts']);
-	$template->set_var('fieldname', 'messenger_broadcasts');
-	$template->set_var('fieldvalue', '1');
-	if ($option1) {
-        $template->set_var('fieldchecked', 'checked="checked"');
-    } else {
-        $template->set_var('fieldchecked', '');
-    }
-	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
-	
-	$template->set_var ('lang_field', $LANG_MSG['lang_notifications']);
-	$template->set_var ('lang_field_text', $LANG_MSG['help_notifications']);
-	$template->set_var('fieldname', 'messenger_notifications');
-	$template->set_var('fieldvalue', '1');
-    if ($option2) {
-        $template->set_var('fieldchecked', 'checked="checked"');
-    } else {
-        $template->set_var('fieldchecked', '');
-    }
-	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
-	
-	$template->set_var ('lang_field', $LANG_MSG['lang_sitenotifications']);
-	$template->set_var ('lang_field_text', $LANG_MSG['help_sitenotifications']);
-	$template->set_var('fieldname', 'messenger_sitepreference');
-	$template->set_var('fieldvalue', '1');
-    if ($option3) {
-        $template->set_var('fieldchecked', 'checked="checked"');
-    } else {
-        $template->set_var('fieldchecked', '');
-    }
-	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);	
 }
 
 function plugin_profileextrassave_messenger($uid = '')
 {
     global $_USER, $_TABLES;
-    
+
 	if (empty($uid)) {
         $uid = $_USER['uid'];
     }
-	
-	$broadcasts = (int) Input::fPost('messenger_broadcasts', 0);
-	$notifications = (int) Input::fPost('messenger_notifications', 0);
-	$sitepreference = (int) Input::fPost('messenger_sitepreference', 0);
-	
-    DB_save($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference", "'$uid', $broadcasts, $notifications, $sitepreference");
+
+    // Make sure post variables are set. Remember edit can happen by User for User Settings and edit/new by Admin on User Admin form
+    // Messenger plugin privacy fields do not display on the Admin User form, only the user settings form
+    // Cannot check isset($_POST['messenger_broadcasts']) since checkboxs if not checked do not get returned and we need to know that info
+    if ($uid > 1 && basename($_SERVER['SCRIPT_FILENAME']) == 'usersettings.php') {
+    	$broadcasts = (int) Input::fPost('messenger_broadcasts', 0);
+    	$notifications = (int) Input::fPost('messenger_notifications', 0);
+    	$sitepreference = (int) Input::fPost('messenger_sitepreference', 0);
+
+        DB_save($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference", "'$uid', $broadcasts, $notifications, $sitepreference");
+    }
 }
 
 /**
@@ -345,7 +366,7 @@ function plugin_profilevariablesdisplay_messenger($uid, $template)
 */
 function plugin_chkVersion_messenger() {
     global $CONF_MSG;
-    
+
     return $CONF_MSG['pi_version'];
 }
 
@@ -372,9 +393,9 @@ function plugin_getuseroption_messenger() {
                 . "LEFT JOIN {$_TABLES['messenger_msg']} msg ON dist.msg_id = msg.id "
                 . "WHERE (target_uid = {$_USER['uid']} AND read_date is NULL) OR (target_uid = 0 AND archive = 0)");
        }
-       
+
        list($count) = DB_fetchArray($sql);
-       
+
        if ($count > 0) {
            return array($LANG_MSG['usermenu'] . '&nbsp;(' .$count. ')', $_CONF['site_url'] . '/messenger/index.php', 0);
        } else {
@@ -397,7 +418,7 @@ function plugin_upgrade_messenger() {
     $A = DB_fetchArray($result);
     $installed_version = $A['pi_version'];     // Version info stored in database
 	$pi_version = $installed_version;
-    
+
     // Do upgrading
     if (version_compare($pi_version, '1.9.1', '<=')) {
         require_once __DIR__ . '/install_defaults.php';
@@ -414,7 +435,7 @@ function plugin_upgrade_messenger() {
                 break;
         }
     }
-	
+
     // Updates plugin info
     $sql = "UPDATE {$_TABLES['plugins']} "
          . "SET pi_version = '" . DB_escapeString($CONF_MSG['pi_version']) . "' "
@@ -422,9 +443,9 @@ function plugin_upgrade_messenger() {
 		 . ",  pi_homepage = '" . DB_escapeString($CONF_MSG['pi_url']) . "' "
          . "WHERE (pi_name = 'messenger') ";
     DB_query($sql);
-	
+
 	COM_errorLog( "Updated Messenger plugin from v$installed_version to v{$CONF_MSG['pi_version']}", 1 );
-	
+
     return true;
 }
 
@@ -459,11 +480,11 @@ function plugin_autouninstall_messenger() {
 /*
 function plugin_getdocumentationurl_messenger($file) {
     global $_CONF;
-    
+
     $lang = COM_getLanguageName();
     $path = $_CONF['path_html'] . 'admin/plugins/messenger/docs/' . $lang . '/' . $file . '.html';
     clearstatcache();
-    
+
     if (!file_exists($path)) {
         $lang = 'english';
     }
@@ -477,14 +498,14 @@ function plugin_getdocumentationurl_messenger($file) {
 * Provides text for a Configuration tooltip
 *
 * @param    string  $id     Id of config value
-* @return   mixed           Text to use regular tooltip, null to use config 
+* @return   mixed           Text to use regular tooltip, null to use config
 *                           tooltip hack, or empty string when not available
 */
 /*
 function plugin_getconfigtooltip_messenger($id) {
     // Use config tooltip hack where tooltip is read from the config documentation
     return;
-}*/ 
+}*/
 
 /**
 * Loads config infor with config.class.php
@@ -656,7 +677,7 @@ function msg_cleandata($parameter) {
     } else {
        msg_cleanfield($parameter);
     }
-    
+
     return $parameter;
 }
 
