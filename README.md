@@ -1,4 +1,4 @@
-# Geeklog Messenger Plugin v1.9.5
+# Geeklog Messenger Plugin
 
 * Original Author: Blaine Lang < blaine@portalparts.com >
 * Maintainers: [Geeklog Community Members](https://github.com/Geeklog-Plugins/messenger/graphs/contributors)
