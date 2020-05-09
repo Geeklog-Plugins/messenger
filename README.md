@@ -1,8 +1,8 @@
-# Geeklog Messenger Plugin
+# Geeklog Messenger Plugin v1.9.5
 
 * Original Author: Blaine Lang < blaine@portalparts.com >
 * Maintainers: [Geeklog Community Members](https://github.com/Geeklog-Plugins/messenger/graphs/contributors)
-* Latest Release Supports: Geeklog v2.2.1 or higher and MySQL 4.1 or higher
+* Latest Release Supports: Geeklog v2.2.1 or higher
 
 ## Summary
 
@@ -33,6 +33,15 @@ To request a feature or report an issue see:
 https://github.com/Geeklog-Plugins/messenger/issues
 
 ## Versions
+
+### v1.9.5
+
+* Release Date: May ??, 2020
+* Requires minimum Geeklog version 2.2.1
+
+#### Changlog
+
+* [Improvement] The messenger plugin now accepts IPv6 addresses
 
 ### v1.9.4
 

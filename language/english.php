@@ -40,89 +40,89 @@
 // |                                                                             |
 // +-----------------------------------------------------------------------------+
 
-$LANG_MSG  = array(
-    'err01'             => 'Access not permitted to this feature',
-    'err02'             => 'Attempt to perform an illegal operation',
-    'err03'             => 'Error: One of more members names are invalid',
-    'BLOCKHEADER'       => 'Private Messages',
-    'RE'                => 'Re:',
-    'ERROR'             => 'Error!',
-    'FROM'              => 'From',
-    'TO'                => 'To',
-    'SUBJECT'           => 'Subject',
-    'PM'                => 'PM',
-    'NEW_PM'            => 'NewPM',
-    'NEW'               => 'New',
-    'NEWMESSAGE'        => 'New Message',
-    'DATE'              => 'Date',
-    'ARCHIVE'           => '&nbsp;Archive&nbsp;',
-    'ARCHIVEMSG'        => 'Archive Message',
-    'REPLY'             => '&nbsp;Reply&nbsp;',
-    'REPLYMSG'          => 'Reply to sender',
-    'DELETE'            => '&nbsp;Delete&nbsp;',
-    'DELETEMSG'         => 'Delete Message',
-    'INBOX'             => 'Inbox',
-    'OUTBOX'            => 'Outbox',
-    'SENTBOX'           => 'Sent',
-    'ARCHIVEBOX'        => 'Archive',
-    'REMOVE'            => 'Delete this message',
-    'SUBMIT'            => 'Submit',
-    'CANCEL'            => 'Cancel',
-    'PREVIEW'           => 'Preview',
-    'MESSAGE'           => 'Message',
-    'MEMBERS'           => 'Members',
-    'MEMBERSLIST'       => 'Memberslist',
-    'ANONYMOUS'         => 'Guest',
-    'BROADCAST'         => 'Broadcast',
-    'BROADCAST_MSG'     => 'Broadcast Message',
-    'EXPIRE_MSG'        => 'Message will auto delete on %s',
-    'OPTIONS'           => 'Options',
-    'DELALL'            => 'Delete All',
-    'DELALLMSG'         => 'Delete all messages',
-    'DELOLDER'          => 'Delete older',
-    'DELOLDERMSG'       => 'Delete all messages before today',
-    'VIEWORIGINAL'      => '<hr>View&nbsp;<a href="%s">Original </a>&nbsp;Message',
-    'MYBUDDIES'         => 'My Buddies',
-    'MSGFAVORITES'      => 'Messenger Favorites',
-    'ADDBUDDY'          => 'Add Buddy',
-    'DELBUDDY'          => 'Delete Buddy',
-    'HOME'              => 'Home',
-    'SETTINGS'          => 'Settings',
-    'prompt01'          => 'the page does not automatically reload, please click <a href=%s>here</a>',
-    'prompt02'          => '* Broadcast message. Only originator or Admin can delete.<br>&nbsp;Delete will remove all copies.',
-    'prompt02b'         => '* Broadcast message. Only originator or Admin can delete.',
-    'prompt03'          => 'Sent on: ',
-    'statusmsg1'        => '%s Click <a href="%s">here</a> to continue.',
-    'statusmsg2'        => 'to continue',
-    'statusmsg3'        => 'This page should return automatically. If you do not wish to wait, click <a href="%s">here</a>',
-    'msgsent'           => 'Message Sent!',
-    'msgsave'           => 'Your message to %s has been sent.',
-    'msgreturn'         => 'to return to your inbox.',
-    'msgerror'          => 'Your message has not been sent. Please go <a href="javascript:history.back()">back</a> and make sure you have all fields filled.',
-    'msgdelok'          => 'Delete Successful',
-    'msgdelsuccess'     => 'You have sucessfully deleted this message.',
-    'msgdelerr'         => 'The message has not been deleted. Please go <a href=\"javascript:history.back()\">back</a> and choose one.',
-    'msgpriv'           => 'Private Messages',
-    'msgprivnote1'      => 'You have %s private message in your %s folder.',
-    'msgprivnote2'      => 'You have %s private messages in your %s folder.',
-    'msgto'             => 'To :',
-    'msgmembers'        => 'Member List.',
-    'msgarchive'        => 'Message has been moved to your Archive folder',
-    'newmsghelp'        => 'Create a new message',
-    'lang_broadcasts'   => 'PM Broadcasts',
-    'help_broadcasts'   => 'Block Messenger Broadcasts',
-    'lang_notifications'       => 'Notifications',
-    'help_notifications'       => 'Enable email notifications for new Private Messages or subscribed updates',
-    'lang_sitenotifications'   => 'Messenger as default',
-    'help_sitenotifications'   => 'Send all notifications to my Messenger inbox',
-    'outboxmsg'         => 'Outbox messages can not be deleted. They represent the messages still in receipient\'s INBOX.',
-    'show_smilies'      => 'Show Smilies',
-    'hide_smilies'      => 'Hide Smilies',
-    'usermenu'          => 'Messenger',
-);
+$LANG_MSG = [
+    'err01'                  => 'Access not permitted to this feature',
+    'err02'                  => 'Attempt to perform an illegal operation',
+    'err03'                  => 'Error: One of more members names are invalid',
+    'BLOCKHEADER'            => 'Private Messages',
+    'RE'                     => 'Re:',
+    'ERROR'                  => 'Error!',
+    'FROM'                   => 'From',
+    'TO'                     => 'To',
+    'SUBJECT'                => 'Subject',
+    'PM'                     => 'PM',
+    'NEW_PM'                 => 'NewPM',
+    'NEW'                    => 'New',
+    'NEWMESSAGE'             => 'New Message',
+    'DATE'                   => 'Date',
+    'ARCHIVE'                => '&nbsp;Archive&nbsp;',
+    'ARCHIVEMSG'             => 'Archive Message',
+    'REPLY'                  => '&nbsp;Reply&nbsp;',
+    'REPLYMSG'               => 'Reply to sender',
+    'DELETE'                 => '&nbsp;Delete&nbsp;',
+    'DELETEMSG'              => 'Delete Message',
+    'INBOX'                  => 'Inbox',
+    'OUTBOX'                 => 'Outbox',
+    'SENTBOX'                => 'Sent',
+    'ARCHIVEBOX'             => 'Archive',
+    'REMOVE'                 => 'Delete this message',
+    'SUBMIT'                 => 'Submit',
+    'CANCEL'                 => 'Cancel',
+    'PREVIEW'                => 'Preview',
+    'MESSAGE'                => 'Message',
+    'MEMBERS'                => 'Members',
+    'MEMBERSLIST'            => 'Memberslist',
+    'ANONYMOUS'              => 'Guest',
+    'BROADCAST'              => 'Broadcast',
+    'BROADCAST_MSG'          => 'Broadcast Message',
+    'EXPIRE_MSG'             => 'Message will auto delete on %s',
+    'OPTIONS'                => 'Options',
+    'DELALL'                 => 'Delete All',
+    'DELALLMSG'              => 'Delete all messages',
+    'DELOLDER'               => 'Delete older',
+    'DELOLDERMSG'            => 'Delete all messages before today',
+    'VIEWORIGINAL'           => '<hr>View&nbsp;<a href="%s">Original </a>&nbsp;Message',
+    'MYBUDDIES'              => 'My Buddies',
+    'MSGFAVORITES'           => 'Messenger Favorites',
+    'ADDBUDDY'               => 'Add Buddy',
+    'DELBUDDY'               => 'Delete Buddy',
+    'HOME'                   => 'Home',
+    'SETTINGS'               => 'Settings',
+    'prompt01'               => 'the page does not automatically reload, please click <a href=%s>here</a>',
+    'prompt02'               => '* Broadcast message. Only originator or Admin can delete.<br>&nbsp;Delete will remove all copies.',
+    'prompt02b'              => '* Broadcast message. Only originator or Admin can delete.',
+    'prompt03'               => 'Sent on: ',
+    'statusmsg1'             => '%s Click <a href="%s">here</a> to continue.',
+    'statusmsg2'             => 'to continue',
+    'statusmsg3'             => 'This page should return automatically. If you do not wish to wait, click <a href="%s">here</a>',
+    'msgsent'                => 'Message Sent!',
+    'msgsave'                => 'Your message to %s has been sent.',
+    'msgreturn'              => 'to return to your inbox.',
+    'msgerror'               => 'Your message has not been sent. Please go <a href="javascript:history.back()">back</a> and make sure you have all fields filled.',
+    'msgdelok'               => 'Delete Successful',
+    'msgdelsuccess'          => 'You have sucessfully deleted this message.',
+    'msgdelerr'              => 'The message has not been deleted. Please go <a href=\"javascript:history.back()\">back</a> and choose one.',
+    'msgpriv'                => 'Private Messages',
+    'msgprivnote1'           => 'You have %s private message in your %s folder.',
+    'msgprivnote2'           => 'You have %s private messages in your %s folder.',
+    'msgto'                  => 'To :',
+    'msgmembers'             => 'Member List.',
+    'msgarchive'             => 'Message has been moved to your Archive folder',
+    'newmsghelp'             => 'Create a new message',
+    'lang_broadcasts'        => 'PM Broadcasts',
+    'help_broadcasts'        => 'Block Messenger Broadcasts',
+    'lang_notifications'     => 'Notifications',
+    'help_notifications'     => 'Enable email notifications for new Private Messages or subscribed updates',
+    'lang_sitenotifications' => 'Messenger as default',
+    'help_sitenotifications' => 'Send all notifications to my Messenger inbox',
+    'outboxmsg'              => 'Outbox messages can not be deleted. They represent the messages still in receipient\'s INBOX.',
+    'show_smilies'           => 'Show Smilies',
+    'hide_smilies'           => 'Hide Smilies',
+    'usermenu'               => 'Messenger',
+];
 
 // Language used for Notification Feature
-$LANG_MSG01 = array (
+$LANG_MSG01 = [
     'HELLO'     => "Hello",
     'ADMIN'     => "Site Administrator",
     'SUBJECT'   => "- New Private Message Notifiction",
@@ -130,11 +130,11 @@ $LANG_MSG01 = array (
     'LINE1'     => "You have a new Private message from fellow site member: %s\nSubject:%s",
     'LINE1B'    => "There is a new broadcast message waiting in your private message area from: %s\nSubject: %s",
     'LINE2'     => "\n \nYou are receiving this because you requested to be notified of any new Private Messages.\n\n",
-    'LINE3'     => "Have a great day!\n"
-);
+    'LINE3'     => "Have a great day!\n",
+];
 
 // Language used for Admin screens
-$LANG_MSG02 = array (
+$LANG_MSG02 = [
     'BLOCKHEADER' => 'Smilie Administration',
     'IMAGE'       => 'Image',
     'CODE'        => 'Emoticon',
@@ -147,43 +147,42 @@ $LANG_MSG02 = array (
     'EDITPROMPT'  => 'Edit Smilie',
     'EDITSUBMIT'  => 'Update Smilie',
     'FILENAME'    => 'Image Filename',
-    'EDIT'        => 'Edit',
-    'HELPMSG1'    => 'You are able to Add, Edit or Delete the allowable smilies. It is possible to have multiple emoticons for a single smilie image. To add a new smilie, upload the image to your smilie images directory on you server and use Add link to add a new emoticon record. Use Edit to change the emoticon or change the assigned image.'
-);
+    'HELPMSG1'    => 'You are able to Add, Edit or Delete the allowable smilies. It is possible to have multiple emoticons for a single smilie image. To add a new smilie, upload the image to your smilie images directory on you server and use Add link to add a new emoticon record. Use Edit to change the emoticon or change the assigned image.',
+];
 
 // Language used for Sortby Filter in main message view
-$LANG_MSG03 = array (
+$LANG_MSG03 = [
     'BUDDYADMIN' => 'Buddy Admin',
     'SORTBY'     => 'Sorted by',
     'OLDFIRST'   => 'Oldest First',
     'NEWFIRST'   => 'Newest First',
-    'MEMBER'     => 'Member Name'
-);
+    'MEMBER'     => 'Member Name',
+];
 
 // Language used in the Buddy Admin screen
-$LANG_MSG04 = array (
+$LANG_MSG04 = [
     'MAINHEADER' => 'Buddy Administration',
     'HEADER1'    => 'Available Members',
     'HEADER2'    => 'My Buddies',
     'ADD'        => 'Add',
     'REMOVE'     => 'Remove',
     'CANCEL'     => 'Cancel',
-    'SAVE'       => 'Save'
-);
+    'SAVE'       => 'Save',
+];
 
 // Language used to send message to new members - intro message
-$LANG_MSG05 = array (
+$LANG_MSG05 = [
     'subject' => 'Welcome to my site!',
-    'message' => 'Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>'
-);
+    'message' => 'Thank you for joining portalparts.com. I hope that you enjoy being a member :) If you have any questions, please search the FAQ or forum first.<p />Regards,<br><i>Site Administrator</i>',
+];
 
 // Localization of the Admin Configuration UI
-$LANG_configsections['messenger'] = array(
+$LANG_configsections['messenger'] = [
     'label' => 'Messenger',
     'title' => 'Messenger Configuration',
-);
+];
 
-$LANG_confignames['messenger'] = array(
+$LANG_confignames['messenger'] = [
     'debug'                 => 'Debug request vars',
     'smiliesEnabled'        => 'Display smilies in Messenger',
     'RestrictedAccess'      => 'Only allow access with messenger.user access right',
@@ -196,22 +195,22 @@ $LANG_confignames['messenger'] = array(
     'USER_PMBLOCK'          => 'Users should not receive broadcast messages',
     'USER_NOTIFY'           => 'User should receive email notifications of new PM\'s by default',
     'USER_INBOX'            => 'All system and plugin notifications should be sent to users INBOX',
-);
+];
 
-$LANG_configsubgroups['messenger'] = array(
+$LANG_configsubgroups['messenger'] = [
     'sg_main' => 'Main Settings',
-);
+];
 
-$LANG_tab['messenger'] = array(
+$LANG_tab['messenger'] = [
     'tab_main' => 'Messenger Settings',
-);
+];
 
-$LANG_fs['messenger'] = array(
-    'fs_main'  => 'Main Settings',
-);
+$LANG_fs['messenger'] = [
+    'fs_main' => 'Main Settings',
+];
 
 // Note: entries 0, 1, 9, and 12 are the same as in $LANG_configselects['Core']
-$LANG_configselects['messenger'] = array(
-    0 => array('Yes' => 1, 'No' => 0),
-    1 => array('Yes' => true, 'No' => false),
-);
+$LANG_configselects['messenger'] = [
+    0 => ['Yes' => 1, 'No' => 0],
+    1 => ['Yes' => true, 'No' => false],
+];

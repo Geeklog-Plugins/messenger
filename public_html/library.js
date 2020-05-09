@@ -4,7 +4,7 @@
 // Used to set a hidden form variable to the result of all the values in the source selectbox
 // -------------------------------------------------------------------
 function setUsers(f) { 
-	var destVals = new Array(), opt = 0, separator = "|", d = f.fieldTo; 
+	var destVals = [], opt = 0, separator = "|", d = f.fieldTo;
 	while (d[opt]) 
         destVals[opt] = d[opt++].value;
         if(d[opt] > 1) {
@@ -21,12 +21,12 @@ function setUsers(f) {
 //   by their text (display) values
 // -------------------------------------------------------------------
 function sortSelect(obj) {
-    var o = new Array();
-    if (obj.options==null) { return; }
-    for (var i=0; i<obj.options.length; i++) {
+    var i, o = [];
+    if (obj.options===null) { return; }
+    for (i = 0; i < obj.options.length; i++) {
         o[o.length] = new Option( obj.options[i].text, obj.options[i].value, obj.options[i].defaultSelected, obj.options[i].selected) ;
         }
-    if (o.length==0) { return; }
+    if (o.length===0) { return; }
     o = o.sort( 
         function(a,b) { 
             if ((a.text+"") < (b.text+"")) { return -1; }
@@ -35,7 +35,7 @@ function sortSelect(obj) {
             } 
         );
 
-    for (var i=0; i<o.length; i++) {
+    for (i = 0; i < o.length; i++) {
         obj.options[i] = new Option(o[i].text, o[i].value, o[i].defaultSelected, o[i].selected);
         }
     }
@@ -59,31 +59,37 @@ function sortSelect(obj) {
 //  onDblClick() event handler).
 // -------------------------------------------------------------------
 function moveSelectedOptions(from,to) {
+    var regex, i, o;
+
     // Unselect matching options, if required
     if (arguments.length>3) {
-        var regex = arguments[3];
-        if (regex != "") {
+        regex = arguments[3];
+        if (regex !== "") {
             unSelectMatchingOptions(from,regex);
-            }
         }
+    }
+
     // Move them over
-    for (var i=0; i<from.options.length; i++) {
-        var o = from.options[i];
+    for (i = 0; i < from.options.length; i++) {
+        o = from.options[i];
         if (o.selected) {
             to.options[to.options.length] = new Option( o.text, o.value, false, false);
-            }
         }
+    }
+
     // Delete them from original
-    for (var i=(from.options.length-1); i>=0; i--) {
-        var o = from.options[i];
+    for (i = (from.options.length-1); i >= 0; i--) {
+        o = from.options[i];
         if (o.selected) {
             from.options[i] = null;
-            }
         }
+    }
+
     if ((arguments.length<3) || (arguments[2]==true)) {
         sortSelect(from);
         sortSelect(to);
-        }
+    }
+
     from.selectedIndex = -1;
     to.selectedIndex = -1;
-    }
+}

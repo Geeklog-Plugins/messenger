@@ -44,6 +44,8 @@ if (stripos($_SERVER['PHP_SELF'], basename(__FILE__)) !== false) {
     die('This file cannot be used on its own!');
 }
 
+$_SQL = [];
+
 // Table structure for table `gl_messenger_dist`
 $_SQL[] = "CREATE TABLE {$_TABLES['messenger_dist']} (
   msg_id INT NOT NULL DEFAULT 0,
