@@ -1,4 +1,4 @@
-<?php /** @noinspection SqlNoDataSourceInspection */
+<?php
 
 // +-----------------------------------------------------------------------------+
 // | glMessenger Plugin 1.0 for Geeklog- The Ultimate OSS Portal                 |
