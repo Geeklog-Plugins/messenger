@@ -550,8 +550,6 @@ function messenger_statusMessage($message, $url, $prompt)
         $prompt = $LANG_MSG['statusmsg2'];
     }
 
-    ob_start();
-
     echo COM_startBlock();
     echo '<br' . XHTML . '><p class="alert">' . $message . '<br' . XHTML .'></p>' . PHP_EOL;
 
@@ -566,8 +564,6 @@ function messenger_statusMessage($message, $url, $prompt)
     }
 
     echo COM_endBlock();
-
-    return ob_get_clean();
 }
 
 /**
