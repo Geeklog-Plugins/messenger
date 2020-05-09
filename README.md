@@ -42,6 +42,7 @@ https://github.com/Geeklog-Plugins/messenger/issues
 #### Changlog
 
 * [Improvement] The messenger plugin now accepts IPv6 addresses
+* [Bug] Fixed issue which Messenger could not handle when a new user was created from the User Admin form
 
 ### v1.9.4
 
