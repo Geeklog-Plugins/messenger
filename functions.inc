@@ -884,8 +884,10 @@ function msg_logNotification($logentry)
 {
     global $_CONF;
 
-    if (version_compare(VERSION, '2.2.1', '>=')) {
-        Geeklog\Log::messenger($logentry);
+    $comparer = is_callable('COM_versionCompare') ? 'COM_versionCompare' : 'version_compare';
+
+    if ($comparer(VERSION, '2.2.1', '>=')) {
+        Geeklog\Log::notification($logentry);
     } else {
         $timestamp = strftime('%b %d %H:%M');
         $logfile = $_CONF['path_log'] . 'notification.log';
