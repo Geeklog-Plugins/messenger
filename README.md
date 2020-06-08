@@ -36,7 +36,7 @@ https://github.com/Geeklog-Plugins/messenger/issues
 
 ### v1.9.5
 
-* Release Date: May ??, 2020
+* Release Date: June 8, 2020
 * Requires minimum Geeklog version 2.2.1
 
 #### Changlog
