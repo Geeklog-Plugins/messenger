@@ -82,6 +82,7 @@ $toname = msg_cleandata(Input::request('toname', ''));
 $replyid = msg_cleandata(Input::request('replyid', 0));
 $userBlockBrdcast = DB_getItem($_TABLES['messenger_userinfo'], "broadcasts", "uid='{$uid}'");
 $phpself = $_CONF['site_url'] . '/messenger/index.php';
+$rows = '';
 
 // Begin main logic
 ob_start();
@@ -348,7 +349,7 @@ $msg_main->set_var('options', $LANG_MSG['OPTIONS']);
 $msg_main->set_var('curfolder', $folder);
 $msg_main->set_var('LANG_newmsghelp', $LANG_MSG['newmsghelp']);
 $msg_main->set_var('LANG_SETTINGS', $LANG_MSG['SETTINGS']);
-$msg_main->set_var('rows', @$rows);
+$msg_main->set_var('rows', $rows);
 
 if ($folder === 'SENT') {
     $msg_main->set_var('show_info', '');
@@ -424,7 +425,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
     if (isset($_POST['submit']) && ($_POST['submit'] == $LANG_MSG['PREVIEW'])) {
         echo '<br><p>';
 
-        if (get_magic_quotes_gpc()) {
+        if (is_callable('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $message = stripslashes($message);
         }
 
@@ -434,7 +435,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
             $message = $_POST['message'];
         }
 
-        if (get_magic_quotes_gpc()) {
+        if (is_callable('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $message = stripslashes($message);
             $subject = stripslashes($subject);
         }
@@ -455,7 +456,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
         $rows .= $msg_row->finish($msg_row->get_var('output'));
         echo $msg_row->finish($msg_row->get_var('output'));
 
-        if (get_magic_quotes_gpc()) {
+        if (is_callable('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $msg_new->set_var('preview', stripslashes($_POST['message']));
         } else {
             $msg_new->set_var('preview', $_POST['message']);

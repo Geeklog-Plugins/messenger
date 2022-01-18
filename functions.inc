@@ -282,39 +282,39 @@ function plugin_profilevariablesedit_messenger($uid, &$template)
             $option3 = $CONF_MSG['USER_INBOX'];
         }
 
-    	$template->set_var ('lang_field', $LANG_MSG['lang_broadcasts']);
-    	$template->set_var ('lang_field_text', $LANG_MSG['help_broadcasts']);
-    	$template->set_var('fieldname', 'messenger_broadcasts');
-    	$template->set_var('fieldvalue', '1');
-    	if ($option1) {
+        $template->set_var ('lang_field', $LANG_MSG['lang_broadcasts']);
+        $template->set_var ('lang_field_text', $LANG_MSG['help_broadcasts']);
+        $template->set_var('fieldname', 'messenger_broadcasts');
+        $template->set_var('fieldvalue', '1');
+        if ($option1) {
             $template->set_var('fieldchecked', 'checked="checked"');
         } else {
             $template->set_var('fieldchecked', '');
         }
-    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+        $template->parse('extra_privacy_fields', 'extra_privacy_field', true);
 
-    	$template->set_var ('lang_field', $LANG_MSG['lang_notifications']);
-    	$template->set_var ('lang_field_text', $LANG_MSG['help_notifications']);
-    	$template->set_var('fieldname', 'messenger_notifications');
-    	$template->set_var('fieldvalue', '1');
+        $template->set_var ('lang_field', $LANG_MSG['lang_notifications']);
+        $template->set_var ('lang_field_text', $LANG_MSG['help_notifications']);
+        $template->set_var('fieldname', 'messenger_notifications');
+        $template->set_var('fieldvalue', '1');
         if ($option2) {
             $template->set_var('fieldchecked', 'checked="checked"');
         } else {
             $template->set_var('fieldchecked', '');
         }
-    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+        $template->parse('extra_privacy_fields', 'extra_privacy_field', true);
 
-    	$template->set_var ('lang_field', $LANG_MSG['lang_sitenotifications']);
-    	$template->set_var ('lang_field_text', $LANG_MSG['help_sitenotifications']);
-    	$template->set_var('fieldname', 'messenger_sitepreference');
-    	$template->set_var('fieldvalue', '1');
+        $template->set_var ('lang_field', $LANG_MSG['lang_sitenotifications']);
+        $template->set_var ('lang_field_text', $LANG_MSG['help_sitenotifications']);
+        $template->set_var('fieldname', 'messenger_sitepreference');
+        $template->set_var('fieldvalue', '1');
         if ($option3) {
             $template->set_var('fieldchecked', 'checked="checked"');
         } else {
             $template->set_var('fieldchecked', '');
         }
 
-    	$template->parse('extra_privacy_fields', 'extra_privacy_field', true);
+        $template->parse('extra_privacy_fields', 'extra_privacy_field', true);
     }
 }
 
@@ -322,7 +322,7 @@ function plugin_profileextrassave_messenger($uid = '')
 {
     global $_USER, $_TABLES;
 
-	if (empty($uid)) {
+    if (empty($uid)) {
         $uid = $_USER['uid'];
     }
 
@@ -330,9 +330,9 @@ function plugin_profileextrassave_messenger($uid = '')
     // Messenger plugin privacy fields do not display on the Admin User form, only the user settings form
     // Cannot check isset($_POST['messenger_broadcasts']) since checkboxs if not checked do not get returned and we need to know that info
     if ($uid > 1 && basename($_SERVER['SCRIPT_FILENAME']) == 'usersettings.php') {
-    	$broadcasts = (int) Input::fPost('messenger_broadcasts', 0);
-    	$notifications = (int) Input::fPost('messenger_notifications', 0);
-    	$sitepreference = (int) Input::fPost('messenger_sitepreference', 0);
+        $broadcasts = (int) Input::fPost('messenger_broadcasts', 0);
+        $notifications = (int) Input::fPost('messenger_notifications', 0);
+        $sitepreference = (int) Input::fPost('messenger_sitepreference', 0);
 
         DB_save($_TABLES['messenger_userinfo'], "uid, broadcasts, notifications, sitepreference", "'$uid', $broadcasts, $notifications, $sitepreference");
     }
@@ -453,6 +453,10 @@ function plugin_upgrade_messenger()
                     }
                 }
 
+                $pi_version = $CONF_MSG['pi_version'];
+                break;
+
+            case '1.9.5':
                 $pi_version = $CONF_MSG['pi_version'];
                 break;
         }
@@ -717,11 +721,11 @@ function msg_preparefordb($message, $postmode = 'text', $censor = true, $htmlfil
         if ($htmlfilter) {
             // Need to call addslahes again as COM_checkHTML stips it out
             $message = addslashes(nl2br(COM_checkHTML($message)));
-        } elseif (!get_magic_quotes_gpc()) {
+        } elseif (!is_callable('get_magic_quotes_gpc') || !get_magic_quotes_gpc()) {
             $message = addslashes(nl2br($message));
         }
     } else {
-        if (get_magic_quotes_gpc()) {
+        if (is_callable('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
             $message = htmlspecialchars($message);
         } else {
             $message = addslashes(htmlspecialchars($message));
@@ -845,8 +849,8 @@ function msg_sendNotification($user, $subject, $message, $type = '')
 {
     global $_USER, $_CONF, $_TABLES, $CONF_MSG;
 
-    // Added to handle domain\user.name type usernames - occured at Inco where we have NTLM integration
-    if (!get_magic_quotes_gpc()) {
+    // Added to handle domain\user.name type usernames - occurred at Inco where we have NTLM integration
+    if (!is_callable('get_magic_quotes_gpc') || !get_magic_quotes_gpc()) {
         $user = addslashes($user);
     }
 
