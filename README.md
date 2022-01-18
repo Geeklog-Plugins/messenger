@@ -2,7 +2,7 @@
 
 * Original Author: Blaine Lang < blaine@portalparts.com >
 * Maintainers: [Geeklog Community Members](https://github.com/Geeklog-Plugins/messenger/graphs/contributors)
-* Latest Release Supports: Geeklog v2.2.1 or higher
+* Latest Release Supports: Geeklog v2.2.1 or higher (works with PHP 8.0)
 
 ## Summary
 
@@ -33,6 +33,11 @@ To request a feature or report an issue see:
 https://github.com/Geeklog-Plugins/messenger/issues
 
 ## Versions
+
+### v1.9.6
+
+* Release Date: January 18, 2022
+* [Improvement] Requires minimum Geeklog version 2.2.1.  Works with Geeklog 2.2.2 and PHP 8.0
 
 ### v1.9.5
 
