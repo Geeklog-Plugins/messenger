@@ -893,7 +893,11 @@ function msg_logNotification($logentry)
     if ($comparer(VERSION, '2.2.1', '>=')) {
         Geeklog\Log::notification($logentry);
     } else {
-        $timestamp = strftime('%b %d %H:%M');
+        if (is_callable('COM_strftime')) {
+            $timestamp = COM_strftime('%b %d %H:%M');
+        } else {
+            $timestamp = strftime('%b %d %H:%M');
+        }
         $logfile = $_CONF['path_log'] . 'notification.log';
         @file_put_contents($logfile, "$timestamp,$logentry \n", FILE_APPEND);
     }
