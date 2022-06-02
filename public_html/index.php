@@ -589,7 +589,11 @@ if ($action === 'newpm' || $mode === 'newpm') {
         while (list($msg_id, $source, $target, $message, $subject, $datetime, $read_date, $reply_msgid) = DB_fetchARRAY($query)) {
             if (($target == '0' && !$userBlockBrdcast) || $target > 0) {
                 $numMessages++;
-                $long_date = strftime('%b %d %Y @ %H:%M', $datetime);
+				if (is_callable('COM_strftime')) {
+					$long_date = COM_strftime('%b %d %Y @ %H:%M', $datetime);
+				} else {
+					$long_date = strftime('%b %d %Y @ %H:%M', $datetime);
+				}				
                 $datePostedMsg = $LANG_MSG['prompt03'] . $long_date . "'";
                 $delete = '';
                 $reply = '';
