@@ -395,7 +395,7 @@ if ($action === 'newpm' || $mode === 'newpm') {
     } elseif (!empty($replyid)) {
         $subject = DB_getItem($_TABLES['messenger_msg'], 'subject', "id = '{$replyid}'");
         if (strpos($subject, $LANG_MSG['RE']) === false) {
-            $subject = $LANG_MSG['RE'] . "&nbsp;{$subject}";
+            $subject = "{$LANG_MSG['RE']} {$subject}";
         }
     } else {
         $subject = '';
