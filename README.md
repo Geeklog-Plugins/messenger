@@ -36,7 +36,7 @@ https://github.com/Geeklog-Plugins/messenger/issues
 
 ### v1.9.7
 
-* Release Date: October 1, 2022
+* Release Date: October 31, 2022
 * [Improvement] Requires minimum Geeklog version 2.2.1.  Works with Geeklog 2.2.2 and PHP 8.1
 
 ### v1.9.6
