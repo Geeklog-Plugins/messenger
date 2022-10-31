@@ -457,6 +457,7 @@ function plugin_upgrade_messenger()
                 break;
 
             case '1.9.5':
+			case '1.9.6':
                 $pi_version = $CONF_MSG['pi_version'];
                 break;
         }

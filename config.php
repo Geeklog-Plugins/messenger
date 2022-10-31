@@ -54,7 +54,7 @@ $_TABLES['smilies'] = $_DB_table_prefix . 'smilies';
 
 // Plugin info
 $CONF_MSG = [
-    'pi_version'  => '1.9.6',                                        // Plugin Version
+    'pi_version'  => '1.9.7',                                        // Plugin Version
     'gl_version'  => '2.2.1',                                        // GL Version plugin for
     'pi_url'      => 'https://github.com/Geeklog-Plugins/messenger', // Plugin Homepage
     'GROUPS'      => [
